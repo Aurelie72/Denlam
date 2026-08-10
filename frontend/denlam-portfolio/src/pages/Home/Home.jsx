@@ -9,9 +9,10 @@ import eeta from "../../assets/eeta.jpg"
 // hero et contact restent des textes statiques pour l'instant.
 import hero from "../../../content/settings/hero.json";
 import contact from "../../../content/settings/contact.json";
+
 // La section À propos (texte + photo), elle, est éditable depuis /admin
 // et vient du backend MongoDB.
-import { fetchAbout, sendContactMessage, resolveImageUrl, ApiError } from "../../services/api.js";
+import { fetchAbout, resolveImageUrl } from "../../services/api.js";
 
 const initialForm = { name: "", email: "", phone: "", message: "", consent: false };
 const defaultAbout = {
@@ -23,7 +24,6 @@ const defaultAbout = {
 export default function Home() {
   const [form, setForm] = useState(initialForm);
   const [status, setStatus] = useState("idle"); // idle | sending | sent | error
-  const [errorMessage, setErrorMessage] = useState(null);
 
   const [about, setAbout] = useState(defaultAbout);
 
@@ -50,14 +50,11 @@ export default function Home() {
   async function handleSubmit(e) {
     e.preventDefault();
     setStatus("sending");
-    try {
-      await sendContactMessage(form);
-      setStatus("sent");
-      setForm(initialForm);
-    } catch (err) {
-      setStatus("error");
-      setErrorMessage(err instanceof ApiError ? err.message : "Une erreur est survenue.");
-    }
+    // Simulation d'envoi. Pour un vrai envoi d'email sans backend,
+    // voir Netlify Forms dans le README.
+    await new Promise((resolve) => setTimeout(resolve, 600));
+    setStatus("sent");
+    setForm(initialForm);
   }
 
   return (
