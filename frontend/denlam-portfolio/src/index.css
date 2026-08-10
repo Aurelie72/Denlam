@@ -1,0 +1,139 @@
+/* ==========================================================================
+   Denlam — Design tokens
+   Repris de la charte du site statique : Cormorant Garamond, palette
+   neutre gris/blanc, coins arrondis, transitions douces.
+   ========================================================================== */
+:root {
+  --font-display: "Cormorant Garamond", serif;
+
+  --color-bg: #fffefe;
+  --color-surface: #ffffff;
+  --color-text: #1a1a1a;
+  --color-muted: #5b5959;
+  --color-border: #b9b8b8;
+  --color-accent: #b9b8b8;
+  --color-accent-strong: #8f8e8e;
+
+  --radius-sm: 8px;
+  --radius-pill: 100px;
+
+  --shadow-soft: 0 4px 8px rgba(0, 0, 0, 0.1);
+  --shadow-strong: 0 4px 8px rgba(0, 0, 0, 0.2);
+
+  --transition-fast: 0.3s ease;
+  --transition-soft: 0.4s ease;
+  --transition-slide: 0.5s ease;
+
+  --container-max: 1200px;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-display);
+  font-weight: 500;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1,
+h2,
+h3 {
+  font-weight: 800;
+}
+
+h1 {
+  letter-spacing: 10px;
+  font-size: clamp(2rem, 4vw, 3.125rem);
+}
+
+h2 {
+  letter-spacing: 4px;
+  font-size: clamp(1.5rem, 3vw, 2.25rem);
+}
+
+h3 {
+  letter-spacing: 15px;
+  font-size: clamp(1.25rem, 2.5vw, 1.875rem);
+  color: var(--color-border);
+}
+
+a {
+  color: inherit;
+}
+
+button {
+  font-family: inherit;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+.container {
+  width: 100%;
+  max-width: var(--container-max);
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+.btn {
+  padding: 12px 28px;
+  font-size: 1.05rem;
+  font-family: var(--font-display);
+  font-weight: 700;
+  letter-spacing: 1px;
+  border-radius: var(--radius-sm);
+  border: none;
+  background-color: var(--color-accent);
+  color: #fff;
+  cursor: pointer;
+  transition: background-color var(--transition-fast);
+}
+
+.btn:hover {
+  background-color: var(--color-accent-strong);
+}
+
+.btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+/* Focus visible cohérent sur toute l'app */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+textarea:focus-visible {
+  outline: 2px solid var(--color-accent-strong);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  * {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}

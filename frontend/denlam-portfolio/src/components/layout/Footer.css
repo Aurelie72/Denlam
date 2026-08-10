@@ -1,0 +1,26 @@
+.site-footer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 40px 80px;
+  text-align: center;
+}
+
+.site-footer a {
+  text-decoration: none;
+  color: var(--color-muted);
+  font-size: 0.95rem;
+}
+
+.site-footer a:hover {
+  color: var(--color-text);
+}
+
+.site-footer .copy {
+  color: var(--color-border);
+  font-size: 0.8rem;
+  letter-spacing: 1px;
+  margin-top: 8px;
+}

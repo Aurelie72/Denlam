@@ -1,0 +1,239 @@
+/* ---- Hero / cartes ------------------------------------------------- */
+.hero {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: clamp(24px, 5vw, 60px);
+  padding: clamp(40px, 8vw, 80px) clamp(24px, 6vw, 70px);
+}
+
+.hero-card {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-decoration: none;
+  color: var(--color-text);
+  cursor: pointer;
+}
+
+.hero-card-media {
+  display: block;
+  width: min(420px, 40vw + 120px);
+  aspect-ratio: 1 / 1;
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  box-shadow: var(--shadow-soft);
+}
+
+.hero-card-media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: opacity var(--transition-soft), transform var(--transition-soft);
+}
+
+.hero-card p {
+  position: absolute;
+  opacity: 0;
+  transition: opacity var(--transition-soft);
+  padding: 10px 20px;
+  font-size: clamp(1.5rem, 2.5vw, 2rem);
+  font-weight: 800;
+  letter-spacing: 1px;
+  pointer-events: none;
+}
+
+.hero-card:hover .hero-card-media img {
+  opacity: 0.45;
+  transform: scale(1.03);
+}
+
+.hero-card:hover p {
+  opacity: 1;
+}
+
+@media (max-width: 640px) {
+  .hero-card-media {
+    width: min(80vw, 380px);
+  }
+}
+
+/* ---- A propos -------------------------------------------------------- */
+.about {
+  padding: clamp(40px, 8vw, 80px) clamp(24px, 6vw, 70px);
+}
+
+.about-inner {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: clamp(24px, 4vw, 40px);
+}
+
+.about-portrait {
+  width: min(360px, 90vw);
+  height: min(430px, 60vw);
+  object-fit: cover;
+  border-radius: var(--radius-sm);
+  box-shadow: var(--shadow-soft);
+}
+
+.about-text {
+  max-width: 540px;
+}
+
+.about-text h2 {
+  margin-bottom: 20px;
+}
+
+.about-text p {
+  font-size: 1.15rem;
+  line-height: 1.6;
+  color: var(--color-muted);
+  font-weight: 500;
+}
+
+.about-placeholder-note {
+  margin-top: 12px;
+  font-size: 0.85rem !important;
+  font-style: italic;
+  color: var(--color-border) !important;
+}
+
+/* ---- Contact ----------------------------------------------------------- */
+.contact {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 40px;
+  padding: clamp(40px, 6vw, 60px) clamp(24px, 6vw, 70px) clamp(60px, 10vw, 100px);
+}
+
+.contact-form-wrap {
+  flex: 1 1 480px;
+}
+
+.form {
+  max-width: 560px;
+  margin-top: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+textarea {
+  resize: none;
+  width: 100%;
+}
+
+.input-field {
+  position: relative;
+  width: 100%;
+}
+
+.input-field label {
+  position: absolute;
+  pointer-events: none;
+  left: 15px;
+  top: 0.6rem;
+  color: var(--color-muted);
+  transition: all var(--transition-fast);
+}
+
+.input-field input,
+.input-field textarea {
+  padding: 10px 15px;
+  font-size: 1rem;
+  font-family: var(--font-display);
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--color-border);
+  letter-spacing: 0.5px;
+  width: 100%;
+  background-color: var(--color-surface);
+  color: var(--color-text);
+}
+
+.input-field input:focus,
+.input-field input:valid,
+.input-field textarea:focus,
+.input-field textarea:valid {
+  outline: none;
+}
+
+.input-field input:focus ~ label,
+.input-field input:valid ~ label,
+.input-field textarea:focus ~ label,
+.input-field textarea:valid ~ label {
+  transform: translateY(-1.35rem) translateX(-10px) scale(0.8);
+  background-color: var(--color-surface);
+  padding: 0 5px;
+  color: var(--color-border);
+  font-weight: 700;
+  border-radius: var(--radius-pill);
+}
+
+.container-checkbox {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 0.9rem;
+  color: var(--color-muted);
+  cursor: pointer;
+}
+
+.container-checkbox input {
+  width: 18px;
+  height: 18px;
+  margin-top: 2px;
+  accent-color: var(--color-accent-strong);
+}
+
+.form-feedback.success {
+  color: #3a7a3a;
+  font-size: 0.95rem;
+}
+
+.coordonnees {
+  flex: 1 1 260px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  text-align: right;
+}
+
+.coordonnees h2 {
+  margin-bottom: 16px;
+}
+
+.coordonnees p {
+  color: var(--color-muted);
+  font-size: 1.05rem;
+}
+
+.reseaux {
+  display: flex;
+  justify-content: flex-end;
+  gap: 20px;
+  margin-top: 16px;
+}
+
+.reseaux a {
+  font-size: 1.4rem;
+  color: var(--color-muted);
+  transition: color var(--transition-fast);
+}
+
+.reseaux a:hover {
+  color: var(--color-text);
+}
+
+@media (max-width: 780px) {
+  .coordonnees {
+    text-align: left;
+  }
+  .reseaux {
+    justify-content: flex-start;
+  }
+}

@@ -1,0 +1,83 @@
+.login {
+  min-height: 70vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 24px;
+}
+
+.login-card {
+  width: 100%;
+  max-width: 380px;
+}
+
+.login .form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.75rem;
+}
+
+.login .input-field {
+  position: relative;
+}
+
+.login .input-field label {
+  position: absolute;
+  pointer-events: none;
+  left: 15px;
+  top: 0.6rem;
+  color: var(--color-muted);
+  transition: all var(--transition-fast);
+}
+
+.login .input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.login input {
+  padding: 10px 15px;
+  font-size: 1rem;
+  font-family: var(--font-display);
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--color-border);
+  letter-spacing: 0.5px;
+  width: 100%;
+  background-color: var(--color-surface);
+  color: var(--color-text);
+}
+
+.login input:focus,
+.login input:valid {
+  outline: none;
+}
+
+.login .input-field:has(input:focus) label,
+.login .input-field:has(input:valid) label,
+.login .input-field:has(.input-wrapper input:focus) label,
+.login .input-field:has(.input-wrapper input:valid) label {
+  transform: translateY(-1.35rem) translateX(-10px) scale(0.8);
+  background-color: var(--color-surface);
+  padding: 0 5px;
+  color: var(--color-border);
+  font-weight: 700;
+  border-radius: var(--radius-pill);
+}
+
+.eye-toggle {
+  position: absolute;
+  right: 14px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--color-muted);
+  display: flex;
+  align-items: center;
+}
+
+.login-error {
+  color: #b23b3b;
+  font-size: 0.9rem;
+  margin-top: -0.75rem;
+}
