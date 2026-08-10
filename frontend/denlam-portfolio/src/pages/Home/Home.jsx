@@ -60,7 +60,7 @@ export default function Home() {
   return (
     <>
       <section id="etude" className="hero">
-        <Link to="" className="hero-card">
+        <Link to="/etude" className="hero-card">
           <span className="hero-card-media" aria-hidden="true">
             <img
               src={eeta}

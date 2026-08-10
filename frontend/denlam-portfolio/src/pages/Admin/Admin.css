@@ -119,6 +119,86 @@
   color: var(--color-muted);
 }
 
+.admin-divider {
+  border: none;
+  border-top: 1px solid var(--color-border);
+  margin: 24px 0;
+}
+
+.admin-etude-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.admin-etude-tab {
+  padding: 8px 20px;
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--color-border);
+  background: transparent;
+  font-family: var(--font-display);
+  font-weight: 700;
+  color: var(--color-text);
+  cursor: pointer;
+  transition: background-color var(--transition-fast), color var(--transition-fast);
+}
+
+.admin-etude-tab:hover {
+  background-color: #f2f2f2;
+}
+
+.admin-etude-tab.active {
+  background: linear-gradient(45deg, var(--color-accent-strong), var(--color-border));
+  border-color: transparent;
+  color: #fff;
+}
+
+.admin-etude-upload-form {
+  margin-bottom: 20px;
+}
+
+.admin-etude-photos {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 12px;
+}
+
+.admin-etude-photo {
+  position: relative;
+  aspect-ratio: 1 / 1;
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+}
+
+.admin-etude-photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.admin-etude-photo-delete {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(178, 59, 59, 0.9);
+  color: #fff;
+  font-size: 0.85rem;
+  line-height: 1;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.admin-etude-photo-delete:hover {
+  background: #8f2e2e;
+}
+
 .admin-badge {
   display: inline-block;
   margin-left: 10px;

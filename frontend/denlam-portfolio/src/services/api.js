@@ -128,6 +128,37 @@ export function deleteMessage(id, token) {
   return request(`/messages/${id}`, { method: "DELETE", token });
 }
 
+// ---- Étude & Agencement --------------------------------------------------
+export function fetchEtudeSettings() {
+  return request("/etude/settings");
+}
+
+export function updateEtudeSettings(description, token) {
+  return request("/etude/settings", {
+    method: "PUT",
+    body: { description },
+    token,
+  });
+}
+
+export function fetchEtudePhotos(type) {
+  const query = type ? `?type=${type}` : "";
+  return request(`/etude/photos${query}`);
+}
+
+export function addEtudePhotos(formData, token) {
+  return request("/etude/photos", {
+    method: "POST",
+    body: formData,
+    token,
+    isFormData: true,
+  });
+}
+
+export function deleteEtudePhoto(id, token) {
+  return request(`/etude/photos/${id}`, { method: "DELETE", token });
+}
+
 export { ApiError, API_URL };
 
 // Les images uploadées sont stockées en base sous forme de chemin relatif

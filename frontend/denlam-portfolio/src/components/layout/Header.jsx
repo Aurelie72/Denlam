@@ -4,7 +4,7 @@ import "./Header.css";
 import logo from "../../assets/logo.png"
 
 const NAV_LINKS = [
-  { to: "/#etude", label: "Étude & Agencement", end: false },
+    { to: "/etude", label: "Étude & Agencement", end: false },
   { to: "/creations", label: "Créations", end: false },
   { to: "/#apropos", label: "À propos", end: false },
   { to: "/#contact", label: "Contact", end: false },

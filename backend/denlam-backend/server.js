@@ -7,6 +7,7 @@ import authRoutes from "./src/routes/auth.routes.js";
 import creationsRoutes from "./src/routes/creations.routes.js";
 import settingsRoutes from "./src/routes/settings.routes.js";
 import messagesRoutes from "./src/routes/messages.routes.js";
+import etudeRoutes from "./src/routes/etude.routes.js";
 import { notFound, errorHandler } from "./src/middleware/errorHandler.js";
 
 const app = express();
@@ -37,6 +38,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api/creations", creationsRoutes);
 app.use("/api/settings", settingsRoutes);
 app.use("/api/messages", messagesRoutes);
+app.use("/api/etude", etudeRoutes);
 
 app.use(notFound);
 app.use(errorHandler);

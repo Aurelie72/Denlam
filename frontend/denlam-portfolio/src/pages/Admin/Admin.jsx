@@ -11,6 +11,11 @@ import {
   fetchMessages,
   toggleMessageRead,
   deleteMessage,
+  fetchEtudeSettings,
+  updateEtudeSettings,
+  fetchEtudePhotos,
+  addEtudePhotos,
+  deleteEtudePhoto,
   resolveImageUrl,
   ApiError,
 } from "../../services/api.js";
@@ -18,6 +23,12 @@ import "./Admin.css";
 
 const emptyForm = { name: "", category: "lampe", description: "", imageFiles: [], existingImages: [] };
 const emptyAboutForm = { name: "", bio: "", portraitFile: null, portraitUrl: "" };
+const ETUDE_TABS = [
+  { key: "conseils", label: "Conseils" },
+  { key: "releves", label: "Relevés" },
+  { key: "plan2d", label: "Plan 2D" },
+  { key: "plan3d", label: "Plan 3D" },
+];
 
 export default function Admin() {
   const { user, token, logout } = useAuth();
@@ -246,6 +257,91 @@ export default function Admin() {
 
   const unreadCount = messages.filter((m) => !m.read).length;
 
+  // ---- Section "Étude & Agencement" ---------------------------------------
+  const [etudeDescription, setEtudeDescription] = useState("");
+  const [isLoadingEtudeText, setIsLoadingEtudeText] = useState(true);
+  const [isSavingEtudeText, setIsSavingEtudeText] = useState(false);
+  const [etudeTextError, setEtudeTextError] = useState(null);
+  const [etudeTextSaved, setEtudeTextSaved] = useState(false);
+
+  const [etudeActiveTab, setEtudeActiveTab] = useState("conseils");
+  const [etudePhotos, setEtudePhotos] = useState([]);
+  const [isLoadingEtudePhotos, setIsLoadingEtudePhotos] = useState(true);
+  const [etudePhotosError, setEtudePhotosError] = useState(null);
+  const [etudeNewFiles, setEtudeNewFiles] = useState([]);
+  const [isUploadingEtudePhotos, setIsUploadingEtudePhotos] = useState(false);
+
+  useEffect(() => {
+    fetchEtudeSettings()
+      .then((data) => setEtudeDescription(data.description || ""))
+      .catch((err) => setEtudeTextError(err instanceof ApiError ? err.message : "Erreur de chargement."))
+      .finally(() => setIsLoadingEtudeText(false));
+  }, []);
+
+  async function loadEtudePhotos(type) {
+    setIsLoadingEtudePhotos(true);
+    setEtudePhotosError(null);
+    try {
+      const data = await fetchEtudePhotos(type);
+      setEtudePhotos(data);
+    } catch (err) {
+      setEtudePhotosError(err instanceof ApiError ? err.message : "Erreur de chargement.");
+    } finally {
+      setIsLoadingEtudePhotos(false);
+    }
+  }
+
+  useEffect(() => {
+    loadEtudePhotos(etudeActiveTab);
+    setEtudeNewFiles([]);
+  }, [etudeActiveTab]);
+
+  async function handleEtudeTextSubmit(e) {
+    e.preventDefault();
+    setEtudeTextError(null);
+    setIsSavingEtudeText(true);
+    setEtudeTextSaved(false);
+    try {
+      const updated = await updateEtudeSettings(etudeDescription, token);
+      setEtudeDescription(updated.description || "");
+      setEtudeTextSaved(true);
+    } catch (err) {
+      setEtudeTextError(err instanceof ApiError ? err.message : "Erreur lors de l'enregistrement.");
+    } finally {
+      setIsSavingEtudeText(false);
+    }
+  }
+
+  async function handleEtudePhotosUpload(e) {
+    e.preventDefault();
+    if (etudeNewFiles.length === 0) return;
+
+    setIsUploadingEtudePhotos(true);
+    setEtudePhotosError(null);
+    try {
+      const formData = new FormData();
+      formData.append("type", etudeActiveTab);
+      etudeNewFiles.forEach((file) => formData.append("images", file));
+      await addEtudePhotos(formData, token);
+      setEtudeNewFiles([]);
+      await loadEtudePhotos(etudeActiveTab);
+    } catch (err) {
+      setEtudePhotosError(err instanceof ApiError ? err.message : "Erreur lors de l'envoi.");
+    } finally {
+      setIsUploadingEtudePhotos(false);
+    }
+  }
+
+  async function handleDeleteEtudePhoto(id) {
+    if (!window.confirm("Supprimer cette photo ?")) return;
+    try {
+      await deleteEtudePhoto(id, token);
+      setEtudePhotos((prev) => prev.filter((p) => p.id !== id));
+    } catch (err) {
+      alert(err instanceof ApiError ? err.message : "Erreur lors de la suppression.");
+    }
+  }
+
   return (
     <section className="admin">
       <div className="admin-header">
@@ -319,6 +415,97 @@ export default function Admin() {
           </>
         )}
       </form>
+
+      <div className="admin-form">
+        <h3>Section "Étude &amp; Agencement"</h3>
+
+        <form onSubmit={handleEtudeTextSubmit} className="admin-etude-text-form">
+          {isLoadingEtudeText ? (
+            <p>Chargement…</p>
+          ) : (
+            <>
+              <div className="admin-field admin-field-full">
+                <label htmlFor="etudeDescription">Texte descriptif</label>
+                <textarea
+                  id="etudeDescription"
+                  rows="4"
+                  value={etudeDescription}
+                  onChange={(e) => {
+                    setEtudeDescription(e.target.value);
+                    setEtudeTextSaved(false);
+                  }}
+                />
+              </div>
+
+              {etudeTextError && <p className="admin-error">{etudeTextError}</p>}
+              {etudeTextSaved && <p className="admin-success">Enregistré.</p>}
+
+              <div className="admin-form-actions">
+                <button className="btn" type="submit" disabled={isSavingEtudeText}>
+                  {isSavingEtudeText ? "Enregistrement…" : "Enregistrer le texte"}
+                </button>
+              </div>
+            </>
+          )}
+        </form>
+
+        <hr className="admin-divider" />
+
+        <div className="admin-etude-tabs">
+          {ETUDE_TABS.map((tab) => (
+            <button
+              key={tab.key}
+              type="button"
+              className={etudeActiveTab === tab.key ? "admin-etude-tab active" : "admin-etude-tab"}
+              onClick={() => setEtudeActiveTab(tab.key)}
+            >
+              {tab.label}
+            </button>
+          ))}
+        </div>
+
+        <form onSubmit={handleEtudePhotosUpload} className="admin-etude-upload-form">
+          <div className="admin-field admin-field-full">
+            <label htmlFor="etudeNewFiles">Ajouter des photos à "{ETUDE_TABS.find((t) => t.key === etudeActiveTab)?.label}"</label>
+            <input
+              id="etudeNewFiles"
+              type="file"
+              accept="image/*"
+              multiple
+              onChange={(e) => setEtudeNewFiles(Array.from(e.target.files))}
+            />
+          </div>
+          <div className="admin-form-actions">
+            <button className="btn" type="submit" disabled={isUploadingEtudePhotos || etudeNewFiles.length === 0}>
+              {isUploadingEtudePhotos ? "Envoi…" : "Ajouter les photos"}
+            </button>
+          </div>
+        </form>
+
+        {etudePhotosError && <p className="admin-error">{etudePhotosError}</p>}
+
+        {isLoadingEtudePhotos ? (
+          <p>Chargement…</p>
+        ) : etudePhotos.length === 0 ? (
+          <p className="admin-empty">Aucune photo dans cette catégorie.</p>
+        ) : (
+          <div className="admin-etude-photos">
+            {etudePhotos.map((photo) => (
+              <div key={photo.id} className="admin-etude-photo">
+                <img src={resolveImageUrl(photo.image)} alt="" />
+                <button
+                  type="button"
+                  className="admin-etude-photo-delete"
+                  onClick={() => handleDeleteEtudePhoto(photo.id)}
+                  aria-label="Supprimer cette photo"
+                >
+                  ✕
+                </button>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
 
       <form className="admin-form" onSubmit={handleSubmit}>
         <h3>{editingId ? "Modifier la création" : "Ajouter une création"}</h3>

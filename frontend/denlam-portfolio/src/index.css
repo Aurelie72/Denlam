@@ -43,7 +43,7 @@ body {
   font-family: var(--font-display);
   font-weight: 500;
   -webkit-font-smoothing: antialiased;
-  cursor: url("/assets/cursor-yellow6.svg") 12 12, auto;
+  cursor: url("/assets/cursor-gray.svg") 12 12, auto;
 
 }
 

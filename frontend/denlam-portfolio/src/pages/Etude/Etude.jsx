@@ -1,0 +1,83 @@
+import { useEffect, useState } from "react";
+import { fetchEtudeSettings, fetchEtudePhotos, resolveImageUrl, ApiError } from "../../services/api.js";
+import "./Etude.css";
+
+const TABS = [
+  { key: "conseils", label: "Conseils" },
+  { key: "releves", label: "Relevés" },
+  { key: "plan2d", label: "Plan 2D" },
+  { key: "plan3d", label: "Plan 3D" },
+];
+
+export default function Etude() {
+  const [description, setDescription] = useState("");
+  const [activeTab, setActiveTab] = useState("conseils");
+  const [photos, setPhotos] = useState([]);
+  const [isLoadingPhotos, setIsLoadingPhotos] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    fetchEtudeSettings()
+      .then((data) => setDescription(data.description || ""))
+      .catch(() => {});
+  }, []);
+
+  useEffect(() => {
+    let cancelled = false;
+    setIsLoadingPhotos(true);
+    setError(null);
+
+    fetchEtudePhotos(activeTab)
+      .then((data) => {
+        if (!cancelled) setPhotos(data);
+      })
+      .catch((err) => {
+        if (!cancelled) setError(err instanceof ApiError ? err.message : "Erreur de chargement.");
+      })
+      .finally(() => {
+        if (!cancelled) setIsLoadingPhotos(false);
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [activeTab]);
+
+  return (
+    <section className="etude">
+      <div className="etude-intro">
+        <h1>Étude &amp; Agencement</h1>
+        <p>{description}</p>
+      </div>
+
+      <div className="etude-tabs">
+        {TABS.map((tab) => (
+          <button
+            key={tab.key}
+            className={activeTab === tab.key ? "etude-tab active" : "etude-tab"}
+            onClick={() => setActiveTab(tab.key)}
+          >
+            {tab.label}
+          </button>
+        ))}
+      </div>
+
+      <div className="etude-photos" aria-live="polite">
+        {isLoadingPhotos && <p className="etude-empty">Chargement…</p>}
+        {error && <p className="etude-empty">{error}</p>}
+
+        {!isLoadingPhotos && !error && photos.length === 0 && (
+          <p className="etude-empty">Aucune photo pour le moment dans cette catégorie.</p>
+        )}
+
+        {!isLoadingPhotos &&
+          !error &&
+          photos.map((photo) => (
+            <div className="etude-photo" key={photo.id}>
+              <img src={resolveImageUrl(photo.image)} alt="" loading="lazy" />
+            </div>
+          ))}
+      </div>
+    </section>
+  );
+}

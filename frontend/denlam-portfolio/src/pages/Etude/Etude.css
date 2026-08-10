@@ -1,0 +1,84 @@
+.etude {
+  padding-bottom: 80px;
+}
+
+.etude-intro {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 50px clamp(24px, 6vw, 70px) 20px;
+  text-align: center;
+}
+
+.etude-intro h1 {
+  letter-spacing: 6px;
+  margin-bottom: 20px;
+}
+
+.etude-intro p {
+  font-size: 1.15rem;
+  line-height: 1.7;
+  color: var(--color-muted);
+}
+
+.etude-tabs {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding: 20px 24px 10px;
+}
+
+.etude-tab {
+  padding: 10px 26px;
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--color-border);
+  background: transparent;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.05rem;
+  color: var(--color-text);
+  cursor: pointer;
+  transition: background-color var(--transition-fast), color var(--transition-fast);
+}
+
+.etude-tab:hover {
+  background-color: #f2f2f2;
+}
+
+.etude-tab.active {
+  background: linear-gradient(45deg, var(--color-accent-strong), var(--color-border));
+  border-color: transparent;
+  color: #fff;
+}
+
+.etude-photos {
+  padding: 30px clamp(24px, 5vw, 60px) 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 24px;
+}
+
+.etude-photo {
+  aspect-ratio: 4 / 3;
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  box-shadow: var(--shadow-soft);
+}
+
+.etude-photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform var(--transition-soft);
+}
+
+.etude-photo:hover img {
+  transform: scale(1.03);
+}
+
+.etude-empty {
+  grid-column: 1 / -1;
+  text-align: center;
+  color: var(--color-muted);
+  padding: 40px 0;
+}
