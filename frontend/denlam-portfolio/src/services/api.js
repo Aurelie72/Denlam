@@ -111,6 +111,23 @@ export function updateAbout(payload, token) {
   });
 }
 
+// ---- Messages de contact -------------------------------------------------
+export function sendContactMessage(payload) {
+  return request("/messages", { method: "POST", body: payload });
+}
+
+export function fetchMessages(token) {
+  return request("/messages", { token });
+}
+
+export function toggleMessageRead(id, token) {
+  return request(`/messages/${id}/read`, { method: "PATCH", token });
+}
+
+export function deleteMessage(id, token) {
+  return request(`/messages/${id}`, { method: "DELETE", token });
+}
+
 export { ApiError, API_URL };
 
 // Les images uploadées sont stockées en base sous forme de chemin relatif

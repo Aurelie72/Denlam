@@ -5,15 +5,20 @@
   padding: 32px clamp(24px, 6vw, 70px) 0;
 }
 
-.logo {
+/* .logo {
   font-family: var(--font-display);
   font-weight: 800;
   font-size: 1.75rem;
   letter-spacing: 6px;
   text-decoration: none;
   color: var(--color-text);
-}
+} */
 
+.logo img {
+  height: 78px;   
+  width: auto;
+  display: block;
+}
 .nav-toggle {
   display: none;
   flex-direction: column;

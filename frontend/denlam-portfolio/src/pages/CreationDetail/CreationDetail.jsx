@@ -58,7 +58,7 @@ export default function CreationDetail() {
 
   return (
     <section className="creation-detail">
-      <div className="filters detail-filters">
+      {/* <div className="filters detail-filters">
         <div className="filters-inner">
           {CATEGORIES.map((cat) => (
             <Link
@@ -70,7 +70,7 @@ export default function CreationDetail() {
             </Link>
           ))}
         </div>
-      </div>
+      </div> */}
 
       {isLoading && <p className="detail-status">Chargement…</p>}
       {error && <p className="detail-status">{error}</p>}

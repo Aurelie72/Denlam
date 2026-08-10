@@ -91,17 +91,20 @@
 .carousel-main {
   position: relative;
   width: 100%;
-  aspect-ratio: 1 / 1;
+  max-width: 500px;     /* largeur max */
+  margin: 0 auto;
   border-radius: var(--radius-sm);
-  overflow: hidden;
   box-shadow: var(--shadow-strong);
   background: #f2f2f2;
+  overflow: hidden;     /* OK si l’image ne déborde plus */
 }
 
 .carousel-main img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
+  display: block;
+  width: 100%;          /* l’image remplit la largeur */
+  height: auto;         /* garde les proportions */
+  max-height: 450px;    /* ← la hauteur max = taille contrôlée */
+  object-fit: contain;  /* jamais coupée */
 }
 
 .carousel-arrow {

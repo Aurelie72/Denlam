@@ -1,16 +1,17 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { FaInstagram, FaLinkedin, FaFacebook } from "react-icons/fa";
+import { FaInstagram, FaLinkedin} from "react-icons/fa";
 import "./Home.css";
+import crea from "../../assets/crea.jpg"
+import eeta from "../../assets/eeta.jpg"
 
 
 // hero et contact restent des textes statiques pour l'instant.
 import hero from "../../../content/settings/hero.json";
 import contact from "../../../content/settings/contact.json";
-
 // La section À propos (texte + photo), elle, est éditable depuis /admin
 // et vient du backend MongoDB.
-import { fetchAbout, resolveImageUrl } from "../../services/api.js";
+import { fetchAbout, sendContactMessage, resolveImageUrl, ApiError } from "../../services/api.js";
 
 const initialForm = { name: "", email: "", phone: "", message: "", consent: false };
 const defaultAbout = {
@@ -22,6 +23,7 @@ const defaultAbout = {
 export default function Home() {
   const [form, setForm] = useState(initialForm);
   const [status, setStatus] = useState("idle"); // idle | sending | sent | error
+  const [errorMessage, setErrorMessage] = useState(null);
 
   const [about, setAbout] = useState(defaultAbout);
 
@@ -48,20 +50,23 @@ export default function Home() {
   async function handleSubmit(e) {
     e.preventDefault();
     setStatus("sending");
-    // Simulation d'envoi. Pour un vrai envoi d'email sans backend,
-    // voir Netlify Forms dans le README.
-    await new Promise((resolve) => setTimeout(resolve, 600));
-    setStatus("sent");
-    setForm(initialForm);
+    try {
+      await sendContactMessage(form);
+      setStatus("sent");
+      setForm(initialForm);
+    } catch (err) {
+      setStatus("error");
+      setErrorMessage(err instanceof ApiError ? err.message : "Une erreur est survenue.");
+    }
   }
 
   return (
     <>
       <section id="etude" className="hero">
-        <Link to="/creations" className="hero-card">
+        <Link to="" className="hero-card">
           <span className="hero-card-media" aria-hidden="true">
             <img
-              src="https://picsum.photos/seed/denlam-etude/700/700"
+              src={eeta}
               alt=""
             />
           </span>
@@ -70,7 +75,7 @@ export default function Home() {
         <Link to="/creations" className="hero-card">
           <span className="hero-card-media" aria-hidden="true">
             <img
-              src="https://picsum.photos/seed/denlam-creations/700/700"
+              src={crea}
               alt=""
             />
           </span>

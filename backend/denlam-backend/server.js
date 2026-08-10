@@ -6,6 +6,7 @@ import { connectDB } from "./src/config/db.js";
 import authRoutes from "./src/routes/auth.routes.js";
 import creationsRoutes from "./src/routes/creations.routes.js";
 import settingsRoutes from "./src/routes/settings.routes.js";
+import messagesRoutes from "./src/routes/messages.routes.js";
 import { notFound, errorHandler } from "./src/middleware/errorHandler.js";
 
 const app = express();
@@ -35,6 +36,7 @@ app.get("/api/health", (req, res) => res.json({ status: "ok" }));
 app.use("/api/auth", authRoutes);
 app.use("/api/creations", creationsRoutes);
 app.use("/api/settings", settingsRoutes);
+app.use("/api/messages", messagesRoutes);
 
 app.use(notFound);
 app.use(errorHandler);

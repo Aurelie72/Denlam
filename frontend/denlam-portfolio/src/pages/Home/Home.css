@@ -195,6 +195,11 @@ textarea {
   font-size: 0.95rem;
 }
 
+.form-feedback.error {
+  color: #b23b3b;
+  font-size: 0.95rem;
+}
+
 .coordonnees {
   flex: 1 1 260px;
   display: flex;

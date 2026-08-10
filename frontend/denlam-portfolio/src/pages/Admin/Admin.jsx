@@ -8,6 +8,9 @@ import {
   deleteCreation,
   fetchAbout,
   updateAbout,
+  fetchMessages,
+  toggleMessageRead,
+  deleteMessage,
   resolveImageUrl,
   ApiError,
 } from "../../services/api.js";
@@ -200,6 +203,49 @@ export default function Admin() {
     }
   }
 
+  // ---- Section "Messages" -------------------------------------------------
+  const [messages, setMessages] = useState([]);
+  const [isLoadingMessages, setIsLoadingMessages] = useState(true);
+  const [messagesError, setMessagesError] = useState(null);
+
+  async function loadMessages() {
+    setIsLoadingMessages(true);
+    setMessagesError(null);
+    try {
+      const data = await fetchMessages(token);
+      setMessages(data);
+    } catch (err) {
+      setMessagesError(err instanceof ApiError ? err.message : "Erreur de chargement.");
+    } finally {
+      setIsLoadingMessages(false);
+    }
+  }
+
+  useEffect(() => {
+    loadMessages();
+  }, []);
+
+  async function handleToggleRead(id) {
+    try {
+      const updated = await toggleMessageRead(id, token);
+      setMessages((prev) => prev.map((m) => (m.id === id ? updated : m)));
+    } catch (err) {
+      alert(err instanceof ApiError ? err.message : "Erreur.");
+    }
+  }
+
+  async function handleDeleteMessage(id) {
+    if (!window.confirm("Supprimer ce message ?")) return;
+    try {
+      await deleteMessage(id, token);
+      setMessages((prev) => prev.filter((m) => m.id !== id));
+    } catch (err) {
+      alert(err instanceof ApiError ? err.message : "Erreur lors de la suppression.");
+    }
+  }
+
+  const unreadCount = messages.filter((m) => !m.read).length;
+
   return (
     <section className="admin">
       <div className="admin-header">
@@ -361,6 +407,50 @@ export default function Admin() {
                   Modifier
                 </button>
                 <button className="btn btn-small btn-danger" onClick={() => handleDelete(c.id)}>
+                  Supprimer
+                </button>
+              </div>
+            </li>
+          ))}
+        </ul>
+      </div>
+      <div className="admin-list">
+        <h3>
+          Messages reçus {unreadCount > 0 && <span className="admin-badge">{unreadCount} non lu(s)</span>}
+        </h3>
+
+        {isLoadingMessages && <p>Chargement…</p>}
+        {messagesError && <p className="admin-error">{messagesError}</p>}
+
+        {!isLoadingMessages && !messagesError && messages.length === 0 && (
+          <p className="admin-empty">Aucun message pour le moment.</p>
+        )}
+
+        <ul className="admin-messages">
+          {messages.map((m) => (
+            <li key={m.id} className={m.read ? "admin-message" : "admin-message unread"}>
+              <div className="admin-message-header">
+                <div>
+                  <p className="admin-message-name">{m.name}</p>
+                  <p className="admin-message-meta">
+                    {m.email} · {m.phone}
+                  </p>
+                </div>
+                <p className="admin-message-date">
+                  {new Date(m.createdAt).toLocaleString("fr-FR", {
+                    dateStyle: "medium",
+                    timeStyle: "short",
+                  })}
+                </p>
+              </div>
+
+              <p className="admin-message-body">{m.message}</p>
+
+              <div className="admin-list-actions">
+                <button className="btn btn-small" onClick={() => handleToggleRead(m.id)}>
+                  {m.read ? "Marquer comme non lu" : "Marquer comme lu"}
+                </button>
+                <button className="btn btn-small btn-danger" onClick={() => handleDeleteMessage(m.id)}>
                   Supprimer
                 </button>
               </div>
