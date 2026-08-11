@@ -1,8 +1,19 @@
 .site-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 32px clamp(24px, 6vw, 70px) 0;
+  min-height: var(--header-height);
+  box-sizing: border-box;
+  padding: 12px clamp(24px, 6vw, 70px);
+  background-color: rgba(255, 254, 254, 0.92);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.06);
 }
 
 /* .logo {
@@ -15,7 +26,7 @@
 } */
 
 .logo img {
-  height: 78px;   
+  height: 58px;
   width: auto;
   display: block;
 }
@@ -92,8 +103,8 @@
   }
 
   .primary-nav {
-    position: absolute;
-    top: 90px;
+    position: fixed;
+    top: var(--header-height);
     left: 24px;
     right: 24px;
     width: auto;

@@ -111,6 +111,18 @@ export function updateAbout(payload, token) {
   });
 }
 
+export function fetchCreationsSettings() {
+  return request("/settings/creations");
+}
+
+export function updateCreationsSettings(description, token) {
+  return request("/settings/creations", {
+    method: "PUT",
+    body: { description },
+    token,
+  });
+}
+
 // ---- Messages de contact -------------------------------------------------
 export function sendContactMessage(payload) {
   return request("/messages", { method: "POST", body: payload });

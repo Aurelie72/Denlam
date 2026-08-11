@@ -46,7 +46,6 @@ export default function Etude() {
   return (
     <section className="etude">
       <div className="etude-intro">
-        <h1>Étude &amp; Agencement</h1>
         <p>{description}</p>
       </div>
 

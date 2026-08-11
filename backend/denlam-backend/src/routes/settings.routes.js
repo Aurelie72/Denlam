@@ -1,5 +1,10 @@
 import { Router } from "express";
-import { getAbout, updateAbout } from "../controllers/settings.controller.js";
+import {
+  getAbout,
+  updateAbout,
+  getCreationsSettings,
+  updateCreationsSettings,
+} from "../controllers/settings.controller.js";
 import { requireAuth } from "../middleware/auth.js";
 import { upload } from "../middleware/upload.js";
 import { asyncHandler } from "../middleware/asyncHandler.js";
@@ -13,5 +18,8 @@ router.put(
   upload.single("portrait"),
   asyncHandler(updateAbout),
 );
+
+router.get("/creations", asyncHandler(getCreationsSettings));
+router.put("/creations", requireAuth, asyncHandler(updateCreationsSettings));
 
 export default router;

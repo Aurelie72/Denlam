@@ -1,3 +1,17 @@
+.creations-intro {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 50px clamp(24px, 6vw, 70px) 20px;
+  text-align: center;
+}
+
+
+.creations-intro p {
+  font-size: 1.15rem;
+  line-height: 1.7;
+  color: var(--color-muted);
+}
+
 /* ---- Filtres ------------------------------------------------------- */
 .filters {
   display: flex;
@@ -28,11 +42,11 @@
   transition: color var(--transition-fast);
 }
 
-/* .filter-btn.active {
+.filter-btn.active {
   color: #fff;
-} */
+}
 
-/* .filters-inner .highlight {
+.filters-inner .highlight {
   position: absolute;
   top: 0;
   bottom: 0;
@@ -40,24 +54,6 @@
   background: linear-gradient(45deg, var(--color-accent-strong), var(--color-border));
   transition: left var(--transition-slide), width var(--transition-slide);
   z-index: 0;
-} */
-
-.filter-btn::after {
-  content: "";
-  position: absolute;
-  left: 0;
-  bottom: -4px;
-  width: 100%;
-  height: 2px;
-  background-color: var(--color-accent-strong);
-  transform: scaleX(0);
-  transform-origin: left;
-  transition: transform var(--transition-fast);
-}
-
-.filter-btn:hover::after,
-.filter-btn.active::after {
-  transform: scaleX(1);
 }
 
 /* ---- Galerie ------------------------------------------------------- */

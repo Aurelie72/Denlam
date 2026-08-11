@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import { CATEGORIES } from "./creationsData.js";
-import { fetchCreations, resolveImageUrl, ApiError } from "../../services/api.js";
+import { fetchCreations, fetchCreationsSettings, resolveImageUrl, ApiError } from "../../services/api.js";
 import "./Creations.css";
 
 export default function Creations() {
@@ -11,9 +11,16 @@ export default function Creations() {
   const buttonRefs = useRef({});
   const [highlightStyle, setHighlightStyle] = useState({});
 
+  const [description, setDescription] = useState("");
   const [creations, setCreations] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
+
+  useEffect(() => {
+    fetchCreationsSettings()
+      .then((data) => setDescription(data.description || ""))
+      .catch(() => {});
+  }, []);
 
   useEffect(() => {
     let cancelled = false;
@@ -58,6 +65,10 @@ export default function Creations() {
 
   return (
     <>
+      <div className="creations-intro">
+        <p>{description}</p>
+      </div>
+
       <section className="filters">
         <div className="filters-inner">
           {CATEGORIES.map((cat) => (

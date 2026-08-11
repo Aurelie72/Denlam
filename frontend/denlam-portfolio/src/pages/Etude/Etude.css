@@ -3,7 +3,7 @@
 }
 
 .etude-intro {
-  max-width: 760px;
+  max-width: 1000px;
   margin: 0 auto;
   padding: 50px clamp(24px, 6vw, 70px) 20px;
   text-align: center;

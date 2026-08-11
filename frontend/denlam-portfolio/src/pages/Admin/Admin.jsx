@@ -8,6 +8,8 @@ import {
   deleteCreation,
   fetchAbout,
   updateAbout,
+  fetchCreationsSettings,
+  updateCreationsSettings,
   fetchMessages,
   toggleMessageRead,
   deleteMessage,
@@ -257,6 +259,36 @@ export default function Admin() {
 
   const unreadCount = messages.filter((m) => !m.read).length;
 
+  // ---- Section "Créations" (texte intro) ---------------------------------
+  const [creationsDescription, setCreationsDescription] = useState("");
+  const [isLoadingCreationsText, setIsLoadingCreationsText] = useState(true);
+  const [isSavingCreationsText, setIsSavingCreationsText] = useState(false);
+  const [creationsTextError, setCreationsTextError] = useState(null);
+  const [creationsTextSaved, setCreationsTextSaved] = useState(false);
+
+  useEffect(() => {
+    fetchCreationsSettings()
+      .then((data) => setCreationsDescription(data.description || ""))
+      .catch((err) => setCreationsTextError(err instanceof ApiError ? err.message : "Erreur de chargement."))
+      .finally(() => setIsLoadingCreationsText(false));
+  }, []);
+
+  async function handleCreationsTextSubmit(e) {
+    e.preventDefault();
+    setCreationsTextError(null);
+    setIsSavingCreationsText(true);
+    setCreationsTextSaved(false);
+    try {
+      const updated = await updateCreationsSettings(creationsDescription, token);
+      setCreationsDescription(updated.description || "");
+      setCreationsTextSaved(true);
+    } catch (err) {
+      setCreationsTextError(err instanceof ApiError ? err.message : "Erreur lors de l'enregistrement.");
+    } finally {
+      setIsSavingCreationsText(false);
+    }
+  }
+
   // ---- Section "Étude & Agencement" ---------------------------------------
   const [etudeDescription, setEtudeDescription] = useState("");
   const [isLoadingEtudeText, setIsLoadingEtudeText] = useState(true);
@@ -415,6 +447,40 @@ export default function Admin() {
           </>
         )}
       </form>
+
+      <div className="admin-form">
+        <h3>Section "Créations" (texte d'intro)</h3>
+
+        <form onSubmit={handleCreationsTextSubmit}>
+          {isLoadingCreationsText ? (
+            <p>Chargement…</p>
+          ) : (
+            <>
+              <div className="admin-field admin-field-full">
+                <label htmlFor="creationsDescription">Texte descriptif</label>
+                <textarea
+                  id="creationsDescription"
+                  rows="3"
+                  value={creationsDescription}
+                  onChange={(e) => {
+                    setCreationsDescription(e.target.value);
+                    setCreationsTextSaved(false);
+                  }}
+                />
+              </div>
+
+              {creationsTextError && <p className="admin-error">{creationsTextError}</p>}
+              {creationsTextSaved && <p className="admin-success">Enregistré.</p>}
+
+              <div className="admin-form-actions">
+                <button className="btn" type="submit" disabled={isSavingCreationsText}>
+                  {isSavingCreationsText ? "Enregistrement…" : "Enregistrer le texte"}
+                </button>
+              </div>
+            </>
+          )}
+        </form>
+      </div>
 
       <div className="admin-form">
         <h3>Section "Étude &amp; Agencement"</h3>

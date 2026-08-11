@@ -25,6 +25,7 @@
   --transition-slide: 0.5s ease;
 
   --container-max: 1200px;
+  --header-height: 72px;
 }
 
 * {
@@ -43,8 +44,7 @@ body {
   font-family: var(--font-display);
   font-weight: 500;
   -webkit-font-smoothing: antialiased;
-  cursor: url("/assets/cursor-gray.svg") 12 12, auto;
-
+  cursor: url("/cursor/cursor-gray.svg") 4 4, auto;
 }
 
 h1,
@@ -80,6 +80,10 @@ button {
 img {
   max-width: 100%;
   display: block;
+}
+
+main {
+  padding-top: var(--header-height);
 }
 
 .container {
