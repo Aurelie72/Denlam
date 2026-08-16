@@ -2,23 +2,21 @@
   padding-bottom: 80px;
 }
 
-.detail-filters {
-  padding-bottom: 0;
-}
-
+/* --- Status --- */
 .detail-status {
   text-align: center;
   color: var(--color-muted);
   padding: 60px 24px;
 }
 
+/* --- Header --- */
 .detail-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 16px;
   flex-wrap: wrap;
-  padding: 30px clamp(24px, 6vw, 70px) 10px;
+  padding: 60px clamp(24px, 6vw, 70px) 40px;
 }
 
 .detail-title {
@@ -32,17 +30,16 @@
   align-items: center;
   gap: 8px;
   background: none;
+  text-decoration: none;
   border: none;
   font-family: var(--font-display);
   font-size: 1.05rem;
   font-weight: 700;
   color: var(--color-muted);
-  text-decoration: none;
   cursor: pointer;
   padding: 6px 10px;
   border-radius: var(--radius-sm);
   transition: color var(--transition-fast), background-color var(--transition-fast);
-  white-space: nowrap;
 }
 
 .nav-arrow:hover {
@@ -54,14 +51,22 @@
   margin-left: auto;
 }
 
+/* --- Layout centré (marges gauche = marges droite) --- */
+.detail-layout {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 20px clamp(24px, 6vw, 70px) 0;
+}
+
+/* --- Grille texte + photo --- */
 .detail-body {
   display: grid;
-  grid-template-columns: minmax(260px, 380px) 1fr;
-  gap: clamp(24px, 5vw, 60px);
-  padding: 20px clamp(24px, 6vw, 70px) 0;
+  grid-template-columns: minmax(300px, 450px) 1fr;
+  gap: clamp(40px, 6vw, 80px);
   align-items: start;
 }
 
+/* --- Description --- */
 .detail-description {
   display: flex;
   flex-direction: column;
@@ -82,31 +87,34 @@
   color: var(--color-muted);
 }
 
+/* --- Carousel --- */
 .detail-carousel {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  align-items: center;
+  gap: 12px;
 }
 
+/* Photo active */
 .carousel-main {
   position: relative;
   width: 100%;
-  max-width: 500px;     /* largeur max */
+  max-width: 500px;
   margin: 0 auto;
   border-radius: var(--radius-sm);
   box-shadow: var(--shadow-strong);
-  background: #f2f2f2;
-  overflow: hidden;     /* OK si l’image ne déborde plus */
+  overflow: hidden;
+  background: none; /* plus de cadre gris */
 }
 
 .carousel-main img {
-  display: block;
-  width: 100%;          /* l’image remplit la largeur */
-  height: auto;         /* garde les proportions */
-  max-height: 450px;    /* ← la hauteur max = taille contrôlée */
-  object-fit: contain;  /* jamais coupée */
+  width: 100%;
+  height: auto;          /* ← on laisse l’image respirer */
+  max-height: 400px;     /* ← limite la hauteur portrait */
+  object-fit: cover;     /* ← remplit le cadre sans bandes */
 }
 
+/* Flèches */
 .carousel-arrow {
   position: absolute;
   top: 50%;
@@ -118,16 +126,10 @@
   background: rgba(255, 255, 255, 0.85);
   color: var(--color-text);
   font-size: 1.5rem;
-  line-height: 1;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: background-color var(--transition-fast);
-}
-
-.carousel-arrow:hover {
-  background: #fff;
 }
 
 .carousel-arrow-left {
@@ -138,24 +140,24 @@
   right: 12px;
 }
 
+/* Miniatures sous la photo */
 .carousel-thumbs {
   display: flex;
-  flex-wrap: wrap;
+  justify-content: center;
   gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 8px;
 }
 
 .thumb {
-  width: 68px;
-  height: 68px;
+  width: 64px;
+  height: 64px;
   border-radius: var(--radius-sm);
   overflow: hidden;
   border: 2px solid transparent;
-  padding: 0;
   cursor: pointer;
-  background: none;
-  flex-shrink: 0;
-  transition: border-color var(--transition-fast), opacity var(--transition-fast);
   opacity: 0.65;
+  transition: border-color var(--transition-fast), opacity var(--transition-fast);
 }
 
 .thumb img {
@@ -169,14 +171,17 @@
   opacity: 1;
 }
 
+/* --- Responsive --- */
 @media (max-width: 780px) {
   .detail-body {
     grid-template-columns: 1fr;
   }
+
   .detail-header {
     flex-direction: column;
     text-align: center;
   }
+
   .nav-arrow-next {
     margin-left: 0;
   }

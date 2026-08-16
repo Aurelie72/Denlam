@@ -1,7 +1,7 @@
 import EtudeSettings from "../models/EtudeSettings.js";
 import EtudePhoto from "../models/EtudePhoto.js";
 
-const VALID_TYPES = ["conseils", "releves", "plan2d", "plan3d"];
+const VALID_TYPES = ["conseils", "releves", "plan"];
 
 // GET /api/etude/settings — public
 export async function getSettings(req, res) {

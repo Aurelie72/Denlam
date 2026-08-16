@@ -1,3 +1,9 @@
+h1 {
+  margin-left: 75px;
+  margin-top: 50px;
+  font-size: 0.65rem !important;
+}
+
 /* ---- Hero / cartes ------------------------------------------------- */
 .hero {
   display: flex;
@@ -61,7 +67,7 @@
 
 /* ---- A propos -------------------------------------------------------- */
 .about {
-  padding: clamp(40px, 8vw, 80px) clamp(24px, 6vw, 70px);
+  padding: clamp(70px, 8vw, 100px) clamp(24px, 6vw, 70px);
 }
 
 .about-inner {
@@ -69,7 +75,7 @@
   flex-wrap: wrap;
   justify-content: center;
   align-items: center;
-  gap: clamp(24px, 4vw, 40px);
+  gap: clamp(24px, 4vw, 50px);
 }
 
 .about-portrait {
@@ -107,7 +113,7 @@
   display: flex;
   flex-wrap: wrap;
   gap: 40px;
-  padding: clamp(40px, 6vw, 60px) clamp(24px, 6vw, 70px) clamp(60px, 10vw, 100px);
+ padding: clamp(100px, 6vw, 60px) clamp(60px, 10vw, 140px) clamp(60px, 10vw, 100px);
 }
 
 .contact-form-wrap {
@@ -200,6 +206,13 @@ textarea {
   font-size: 0.95rem;
 }
 
+.form input,
+.form textarea,
+.btn,
+.container-checkbox {
+  max-width: 480px;
+}
+
 .coordonnees {
   flex: 1 1 260px;
   display: flex;
@@ -216,6 +229,14 @@ textarea {
   color: var(--color-muted);
   font-size: 1.05rem;
 }
+
+.phone-link,
+.email-link {
+  text-decoration: none;
+  color: inherit;
+}
+
+
 
 .reseaux {
   display: flex;

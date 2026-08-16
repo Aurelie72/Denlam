@@ -1,3 +1,4 @@
+/* ---- Section Étude ------------------------------------------------------- */
 .etude {
   padding-bottom: 80px;
 }
@@ -9,46 +10,55 @@
   text-align: center;
 }
 
-.etude-intro h1 {
-  letter-spacing: 6px;
-  margin-bottom: 20px;
-}
-
 .etude-intro p {
   font-size: 1.15rem;
   line-height: 1.7;
   color: var(--color-muted);
 }
 
-.etude-tabs {
+/* ---- Filtres (identiques à Créations) ----------------------------------- */
+.filters {
   display: flex;
   justify-content: center;
-  flex-wrap: wrap;
-  gap: 12px;
-  padding: 20px 24px 10px;
+  padding: 40px 24px 20px;
 }
 
-.etude-tab {
-  padding: 10px 26px;
-  border-radius: var(--radius-pill);
-  border: 1px solid var(--color-border);
+.filters-inner {
+  position: relative;
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.filter-btn {
+  position: relative;
+  z-index: 1;
   background: transparent;
+  border: 2px solid transparent;
+  border-radius: 8px;
   font-family: var(--font-display);
   font-weight: 700;
-  font-size: 1.05rem;
+  font-size: 1.15rem;
+  letter-spacing: 0.5px;
+  padding: 10px 22px;
   color: var(--color-text);
   cursor: pointer;
-  transition: background-color var(--transition-fast), color var(--transition-fast);
+  transition: border-color 0.2s ease, color 0.2s ease;
 }
 
-.etude-tab:hover {
-  background-color: #f2f2f2;
+.filter-btn.active {
+  border-color: var(--color-accent-strong);
+  color: var(--color-accent-strong);
 }
 
-.etude-tab.active {
-  background: linear-gradient(45deg, var(--color-accent-strong), var(--color-border));
-  border-color: transparent;
-  color: #fff;
+.filters-inner .highlight {
+  display: none;
+}
+
+/* ---- Photos -------------------------------------------------------------- */
+.etude-intro p {
+  white-space: pre-line;
 }
 
 .etude-photos {

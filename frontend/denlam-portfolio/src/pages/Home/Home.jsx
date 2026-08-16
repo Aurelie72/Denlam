@@ -2,8 +2,8 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { FaInstagram, FaLinkedin} from "react-icons/fa";
 import "./Home.css";
-import crea from "../../assets/crea.jpg"
-import eeta from "../../assets/eeta.jpg"
+import crea from "../../assets/creadenlam.jfif"
+import eeta from "../../assets/eetadenlam.jfif"
 
 
 // hero et contact restent des textes statiques pour l'instant.
@@ -34,8 +34,6 @@ export default function Home() {
         if (!cancelled) setAbout(data);
       })
       .catch(() => {
-        // Si le backend n'est pas joignable, on garde le contenu par défaut
-        // plutôt que de casser l'affichage de la page.
       });
     return () => {
       cancelled = true;
@@ -59,6 +57,7 @@ export default function Home() {
 
   return (
     <>
+    <h1>ETUDE | AGENCEMENT | MENUISERIE | DESIGN | CREATIONS | SARTHE | PAYS DE LOIRE</h1>
       <section id="etude" className="hero">
         <Link to="/etude" className="hero-card">
           <span className="hero-card-media" aria-hidden="true">
@@ -179,8 +178,13 @@ export default function Home() {
           <h2>Mes Coordonnées</h2>
           <p>{contact.address_line1}</p>
           <p>{contact.address_line2}</p>
-          <p>{contact.phone}</p>
-          <p>{contact.email}</p>
+          <a href={`tel:${contact.phone.replace(/\D/g, "")}`} className="phone-link">
+  {contact.phone}
+</a>
+          <a href={`mailto:${contact.email}`} className="email-link">
+  {contact.email}
+</a>
+
 
           <div className="reseaux">
             {contact.instagram && (

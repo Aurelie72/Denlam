@@ -10,55 +10,18 @@
   font-size: 1.15rem;
   line-height: 1.7;
   color: var(--color-muted);
+  white-space: pre-line;
 }
 
-/* ---- Filtres ------------------------------------------------------- */
-.filters {
-  display: flex;
-  justify-content: center;
-  padding: 40px 24px 20px;
+.detail-description p {
+  text-align: justify;
+  text-justify: inter-word;
 }
 
-.filters-inner {
-  position: relative;
-  display: flex;
-  gap: 12px;
-  flex-wrap: wrap;
-  justify-content: center;
-}
-
-.filter-btn {
-  position: relative;
-  z-index: 1;
-  background: transparent;
-  border: none;
-  font-family: var(--font-display);
-  font-weight: 700;
-  font-size: 1.15rem;
-  letter-spacing: 0.5px;
-  padding: 10px 22px;
-  color: var(--color-text);
-  cursor: pointer;
-  transition: color var(--transition-fast);
-}
-
-.filter-btn.active {
-  color: #fff;
-}
-
-.filters-inner .highlight {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  border-radius: var(--radius-pill);
-  background: linear-gradient(45deg, var(--color-accent-strong), var(--color-border));
-  transition: left var(--transition-slide), width var(--transition-slide);
-  z-index: 0;
-}
 
 /* ---- Galerie ------------------------------------------------------- */
 .gallery {
-  padding: 20px clamp(24px, 5vw, 60px) 80px;
+  padding: 50px clamp(24px, 5vw, 60px) 80px;
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
   gap: 32px;
@@ -106,4 +69,31 @@
   text-align: center;
   color: var(--color-muted);
   padding: 40px 0;
+}
+
+/* Titre identique à la Home */
+.gallery-title {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity var(--transition-soft);
+  padding: 10px 20px;
+  font-size: clamp(1.5rem, 2.5vw, 2rem);
+  font-weight: 800;
+  letter-spacing: 1px;
+  color: black;
+  pointer-events: none;
+}
+
+/* Hover identique à la Home */
+.gallery-item:hover .gallery-media img {
+  opacity: 0.45;
+  transform: scale(1.03);
+}
+
+.gallery-item:hover .gallery-title {
+  opacity: 1;
 }

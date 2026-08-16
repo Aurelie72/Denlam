@@ -28,8 +28,7 @@ const emptyAboutForm = { name: "", bio: "", portraitFile: null, portraitUrl: "" 
 const ETUDE_TABS = [
   { key: "conseils", label: "Conseils" },
   { key: "releves", label: "Relevés" },
-  { key: "plan2d", label: "Plan 2D" },
-  { key: "plan3d", label: "Plan 3D" },
+  { key: "plan", label: "Plans" },
 ];
 
 export default function Admin() {

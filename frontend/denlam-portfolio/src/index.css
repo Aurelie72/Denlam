@@ -1,8 +1,3 @@
-/* ==========================================================================
-   Denlam — Design tokens
-   Repris de la charte du site statique : Cormorant Garamond, palette
-   neutre gris/blanc, coins arrondis, transitions douces.
-   ========================================================================== */
 :root {
   --font-display: "Cormorant Garamond", serif;
 

@@ -1,12 +1,16 @@
 import { useEffect, useState } from "react";
-import { fetchEtudeSettings, fetchEtudePhotos, resolveImageUrl, ApiError } from "../../services/api.js";
+import {
+  fetchEtudeSettings,
+  fetchEtudePhotos,
+  resolveImageUrl,
+  ApiError
+} from "../../services/api.js";
 import "./Etude.css";
 
 const TABS = [
   { key: "conseils", label: "Conseils" },
   { key: "releves", label: "Relevés" },
-  { key: "plan2d", label: "Plan 2D" },
-  { key: "plan3d", label: "Plan 3D" },
+  { key: "plan", label: "Plans" },
 ];
 
 export default function Etude() {
@@ -16,12 +20,14 @@ export default function Etude() {
   const [isLoadingPhotos, setIsLoadingPhotos] = useState(true);
   const [error, setError] = useState(null);
 
+  // Charger description
   useEffect(() => {
     fetchEtudeSettings()
       .then((data) => setDescription(data.description || ""))
       .catch(() => {});
   }, []);
 
+  // Charger photos selon onglet
   useEffect(() => {
     let cancelled = false;
     setIsLoadingPhotos(true);
@@ -32,7 +38,8 @@ export default function Etude() {
         if (!cancelled) setPhotos(data);
       })
       .catch((err) => {
-        if (!cancelled) setError(err instanceof ApiError ? err.message : "Erreur de chargement.");
+        if (!cancelled)
+          setError(err instanceof ApiError ? err.message : "Erreur de chargement.");
       })
       .finally(() => {
         if (!cancelled) setIsLoadingPhotos(false);
@@ -49,18 +56,23 @@ export default function Etude() {
         <p>{description}</p>
       </div>
 
-      <div className="etude-tabs">
-        {TABS.map((tab) => (
-          <button
-            key={tab.key}
-            className={activeTab === tab.key ? "etude-tab active" : "etude-tab"}
-            onClick={() => setActiveTab(tab.key)}
-          >
-            {tab.label}
-          </button>
-        ))}
+      {/* --- Filtres identiques à la page Créations --- */}
+      <div className="filters">
+        <div className="filters-inner">
+          {TABS.map((tab) => (
+            <button
+              key={tab.key}
+              className={activeTab === tab.key ? "filter-btn active" : "filter-btn"}
+              onClick={() => setActiveTab(tab.key)}
+            >
+              {tab.label}
+            </button>
+          ))}
+          <span className="highlight"></span>
+        </div>
       </div>
 
+      {/* --- Photos --- */}
       <div className="etude-photos" aria-live="polite">
         {isLoadingPhotos && <p className="etude-empty">Chargement…</p>}
         {error && <p className="etude-empty">{error}</p>}
