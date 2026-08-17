@@ -6,6 +6,7 @@ import crea from "../../assets/creadenlam.jfif"
 import eeta from "../../assets/eetadenlam.jfif"
 
 
+
 // hero et contact restent des textes statiques pour l'instant.
 import hero from "../../../content/settings/hero.json";
 import contact from "../../../content/settings/contact.json";
@@ -86,10 +87,36 @@ export default function Home() {
             src={resolveImageUrl(about.portrait)}
             alt={`Portrait de ${about.name}`}
           />
-          <div className="about-text">
-            <h2>{about.name}</h2>
-            <p>{about.bio}</p>
-          </div>
+<div className="about-text">
+  <h2>{about.name}</h2>
+
+  <p>
+    Picqué par le dessin dès les années collège, c’est tout naturellement que je
+    m’oriente vers les Arts Appliqués. En parallèle, je développe une véritable
+    appétence pour le travail de la matière, au fil de journées entières passées
+    à façonner, souder, démonter, comprendre — guidé par l’œil aguerri de mon
+    grand-père.   Une formation post-bac en Design viendra confirmer mes choix et nourrir mon
+    goût pour l’art, la création et l’expérimentation. Mes créations se situent
+    au croisement de l’art et du design.
+  </p>
+
+  <p className="indent">
+    Elles naissent souvent d’une découverte visuelle : un objet, un rebus, une
+    matière qui révèle une qualité inattendue. J’aime imaginer des choses.
+  </p>
+
+  <p className="indent">
+    Je commence toujours par coucher l’idée sur le papier, en la dessinant ou en
+    l’écrivant. À ce moment-là, je n’ai pas encore une vision précise du résultat
+    final ; je laisse l’intuition ouvrir la voie.
+  </p>
+
+  <p className="indent">
+    J’expérimente toujours avec l’idée que l’objet peut marcher, en me fixant
+    comme seule contrainte l’usage : imaginer un objet qui trouve sa place, qui
+    sert, qui vit, qui se différencie.
+  </p>
+</div>
         </div>
       </section>
 

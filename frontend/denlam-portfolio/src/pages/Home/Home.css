@@ -66,32 +66,56 @@ h1 {
 }
 
 /* ---- A propos -------------------------------------------------------- */
+/* ---- A propos -------------------------------------------------------- */
+/* ---- A propos -------------------------------------------------------- */
 .about {
   padding: clamp(70px, 8vw, 100px) clamp(24px, 6vw, 70px);
 }
 
 .about-inner {
+  position: relative;
   display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  align-items: center;
-  gap: clamp(24px, 4vw, 50px);
+  flex-wrap: nowrap; /* important : pour que le texte puisse chevaucher */
+  align-items: flex-start;
+  justify-content: left;
+  padding-left: 100px;
 }
+
 
 .about-portrait {
-  width: min(360px, 90vw);
-  height: min(430px, 60vw);
+  width: min(760px, 90vw);
+  height: min(480px, 60vw);
   object-fit: cover;
-  border-radius: var(--radius-sm);
-  box-shadow: var(--shadow-soft);
+  /* border-radius: var(--radius-sm); */
+  /* box-shadow: var(--shadow-soft); */
+  transform: translateX(-40px);
 }
 
+/* Texte placé à l’endroit du X, qui dépasse à droite */
 .about-text {
-  max-width: 540px;
+  position: absolute;
+  top: -70px;        /* ← place le texte en haut */
+  left: calc(720px - 320px); 
+  max-width: 800px;
+  /* background: rgba(255, 255, 255, 0.2); */
+  padding: 20px;
+  border-radius: var(--radius-sm);
+  /* backdrop-filter: blur(6px); */
 }
 
+.about-text p {
+  text-align: justify;
+  text-justify: inter-word;
+  font-size: 18px !important;
+}
+
+/* Style du texte */
 .about-text h2 {
   margin-bottom: 20px;
+}
+
+.about-text .indent {
+  margin-left: 380px; 
 }
 
 .about-text p {
@@ -101,12 +125,25 @@ h1 {
   font-weight: 500;
 }
 
-.about-placeholder-note {
-  margin-top: 12px;
-  font-size: 0.85rem !important;
-  font-style: italic;
-  color: var(--color-border) !important;
+/* Mobile : tout redevient normal */
+@media (max-width: 780px) {
+  .about-inner {
+    flex-wrap: wrap;
+  }
+
+  .about-text {
+    position: static;
+    background: none;
+    padding: 0;
+    backdrop-filter: none;
+    margin-top: 20px;
+  }
+
+  .about-portrait {
+    transform: translateX(0);
+  }
 }
+
 
 /* ---- Contact ----------------------------------------------------------- */
 .contact {
