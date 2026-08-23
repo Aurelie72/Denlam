@@ -97,20 +97,6 @@ export function deleteCreation(id, token) {
 }
 
 // ---- Réglages du site (section À propos) -------------------------------
-export function fetchAbout() {
-  return request("/settings/about");
-}
-
-export function updateAbout(payload, token) {
-  const isFormData = payload instanceof FormData;
-  return request("/settings/about", {
-    method: "PUT",
-    body: payload,
-    token,
-    isFormData,
-  });
-}
-
 export function fetchCreationsSettings() {
   return request("/settings/creations");
 }
@@ -153,13 +139,12 @@ export function updateEtudeSettings(description, token) {
   });
 }
 
-export function fetchEtudePhotos(type) {
-  const query = type ? `?type=${type}` : "";
-  return request(`/etude/photos${query}`);
+export function fetchEtudePlans() {
+  return request("/etude/plans");
 }
 
-export function addEtudePhotos(formData, token) {
-  return request("/etude/photos", {
+export function addEtudePlan(formData, token) {
+  return request("/etude/plans", {
     method: "POST",
     body: formData,
     token,
@@ -167,8 +152,17 @@ export function addEtudePhotos(formData, token) {
   });
 }
 
-export function deleteEtudePhoto(id, token) {
-  return request(`/etude/photos/${id}`, { method: "DELETE", token });
+export function updateEtudePlan(id, formData, token) {
+  return request(`/etude/plans/${id}`, {
+    method: "PUT",
+    body: formData,
+    token,
+    isFormData: true,
+  });
+}
+
+export function deleteEtudePlan(id, token) {
+  return request(`/etude/plans/${id}`, { method: "DELETE", token });
 }
 
 export { ApiError, API_URL };

@@ -101,6 +101,7 @@
   width: 100%;
   max-width: 500px;
   margin: 0 auto;
+  aspect-ratio: 4 / 3;
   border-radius: var(--radius-sm);
   box-shadow: var(--shadow-strong);
   overflow: hidden;
@@ -109,9 +110,10 @@
 
 .carousel-main img {
   width: 100%;
-  height: auto;          /* ← on laisse l’image respirer */
-  max-height: 400px;     /* ← limite la hauteur portrait */
-  object-fit: cover;     /* ← remplit le cadre sans bandes */
+  /* height: auto;          /* ← on laisse l’image respirer */
+  /* max-height: 400px;     ← limite la hauteur portrait */ 
+  object-fit: cover;  
+  height: 100%;   /* ← remplit le cadre sans bandes */
 }
 
 /* Flèches */

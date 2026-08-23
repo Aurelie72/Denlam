@@ -7,6 +7,8 @@ import Creations from "./pages/Creations/Creations.jsx";
 import CreationDetail from "./pages/CreationDetail/CreationDetail.jsx";
 import Login from "./pages/Login/Login.jsx";
 import Admin from "./pages/Admin/Admin.jsx";
+import MentionsLegales from "./pages/Legal/MentionsLegales.jsx";
+import Confidentialite from "./pages/Legal/Confidentialite.jsx";
 import NotFound from "./pages/NotFound/NotFound.jsx";
 
 export default function App() {
@@ -18,6 +20,8 @@ export default function App() {
         <Route path="/creations" element={<Creations />} />
         <Route path="/creations/:id" element={<CreationDetail />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/mentions-legales" element={<MentionsLegales />} />
+        <Route path="/confidentialite" element={<Confidentialite />} />
         <Route
           path="/admin"
           element={

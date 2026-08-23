@@ -1,9 +1,10 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import { FaInstagram, FaLinkedin} from "react-icons/fa";
 import "./Home.css";
-import crea from "../../assets/creadenlam.jfif"
-import eeta from "../../assets/eetadenlam.jfif"
+import crea from "../../assets/creadenlam.jpg"
+import eeta from "../../assets/eetadenlam.jpg"
+import portrait from "../../assets/portraitapropos.png"
 
 
 
@@ -11,35 +12,19 @@ import eeta from "../../assets/eetadenlam.jfif"
 import hero from "../../../content/settings/hero.json";
 import contact from "../../../content/settings/contact.json";
 
-// La section À propos (texte + photo), elle, est éditable depuis /admin
-// et vient du backend MongoDB.
-import { fetchAbout, resolveImageUrl } from "../../services/api.js";
+import { sendContactMessage, ApiError } from "../../services/api.js";
+
+// La section "À propos" est désormais statique (plus gérée depuis /admin) :
+// modifie directement le nom, la photo et le texte ci-dessous/plus bas.
+const ABOUT_NAME = "Thomas André";
+const ABOUT_PORTRAIT = {portrait};
 
 const initialForm = { name: "", email: "", phone: "", message: "", consent: false };
-const defaultAbout = {
-  name: "Thomas André",
-  bio: "",
-  portrait: "https://picsum.photos/seed/denlam-portrait/500/600",
-};
 
 export default function Home() {
   const [form, setForm] = useState(initialForm);
   const [status, setStatus] = useState("idle"); // idle | sending | sent | error
-
-  const [about, setAbout] = useState(defaultAbout);
-
-  useEffect(() => {
-    let cancelled = false;
-    fetchAbout()
-      .then((data) => {
-        if (!cancelled) setAbout(data);
-      })
-      .catch(() => {
-      });
-    return () => {
-      cancelled = true;
-    };
-  }, []);
+  const [errorMessage, setErrorMessage] = useState(null);
 
   function handleChange(e) {
     const { name, type, value, checked } = e.target;
@@ -49,11 +34,14 @@ export default function Home() {
   async function handleSubmit(e) {
     e.preventDefault();
     setStatus("sending");
-    // Simulation d'envoi. Pour un vrai envoi d'email sans backend,
-    // voir Netlify Forms dans le README.
-    await new Promise((resolve) => setTimeout(resolve, 600));
-    setStatus("sent");
-    setForm(initialForm);
+    try {
+      await sendContactMessage(form);
+      setStatus("sent");
+      setForm(initialForm);
+    } catch (err) {
+      setStatus("error");
+      setErrorMessage(err instanceof ApiError ? err.message : "Une erreur est survenue.");
+    }
   }
 
   return (
@@ -62,33 +50,22 @@ export default function Home() {
       <section id="etude" className="hero">
         <Link to="/etude" className="hero-card">
           <span className="hero-card-media" aria-hidden="true">
-            <img
-              src={eeta}
-              alt=""
-            />
+        <img src={eeta} alt="" width="700" height="700" loading="eager" fetchpriority="high" decoding="async" />
           </span>
           <p>{hero.card1_label}</p>
         </Link>
         <Link to="/creations" className="hero-card">
           <span className="hero-card-media" aria-hidden="true">
-            <img
-              src={crea}
-              alt=""
-            />
+           <img src={crea} alt="" width="700" height="700" loading="eager" fetchpriority="high" decoding="async" />
           </span>
           <p>{hero.card2_label}</p>
         </Link>
       </section>
-
       <section id="apropos" className="about">
         <div className="about-inner">
-          <img
-            className="about-portrait"
-            src={resolveImageUrl(about.portrait)}
-            alt={`Portrait de ${about.name}`}
-          />
+<img className="about-portrait" src={portrait} alt={`Portrait de ${ABOUT_NAME}`} width="760" height="480" loading="lazy" decoding="async" />
 <div className="about-text">
-  <h2>{about.name}</h2>
+  <h2>{ABOUT_NAME}</h2>
 
   <p>
     Picqué par le dessin dès les années collège, c’est tout naturellement que je
@@ -130,11 +107,12 @@ export default function Home() {
                 id="name"
                 name="name"
                 required
+                placeholder=" "
                 autoComplete="off"
                 value={form.name}
                 onChange={handleChange}
               />
-              <label htmlFor="name">Nom</label>
+              <label htmlFor="name">Nom *</label>
             </div>
 
             <div className="input-field">
@@ -143,11 +121,12 @@ export default function Home() {
                 id="email"
                 name="email"
                 required
+                placeholder=" "
                 autoComplete="off"
                 value={form.email}
                 onChange={handleChange}
               />
-              <label htmlFor="email">Email</label>
+              <label htmlFor="email">Email *</label>
             </div>
 
             <div className="input-field">
@@ -155,7 +134,7 @@ export default function Home() {
                 type="tel"
                 id="phone"
                 name="phone"
-                required
+                placeholder=" "
                 autoComplete="off"
                 value={form.phone}
                 onChange={handleChange}
@@ -169,13 +148,15 @@ export default function Home() {
                 name="message"
                 cols="30"
                 rows="10"
+                minLength={10}
                 required
+                placeholder=" "
                 value={form.message}
                 onChange={handleChange}
               />
-              <label htmlFor="message">Votre message</label>
+              <label htmlFor="message">Votre message *</label>
             </div>
-
+<p className="form-required-note">* champ obligatoire</p>
             <label className="container-checkbox">
               En cochant cette case, je consens à ce que mes informations
               soient utilisées afin de me contacter
@@ -196,6 +177,12 @@ export default function Home() {
             {status === "sent" && (
               <p className="form-feedback success">
                 Votre message a bien été envoyé, merci !
+              </p>
+            )}
+
+            {status === "error" && (
+              <p className="form-feedback error">
+                {errorMessage || "Une erreur est survenue, réessaie dans un instant."}
               </p>
             )}
           </form>

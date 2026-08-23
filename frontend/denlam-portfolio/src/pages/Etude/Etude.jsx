@@ -1,10 +1,6 @@
 import { useEffect, useState } from "react";
-import {
-  fetchEtudeSettings,
-  fetchEtudePhotos,
-  resolveImageUrl,
-  ApiError
-} from "../../services/api.js";
+import { fetchEtudeSettings, fetchEtudePlans, ApiError } from "../../services/api.js";
+import PlanCard from "./PlanCard.jsx";
 import "./Etude.css";
 
 const TABS = [
@@ -13,36 +9,48 @@ const TABS = [
   { key: "plan", label: "Plans" },
 ];
 
+
+const CONSEILS_CONTENT = {
+  description:
+    "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like).",
+  images: ["https://picsum.photos/seed/etude-conseils/700/500"],
+};
+
+const RELEVES_CONTENT = {
+  description:
+    "Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like).",
+  images: ["https://picsum.photos/seed/etude-releves/700/500"],
+};
+
 export default function Etude() {
   const [description, setDescription] = useState("");
   const [activeTab, setActiveTab] = useState("conseils");
-  const [photos, setPhotos] = useState([]);
-  const [isLoadingPhotos, setIsLoadingPhotos] = useState(true);
+
+  const [plans, setPlans] = useState([]);
+  const [isLoadingPlans, setIsLoadingPlans] = useState(true);
   const [error, setError] = useState(null);
 
-  // Charger description
   useEffect(() => {
     fetchEtudeSettings()
       .then((data) => setDescription(data.description || ""))
       .catch(() => {});
   }, []);
 
-  // Charger photos selon onglet
   useEffect(() => {
+    if (activeTab !== "plan") return;
     let cancelled = false;
-    setIsLoadingPhotos(true);
+    setIsLoadingPlans(true);
     setError(null);
 
-    fetchEtudePhotos(activeTab)
+    fetchEtudePlans()
       .then((data) => {
-        if (!cancelled) setPhotos(data);
+        if (!cancelled) setPlans(data);
       })
       .catch((err) => {
-        if (!cancelled)
-          setError(err instanceof ApiError ? err.message : "Erreur de chargement.");
+        if (!cancelled) setError(err instanceof ApiError ? err.message : "Erreur de chargement.");
       })
       .finally(() => {
-        if (!cancelled) setIsLoadingPhotos(false);
+        if (!cancelled) setIsLoadingPlans(false);
       });
 
     return () => {
@@ -56,7 +64,6 @@ export default function Etude() {
         <p>{description}</p>
       </div>
 
-      {/* --- Filtres identiques à la page Créations --- */}
       <div className="filters">
         <div className="filters-inner">
           {TABS.map((tab) => (
@@ -72,22 +79,27 @@ export default function Etude() {
         </div>
       </div>
 
-      {/* --- Photos --- */}
-      <div className="etude-photos" aria-live="polite">
-        {isLoadingPhotos && <p className="etude-empty">Chargement…</p>}
-        {error && <p className="etude-empty">{error}</p>}
+      <div className="etude-content">
+        {activeTab === "conseils" && <PlanCard {...CONSEILS_CONTENT} />}
 
-        {!isLoadingPhotos && !error && photos.length === 0 && (
-          <p className="etude-empty">Aucune photo pour le moment dans cette catégorie.</p>
+        {activeTab === "releves" && <PlanCard {...RELEVES_CONTENT} />}
+
+        {activeTab === "plan" && (
+          <>
+            {isLoadingPlans && <p className="etude-empty">Chargement…</p>}
+            {error && <p className="etude-empty">{error}</p>}
+
+            {!isLoadingPlans && !error && plans.length === 0 && (
+              <p className="etude-empty">Aucun plan pour le moment.</p>
+            )}
+
+            {!isLoadingPlans &&
+              !error &&
+              plans.map((plan) => (
+                <PlanCard key={plan.id} description={plan.description} images={plan.images} />
+              ))}
+          </>
         )}
-
-        {!isLoadingPhotos &&
-          !error &&
-          photos.map((photo) => (
-            <div className="etude-photo" key={photo.id}>
-              <img src={resolveImageUrl(photo.image)} alt="" loading="lazy" />
-            </div>
-          ))}
       </div>
     </section>
   );

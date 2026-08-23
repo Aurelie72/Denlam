@@ -9,6 +9,11 @@
   --color-accent: #b9b8b8;
   --color-accent-strong: #8f8e8e;
 
+   /* Couleurs dédiées aux boutons/CTA : plus foncées que --color-accent,
++    pour un contraste correct (>= 4.5:1) avec le texte blanc dessus. */
+  --color-cta: #5b5959;
+ --color-cta-hover: #3d3b3b;
+
   --radius-sm: 8px;
   --radius-pill: 100px;
 
@@ -61,7 +66,7 @@ h2 {
 h3 {
   letter-spacing: 15px;
   font-size: clamp(1.25rem, 2.5vw, 1.875rem);
-  color: var(--color-border);
+  color: var(--color-muted);
 }
 
 a {
@@ -81,6 +86,14 @@ main {
   padding-top: var(--header-height);
 }
 
+/* Décale le point d'arrivée du scroll vers une ancre (#etude, #apropos,
+   #contact) pour que le header fixe ne vienne pas cacher le haut de la
+   section ciblée. */
+
+#apropos{
+  scroll-margin-top: var(--header-height);
+}
+
 .container {
   width: 100%;
   max-width: var(--container-max);
@@ -96,14 +109,14 @@ main {
   letter-spacing: 1px;
   border-radius: var(--radius-sm);
   border: none;
-  background-color: var(--color-accent);
+  background-color: var(--color-cta);
   color: #fff;
   cursor: pointer;
   transition: background-color var(--transition-fast);
 }
 
 .btn:hover {
-  background-color: var(--color-accent-strong);
+  background-color: var(--color-cta-hover);
 }
 
 .btn:disabled {

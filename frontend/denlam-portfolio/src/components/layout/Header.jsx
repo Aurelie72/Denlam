@@ -16,7 +16,7 @@ export default function Header() {
   return (
     <header className="site-header">
       <NavLink to="/" className="logo" onClick={() => setIsOpen(false)}>
-        <img src={logo} alt="logo denlam" />
+        <img src={logo} alt="logo denlam" width="582" height="173" />
       </NavLink>
 
       <button

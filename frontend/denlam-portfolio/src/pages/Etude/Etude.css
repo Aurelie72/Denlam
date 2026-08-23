@@ -4,7 +4,7 @@
 }
 
 .etude-intro {
-  max-width: 1000px;
+  max-width: 1150px;
   margin: 0 auto;
   padding: 50px clamp(24px, 6vw, 70px) 20px;
   text-align: center;
@@ -14,9 +14,10 @@
   font-size: 1.15rem;
   line-height: 1.7;
   color: var(--color-muted);
+  white-space: pre-line;
 }
 
-/* ---- Filtres (identiques à Créations) ----------------------------------- */
+/* ---- Filtres ----------------------------------- */
 .filters {
   display: flex;
   justify-content: center;
@@ -49,46 +50,137 @@
 
 .filter-btn.active {
   border-color: var(--color-accent-strong);
-  color: var(--color-accent-strong);
+  color: var(--color-cta);
 }
 
 .filters-inner .highlight {
   display: none;
 }
 
-/* ---- Photos -------------------------------------------------------------- */
-.etude-intro p {
-  white-space: pre-line;
+/* ---- Contenu (conseils / relevés / plans) ------------------------------- */
+.etude-content {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 20px clamp(24px, 6vw, 70px) 0;
+  display: flex;
+  flex-direction: column;
+  gap: 60px;
 }
 
-.etude-photos {
-  padding: 30px clamp(24px, 5vw, 60px) 0;
+/* Une carte "plan" = texte à gauche, carrousel à droite (comme la page
+   détail d'une création). Plusieurs cartes s'empilent verticalement. */
+.etude-plan-card {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-  gap: 24px;
+  grid-template-columns: minmax(260px, 400px) 1fr;
+  gap: clamp(32px, 5vw, 60px);
+  align-items: start;
+  padding-bottom: 40px;
+  border-bottom: 1px solid var(--color-border);
 }
 
-.etude-photo {
-  aspect-ratio: 4 / 3;
+.etude-plan-card:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.detail-description p {
+  font-size: 1.15rem;
+  line-height: 1.7;
+  color: var(--color-muted);
+}
+
+/* ---- Carrousel (mêmes styles que la page détail créations) -------------- */
+.detail-carousel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+.carousel-main {
+  position: relative;
+  width: 100%;
+  max-width: 500px;
+  margin: 0 auto;
+  border-radius: var(--radius-sm);
+  box-shadow: var(--shadow-strong);
+  overflow: hidden;
+  background: none;
+}
+
+.carousel-main img {
+  width: 100%;
+  height: auto;
+  max-height: 400px;
+  object-fit: cover;
+}
+
+.carousel-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(255, 255, 255, 0.85);
+  color: var(--color-text);
+  font-size: 1.5rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.carousel-arrow-left {
+  left: 12px;
+}
+
+.carousel-arrow-right {
+  right: 12px;
+}
+
+.carousel-thumbs {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 8px;
+}
+
+.thumb {
+  width: 64px;
+  height: 64px;
   border-radius: var(--radius-sm);
   overflow: hidden;
-  box-shadow: var(--shadow-soft);
+  border: 2px solid transparent;
+  cursor: pointer;
+  opacity: 0.65;
+  transition: border-color var(--transition-fast), opacity var(--transition-fast);
+  padding: 0;
+  background: none;
+  flex-shrink: 0;
 }
 
-.etude-photo img {
+.thumb img {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: transform var(--transition-soft);
 }
 
-.etude-photo:hover img {
-  transform: scale(1.03);
+.thumb.active {
+  border-color: var(--color-accent-strong);
+  opacity: 1;
 }
 
 .etude-empty {
-  grid-column: 1 / -1;
   text-align: center;
   color: var(--color-muted);
   padding: 40px 0;
+}
+
+@media (max-width: 780px) {
+  .etude-plan-card {
+    grid-template-columns: 1fr;
+  }
 }

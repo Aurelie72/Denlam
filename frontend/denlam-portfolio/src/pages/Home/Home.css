@@ -1,7 +1,16 @@
 h1 {
-  margin-left: 75px;
+  /* margin-left: 75px; */
   margin-top: 50px;
-  font-size: 0.65rem !important;
+  font-size: 1rem !important;
+  max-width: 1100px;
+  margin: 40px auto 0;
+  padding: 0 24px;
+  text-align: center;
+  /* font-size: clamp(0.65rem, 1.5vw, 1.05rem); */
+  font-weight: 700;
+  letter-spacing: 3px;
+  /* text-transform: uppercase; */
+  color: var(--color-muted);
 }
 
 /* ---- Hero / cartes ------------------------------------------------- */
@@ -69,7 +78,7 @@ h1 {
 /* ---- A propos -------------------------------------------------------- */
 /* ---- A propos -------------------------------------------------------- */
 .about {
-  padding: clamp(70px, 8vw, 100px) clamp(24px, 6vw, 70px);
+  padding: clamp(70px, 8vw, 180px) clamp(24px, 6vw, 70px);
 }
 
 .about-inner {
@@ -204,10 +213,10 @@ textarea {
   outline: none;
 }
 
-.input-field input:focus ~ label,
-.input-field input:valid ~ label,
-.input-field textarea:focus ~ label,
-.input-field textarea:valid ~ label {
+ .input-field input:focus ~ label,
+ .input-field input:not(:placeholder-shown) ~ label,
+ .input-field textarea:focus ~ label,
+ .input-field textarea:not(:placeholder-shown) ~ label  {
   transform: translateY(-1.35rem) translateX(-10px) scale(0.8);
   background-color: var(--color-surface);
   padding: 0 5px;
@@ -271,6 +280,12 @@ textarea {
 .email-link {
   text-decoration: none;
   color: inherit;
+}
+
+.form-required-note {
+  font-size: 0.85rem;
+  color: var(--color-muted);
+  margin-top: -0.5rem;
 }
 
 

@@ -63,14 +63,14 @@ export default function CreationDetail() {
       {!isLoading && !error && creation && (
         <>
           <div className="detail-header">
-            <button className="nav-arrow" onClick={() => navigate(-1)}>
+            <button className="nav-arrow" onClick={() => navigate(-1)} aria-label="Retour à la page précédente">
               <span aria-hidden="true">←</span>
             </button>
 
             <h2 className="detail-title">{creation.name}</h2>
 
             {nextId && (
-              <Link className="nav-arrow nav-arrow-next" to={`/creations/${nextId}`}>
+              <Link className="nav-arrow nav-arrow-next" to={`/creations/${nextId}`} aria-label="Création suivante">
                  <span aria-hidden="true">→</span>
               </Link>
             )}
@@ -96,6 +96,9 @@ export default function CreationDetail() {
                   <img
                     src={resolveImageUrl(images[activeImage])}
                     alt={`${creation.name} — photo ${activeImage + 1}`}
+loading="eager"
+   fetchpriority="high"
+   decoding="async"
                   />
 
                   {images.length > 1 && (
@@ -116,7 +119,9 @@ export default function CreationDetail() {
                         className={i === activeImage ? "thumb active" : "thumb"}
                         onClick={() => setActiveImage(i)}
                       >
-                        <img src={resolveImageUrl(img)} alt="" />
+                        <img src={resolveImageUrl(img)} alt="" loading="eager"
+   fetchpriority="high"
+   decoding="async"/>
                       </button>
                     ))}
                   </div>

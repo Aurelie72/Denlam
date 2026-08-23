@@ -59,7 +59,7 @@ export default function Creations() {
           creations.map((item) => (
 <Link className="gallery-item" key={item.id} to={`/creations/${item.id}`}>
   <div className="gallery-media">
-    <img src={resolveImageUrl(item.image)} alt={item.name} loading="lazy" />
+    <img src={resolveImageUrl(item.image)} alt={item.name} loading="lazy" decoding="async" />
 
     <div className="gallery-title">{item.name}</div>
   </div>

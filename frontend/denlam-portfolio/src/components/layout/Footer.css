@@ -14,12 +14,15 @@
   font-size: 0.95rem;
 }
 
-.site-footer a:hover {
-  color: var(--color-text);
+.footer-links {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+  justify-content: center;
 }
 
 .site-footer .copy {
-  color: var(--color-border);
+  color: var(--color-muted);
   font-size: 0.8rem;
   letter-spacing: 1px;
   margin-top: 8px;
