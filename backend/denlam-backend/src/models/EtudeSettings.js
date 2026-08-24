@@ -8,6 +8,10 @@ const etudeSettingsSchema = new mongoose.Schema(
       default:
         "De l'étude à la réalisation, j'accompagne chaque projet d'agencement avec précision : relevés sur site, plans 2D et 3D, conseils personnalisés pour concevoir un espace qui vous ressemble.",
     },
+    conseilsText: { type: String, default: "" },
+    conseilsImage: { type: String, default: "" },
+    relevesText: { type: String, default: "" },
+    relevesImage: { type: String, default: "" },
   },
   { timestamps: true },
 );

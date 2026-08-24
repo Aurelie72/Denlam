@@ -1,8 +1,8 @@
-h1 {
+.seo-tagline {
   /* margin-left: 75px; */
   margin-top: 50px;
-  font-size: 1rem !important;
-  max-width: 1100px;
+  font-size: 1rem ;
+  max-width: 1500px;
   margin: 40px auto 0;
   padding: 0 24px;
   text-align: center;
@@ -34,7 +34,7 @@ h1 {
 
 .hero-card-media {
   display: block;
-  width: min(420px, 40vw + 120px);
+  width: min(340px, 35vw);
   aspect-ratio: 1 / 1;
   border-radius: var(--radius-sm);
   overflow: hidden;
@@ -75,81 +75,78 @@ h1 {
 }
 
 /* ---- A propos -------------------------------------------------------- */
-/* ---- A propos -------------------------------------------------------- */
-/* ---- A propos -------------------------------------------------------- */
+
 .about {
   padding: clamp(70px, 8vw, 180px) clamp(24px, 6vw, 70px);
 }
 
 .about-inner {
+  --portrait-w: min(700px, 90vw);
   position: relative;
   display: flex;
-  flex-wrap: nowrap; /* important : pour que le texte puisse chevaucher */
+  flex-wrap: nowrap;
   align-items: flex-start;
   justify-content: left;
-  padding-left: 100px;
+  padding-left: clamp(24px, 8vw, 100px);
 }
 
-
 .about-portrait {
-  width: min(760px, 90vw);
-  height: min(480px, 60vw);
+  width: var(--portrait-w);
+  height: min(420px, 60vw);
   object-fit: cover;
-  /* border-radius: var(--radius-sm); */
-  /* box-shadow: var(--shadow-soft); */
   transform: translateX(-40px);
 }
 
-/* Texte placé à l’endroit du X, qui dépasse à droite */
+/* Texte placé proportionnellement à la largeur réelle de la photo (700px
+   de référence, ratio conservé quelle que soit la taille d'écran) */
 .about-text {
   position: absolute;
-  top: -70px;        /* ← place le texte en haut */
-  left: calc(720px - 320px); 
-  max-width: 800px;
-  /* background: rgba(255, 255, 255, 0.2); */
+  top: -70px;
+  left: calc(var(--portrait-w) * 0.5714 - 20px);
+  width: min(750px, 85vw);
   padding: 20px;
   border-radius: var(--radius-sm);
-  /* backdrop-filter: blur(6px); */
+  box-sizing: border-box;
 }
 
-.about-text p {
-  text-align: justify;
-  text-justify: inter-word;
-  font-size: 18px !important;
-}
-
-/* Style du texte */
 .about-text h2 {
   margin-bottom: 20px;
 }
 
-.about-text .indent {
-  margin-left: 380px; 
-}
-
 .about-text p {
-  font-size: 1.15rem;
+  font-size: 1.05rem;
   line-height: 1.6;
   color: var(--color-muted);
   font-weight: 500;
 }
 
-/* Mobile : tout redevient normal */
+.about-text .indent {
+  margin-left: calc(var(--portrait-w) * 0.5429);
+}
+
 @media (max-width: 780px) {
   .about-inner {
     flex-wrap: wrap;
+    padding-left: 0;
   }
 
   .about-text {
     position: static;
-    background: none;
     padding: 0;
-    backdrop-filter: none;
     margin-top: 20px;
+    width: 100%;
+    left: auto;
+  }
+
+  .about-text .indent {
+    margin-left: 0;
   }
 
   .about-portrait {
     transform: translateX(0);
+    width: 100%;
+    height: auto;
+    aspect-ratio: 700 / 420;
   }
 }
 
@@ -168,10 +165,10 @@ h1 {
 
 .form {
   max-width: 560px;
-  margin-top: 1.5rem;
+  margin-top: 1rem;
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
+  gap: 1rem;
 }
 
 textarea {

@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { fetchCreation, fetchCreations, resolveImageUrl, ApiError } from "../../services/api.js";
+import { usePageMeta } from "../../hooks/usePageMeta.js";
 import "./CreationDetail.css";
 
 export default function CreationDetail() {
@@ -13,13 +14,18 @@ export default function CreationDetail() {
   const [error, setError] = useState(null);
   const [activeImage, setActiveImage] = useState(0);
 
+  usePageMeta(
+    creation?.name || "Créations",
+    creation?.description || "Découvrez cette création de Denlam, conçue et fabriquée sur mesure."
+  );
+
   useEffect(() => {
     let cancelled = false;
     setIsLoading(true);
     setError(null);
     setActiveImage(0);
 
-    Promise.all([fetchCreation(id), fetchCreations("tous")])
+    Promise.all([fetchCreation(id), fetchCreations()])
       .then(([creationData, listData]) => {
         if (cancelled) return;
         setCreation(creationData);
@@ -44,11 +50,34 @@ export default function CreationDetail() {
     return siblings[(index + 1) % siblings.length].id;
   }, [siblings, id]);
 
-  const images = creation?.images?.length
-    ? creation.images
-    : creation?.image
-    ? [creation.image]
-    : [];
+ const images = useMemo(
+   () => (creation?.images?.length ? creation.images : creation?.image ? [creation.image] : []),
+   [creation]
+ );
+
+  useEffect(() => {
+    if (!creation) return;
+
+    const script = document.createElement("script");
+    script.type = "application/ld+json";
+    script.id = "creation-jsonld";
+    script.textContent = JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "Product",
+      name: creation.name,
+      description: creation.description,
+      image: images.map((img) => resolveImageUrl(img)),
+      brand: {
+        "@type": "Brand",
+        name: "Denlam",
+      },
+    });
+    document.head.appendChild(script);
+
+    return () => {
+      document.getElementById("creation-jsonld")?.remove();
+    };
+  }, [creation, images]);
 
   function goToImage(delta) {
     if (images.length === 0) return;
@@ -67,7 +96,7 @@ export default function CreationDetail() {
               <span aria-hidden="true">←</span>
             </button>
 
-            <h2 className="detail-title">{creation.name}</h2>
+            <h1 className="detail-title">{creation.name}</h1>
 
             {nextId && (
               <Link className="nav-arrow nav-arrow-next" to={`/creations/${nextId}`} aria-label="Création suivante">
@@ -96,9 +125,9 @@ export default function CreationDetail() {
                   <img
                     src={resolveImageUrl(images[activeImage])}
                     alt={`${creation.name} — photo ${activeImage + 1}`}
-loading="eager"
-   fetchpriority="high"
-   decoding="async"
+                    loading="eager"
+                    fetchPriority="high"
+                    decoding="async"
                   />
 
                   {images.length > 1 && (
@@ -119,9 +148,7 @@ loading="eager"
                         className={i === activeImage ? "thumb active" : "thumb"}
                         onClick={() => setActiveImage(i)}
                       >
-                        <img src={resolveImageUrl(img)} alt="" loading="eager"
-   fetchpriority="high"
-   decoding="async"/>
+                        <img src={resolveImageUrl(img)} alt="" loading="lazy" decoding="async" />
                       </button>
                     ))}
                   </div>

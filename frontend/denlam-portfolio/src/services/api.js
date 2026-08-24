@@ -1,8 +1,3 @@
-// ==========================================================================
-// Client API centralisé. Toutes les requêtes vers le backend passent par ici.
-// URL configurée via VITE_API_URL (voir .env).
-// ==========================================================================
-
 const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000/api";
 
 class ApiError extends Error {
@@ -63,9 +58,8 @@ export function fetchCurrentUser(token) {
 }
 
 // ---- Créations ----------------------------------------------------------
-export function fetchCreations(category) {
-  const query = category && category !== "tous" ? `?category=${category}` : "";
-  return request(`/creations${query}`);
+export function fetchCreations() {
+  return request("/creations");
 }
 
 export function fetchCreation(id) {
@@ -96,7 +90,7 @@ export function deleteCreation(id, token) {
   return request(`/creations/${id}`, { method: "DELETE", token });
 }
 
-// ---- Réglages du site (section À propos) -------------------------------
+// ---- Réglages "Créations" (texte d'intro) --------------------------------
 export function fetchCreationsSettings() {
   return request("/settings/creations");
 }
@@ -126,7 +120,7 @@ export function deleteMessage(id, token) {
   return request(`/messages/${id}`, { method: "DELETE", token });
 }
 
-// ---- Étude & Agencement --------------------------------------------------
+// ---- Étude & Agencement ---------------------------------------------------
 export function fetchEtudeSettings() {
   return request("/etude/settings");
 }
@@ -167,13 +161,9 @@ export function deleteEtudePlan(id, token) {
 
 export { ApiError, API_URL };
 
-// Les images uploadées sont stockées en base sous forme de chemin relatif
-// (ex. "/uploads/xxx.jpg"), servi par le BACKEND — pas le frontend. Cette
-// fonction reconstruit l'URL complète pour que <img src=...> pointe au bon
-// endroit (http://localhost:5000/uploads/xxx.jpg et non :5173/uploads/...).
 export function resolveImageUrl(path) {
   if (!path) return path;
-  if (/^https?:\/\//i.test(path)) return path; // déjà une URL complète (ex. picsum)
+  if (/^https?:\/\//i.test(path)) return path;
   const origin = API_URL.replace(/\/api\/?$/, "");
   return `${origin}${path}`;
 }

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { resolveImageUrl } from "../../services/api.js";
 
-export default function PlanCarousel({ images }) {
+export default function PlanCarousel({ images, alt = "" }) {
   const [activeIndex, setActiveIndex] = useState(0);
 
   function goTo(delta) {
@@ -15,23 +15,18 @@ export default function PlanCarousel({ images }) {
     <div className="detail-carousel">
       <div className="carousel-main">
         {images.length > 1 && (
-          <button
-            className="carousel-arrow carousel-arrow-left"
-            onClick={() => goTo(-1)}
-            aria-label="Photo précédente"
-          >
+          <button className="carousel-arrow carousel-arrow-left" onClick={() => goTo(-1)} aria-label="Photo précédente">
             ‹
           </button>
         )}
-
-        <img src={resolveImageUrl(images[activeIndex])} alt="" loading="eager" decoding="async" />
-
+        <img
+          src={resolveImageUrl(images[activeIndex])}
+          alt={images.length > 1 ? `${alt} — photo ${activeIndex + 1}` : alt}
+          loading="eager"
+          decoding="async"
+        />
         {images.length > 1 && (
-          <button
-            className="carousel-arrow carousel-arrow-right"
-            onClick={() => goTo(1)}
-            aria-label="Photo suivante"
-          >
+          <button className="carousel-arrow carousel-arrow-right" onClick={() => goTo(1)} aria-label="Photo suivante">
             ›
           </button>
         )}

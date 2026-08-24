@@ -169,6 +169,25 @@
   background: #8f2e2e;
 }
 
+.image-picker-add-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 20px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--color-border);
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: var(--color-text);
+  cursor: pointer;
+  transition: background-color var(--transition-fast);
+}
+
+.image-picker-add-btn:hover {
+  background-color: #f2f2f2;
+}
+
 /* ---- Liste des plans ----------------------------------------------------- */
 .admin-plans-list {
   list-style: none;
@@ -257,7 +276,7 @@
 
 .admin-message-date {
   font-size: 0.8rem;
-  color: var(--color-border);
+  color: var(--color-muted);
   white-space: nowrap;
 }
 
@@ -300,12 +319,6 @@
   font-weight: 700;
 }
 
-.admin-list-category {
-  font-size: 0.85rem;
-  color: var(--color-muted);
-  text-transform: capitalize;
-}
-
 .admin-list-actions {
   display: flex;
   gap: 8px;
@@ -331,5 +344,27 @@
   }
   .admin-list-item {
     flex-wrap: wrap;
+  }
+}
+
+/* L'espace admin n'est pas utilisable confortablement sur mobile (longs
+   formulaires, sélecteurs de photos...) — on bloque l'accès en dessous de
+   780px et on affiche un message à la place. */
+.admin-desktop-only {
+  display: none;
+}
+
+@media (max-width: 780px) {
+  .admin > *:not(.admin-desktop-only) {
+    display: none !important;
+  }
+
+  .admin-desktop-only {
+    display: block;
+    text-align: center;
+    padding: 120px 24px;
+    color: var(--color-muted);
+    font-size: 1.1rem;
+    line-height: 1.6;
   }
 }

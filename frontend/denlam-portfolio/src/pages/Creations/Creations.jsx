@@ -6,9 +6,15 @@ import {
   resolveImageUrl,
   ApiError
 } from "../../services/api.js";
+import { usePageMeta } from "../../hooks/usePageMeta.js";
 import "./Creations.css";
 
 export default function Creations() {
+
+   usePageMeta(
+     "Créations",
+     "Lampes, mobilier et objets de décoration conçus et fabriqués sur mesure par Thomas André, Denlam."
+   );
   const [description, setDescription] = useState("");
   const [creations, setCreations] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -46,6 +52,7 @@ export default function Creations() {
 
   return (
     <>
+    <h1 className="visually-hidden">Créations</h1>
       <div className="creations-intro">
         <p>{description}</p>
       </div>

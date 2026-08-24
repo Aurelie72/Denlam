@@ -9,12 +9,79 @@
     />
     <title>Denlam — Objets & Agencement</title>
 
+    <!-- Favicon (icône d'onglet du navigateur), basé sur le petit carré
+         jaune/gris du logo — le seul élément assez simple pour rester
+         lisible en 16x16px. -->
+    <link rel="icon" href="/favicon.ico" sizes="any" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+
+    <!-- Open Graph / réseaux sociaux — valeurs par défaut, remplacées
+         dynamiquement par usePageMeta() une fois React monté (utile pour
+         Google qui exécute le JS ; les valeurs ci-dessous servent surtout
+         pour les robots qui n'exécutent pas de JS, comme certains bots de
+         messagerie). Pense à déposer une vraie image de partage
+         (1200x630px) dans public/og-image.jpg et à remplacer l'URL du
+         domaine une fois le site déployé. -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Denlam" />
+    <meta property="og:title" content="Denlam — Objets & Agencement" />
+    <meta
+      property="og:description"
+      content="Denlam — Créateur d'objets design et dessinateur en agencement. Études, agencement sur mesure et créations uniques."
+    />
+    <meta property="og:image" content="https://denlam.fr/og-image.jpg" />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <!-- Données structurées (Schema.org) — aide Google à comprendre qu'il
+         s'agit d'une entreprise artisanale locale. À tenir synchronisé
+         avec content/settings/contact.json si les coordonnées changent. -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "LocalBusiness",
+        "name": "Denlam",
+        "founder": {
+          "@type": "Person",
+          "name": "Thomas André"
+        },
+        "description": "Menuisier-agenceur et designer d'objets sur mesure : étude, agencement, créations uniques.",
+        "image": "https://denlam.fr/og-image.jpg",
+        "priceRange": "Sur devis",
+        "address": {
+          "@type": "PostalAddress",
+          "streetAddress": "15 avenue de la République",
+          "postalCode": "72230",
+          "addressLocality": "Ruaudin",
+          "addressRegion": "Pays de la Loire",
+          "addressCountry": "FR"
+        },
+        "telephone": "+33675393582",
+        "email": "thomas.andre72@delam.com",
+        "areaServed": {
+          "@type": "AdministrativeArea",
+          "name": "Sarthe"
+        }
+      }
+    </script>
+
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
     <link
-      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300..700;1,300..700&display=swap"
       rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300..700;1,300..700&display=swap"
+      media="print"
+      onload="this.media = 'all'"
     />
+    <noscript>
+      <link
+        rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300..700;1,300..700&display=swap"
+      />
+    </noscript>
   </head>
   <body>
     <div id="root"></div>

@@ -1,80 +1,76 @@
 import Creation from "../models/Creation.js";
 
-// GET /api/creations?category=lampe
+function normalizeArray(value) {
+  if (value === undefined || value === null) return [];
+  return Array.isArray(value) ? value : [value];
+}
+
+// GET /api/creations — liste toutes les créations, sans filtre
 export async function listCreations(req, res) {
-  const { category } = req.query;
-  const filter = category && category !== "tous" ? { category } : {};
-  const creations = await Creation.find(filter).sort({ createdAt: -1 });
+  const creations = await Creation.find().sort({ createdAt: -1 });
   res.json(creations);
 }
 
 // GET /api/creations/:id
 export async function getCreation(req, res) {
   const creation = await Creation.findById(req.params.id);
-  if (!creation) {
+  if (!creation)
     return res.status(404).json({ message: "Création introuvable." });
-  }
   res.json(creation);
 }
 
-function resolveImages(req) {
-  if (req.files && req.files.length > 0) {
-    return req.files.map((f) => `/uploads/${f.filename}`);
-  }
-  if (req.body.images) {
-    // Envoyé en JSON : tableau d'URLs. Envoyé en FormData sans fichier :
-    // peut arriver en string unique ou en plusieurs champs "images".
-    return Array.isArray(req.body.images) ? req.body.images : [req.body.images];
-  }
-  return null;
-}
-
-// POST /api/creations  (protégé)
+// POST /api/creations (protégé)
+// multipart : "images" (fichiers, plusieurs possibles) + name/description
 export async function createCreation(req, res) {
-  const { name, category, description } = req.body;
-  const images = resolveImages(req);
+  const { name, description } = req.body;
 
-  if (!images || images.length === 0) {
+  const uploadedImages = (req.files || []).map((f) => `/uploads/${f.filename}`);
+  const bodyImages = normalizeArray(req.body.images); // fallback si des URLs sont envoyées en JSON
+  const images = uploadedImages.length > 0 ? uploadedImages : bodyImages;
+
+  if (images.length === 0) {
     return res
       .status(400)
       .json({ message: "Au moins une image est obligatoire." });
   }
 
-  const creation = await Creation.create({
-    name,
-    category,
-    description,
-    images,
-  });
+  const creation = await Creation.create({ name, description, images });
   res.status(201).json(creation);
 }
 
-// PUT /api/creations/:id  (protégé)
+// PUT /api/creations/:id (protégé)
+// Combine les photos déjà enregistrées qu'on garde ("existingImages", URLs
+// envoyées par le front, une par une, celles que l'admin n'a pas supprimées
+// via la croix) avec les nouveaux fichiers uploadés.
 export async function updateCreation(req, res) {
-  const { name, category, description } = req.body;
-  const update = { name, category, description };
+  const { name, description } = req.body;
 
-  const images = resolveImages(req);
-  if (images && images.length > 0) {
-    update.images = images; // remplace entièrement le jeu de photos
+  const keptExisting = normalizeArray(req.body.existingImages);
+  const uploadedImages = (req.files || []).map((f) => `/uploads/${f.filename}`);
+  const images = [...keptExisting, ...uploadedImages];
+
+  if (images.length === 0) {
+    return res
+      .status(400)
+      .json({ message: "Au moins une image est obligatoire." });
   }
+
+  const update = { name, description, images };
 
   const creation = await Creation.findByIdAndUpdate(req.params.id, update, {
     new: true,
     runValidators: true,
   });
 
-  if (!creation) {
+  if (!creation)
     return res.status(404).json({ message: "Création introuvable." });
-  }
   res.json(creation);
 }
 
-// DELETE /api/creations/:id  (protégé)
+// DELETE /api/creations/:id (protégé)
 export async function deleteCreation(req, res) {
   const creation = await Creation.findByIdAndDelete(req.params.id);
-  if (!creation) {
+  if (!creation)
     return res.status(404).json({ message: "Création introuvable." });
-  }
   res.status(204).send();
 }

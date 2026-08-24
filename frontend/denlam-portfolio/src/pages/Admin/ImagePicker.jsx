@@ -18,6 +18,7 @@ export default function ImagePicker({
   onAddFiles,
   onRemoveNewFile,
   inputId,
+  ariaLabel = "Choisir des photos",
 }) {
   const [previews, setPreviews] = useState([]);
   const inputRef = useRef(null);
@@ -71,7 +72,12 @@ export default function ImagePicker({
         </div>
       )}
 
-      <button type="button" className="image-picker-add-btn" onClick={() => inputRef.current?.click()}>
+      <button
+        type="button"
+        className="image-picker-add-btn"
+        onClick={() => inputRef.current?.click()}
+        aria-label={ariaLabel}
+      >
         Sélectionner un fichier
       </button>
       <input
@@ -81,6 +87,7 @@ export default function ImagePicker({
         accept="image/*"
         multiple
         onChange={handleFileInput}
+        aria-label={ariaLabel}
         className="visually-hidden"
       />
     </div>

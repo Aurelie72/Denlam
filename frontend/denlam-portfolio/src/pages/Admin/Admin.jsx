@@ -23,14 +23,13 @@ import {
 import ImagePicker from "./ImagePicker.jsx";
 import "./Admin.css";
 
-const emptyForm = { name: "", category: "lampe", description: "", newFiles: [], existingImages: [] };
+const emptyForm = { name: "", description: "", newFiles: [], existingImages: [] };
 const emptyPlanForm = { description: "", newFiles: [], existingImages: [] };
 
 export default function Admin() {
   const { user, token, logout } = useAuth();
   const navigate = useNavigate();
 
-  // ---- Créations : liste --------------------------------------------------
   const [creations, setCreations] = useState([]);
   const [isLoadingList, setIsLoadingList] = useState(true);
   const [listError, setListError] = useState(null);
@@ -67,7 +66,6 @@ export default function Admin() {
     setEditingId(creation.id);
     setForm({
       name: creation.name,
-      category: creation.category,
       description: creation.description || "",
       newFiles: [],
       existingImages: creation.images?.length ? creation.images : creation.image ? [creation.image] : [],
@@ -113,7 +111,6 @@ export default function Admin() {
     try {
       const payload = new FormData();
       payload.append("name", form.name);
-      payload.append("category", form.category);
       payload.append("description", form.description);
       form.existingImages.forEach((img) => payload.append("existingImages", img));
       form.newFiles.forEach((file) => payload.append("images", file));
@@ -143,7 +140,6 @@ export default function Admin() {
     }
   }
 
-  // ---- Créations : texte d'intro ------------------------------------------
   const [creationsDescription, setCreationsDescription] = useState("");
   const [isLoadingCreationsText, setIsLoadingCreationsText] = useState(true);
   const [isSavingCreationsText, setIsSavingCreationsText] = useState(false);
@@ -173,7 +169,6 @@ export default function Admin() {
     }
   }
 
-  // ---- Messages -------------------------------------------------------------
   const [messages, setMessages] = useState([]);
   const [isLoadingMessages, setIsLoadingMessages] = useState(true);
   const [messagesError, setMessagesError] = useState(null);
@@ -193,6 +188,7 @@ export default function Admin() {
 
   useEffect(() => {
     loadMessages();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   async function handleToggleRead(id) {
@@ -216,7 +212,6 @@ export default function Admin() {
 
   const unreadCount = messages.filter((m) => !m.read).length;
 
-  // ---- Étude & Agencement : texte -----------------------------------------
   const [etudeDescription, setEtudeDescription] = useState("");
   const [isLoadingEtudeText, setIsLoadingEtudeText] = useState(true);
   const [isSavingEtudeText, setIsSavingEtudeText] = useState(false);
@@ -246,7 +241,6 @@ export default function Admin() {
     }
   }
 
-  // ---- Étude & Agencement : plans -----------------------------------------
   const [plans, setPlans] = useState([]);
   const [isLoadingPlans, setIsLoadingPlans] = useState(true);
   const [plansError, setPlansError] = useState(null);
@@ -341,6 +335,11 @@ export default function Admin() {
 
   return (
     <section className="admin">
+      <p className="admin-desktop-only">
+  L'espace d'administration n'est disponible que sur ordinateur.
+  <br />
+  Reviens depuis un écran plus grand pour gérer le site.
+</p>
       <div className="admin-header">
         <h2>Espace Admin</h2>
         <button className="btn" onClick={handleLogout}>
@@ -352,7 +351,6 @@ export default function Admin() {
         Connecté en tant que <strong>{user?.username || "administrateur"}</strong>.
       </p>
 
-      {/* ============================= ÉTUDE ============================= */}
       <div className="admin-form">
         <h3>Section "Étude &amp; Agencement"</h3>
 
@@ -362,9 +360,9 @@ export default function Admin() {
           ) : (
             <>
               <div className="admin-field admin-field-full">
-                {/* <label htmlFor="etudeDescription">Texte descriptif</label> */}
                 <textarea
                   id="etudeDescription"
+                  aria-label="Texte descriptif de la section Étude & Agencement"
                   rows="4"
                   value={etudeDescription}
                   onChange={(e) => {
@@ -394,9 +392,9 @@ export default function Admin() {
 
         <form onSubmit={handleSubmitPlan} className="admin-etude-upload-form" ref={planFormRef}>
           <div className="admin-field admin-field-full">
-            {/* <label htmlFor="planDescription">Texte du plan</label> */}
             <textarea
               id="planDescription"
+              aria-label="Texte du plan"
               rows="3"
               value={planForm.description}
               onChange={(e) => setPlanForm((prev) => ({ ...prev, description: e.target.value }))}
@@ -404,10 +402,10 @@ export default function Admin() {
           </div>
 
           <div className="admin-field admin-field-full">
-            {/* <label htmlFor="planFiles">Photos</label> */}
             <br />
             <ImagePicker
               inputId="planFiles"
+              ariaLabel="Choisir des photos pour ce plan"
               existingImages={planForm.existingImages}
               onRemoveExisting={removePlanExistingImage}
               newFiles={planForm.newFiles}
@@ -461,7 +459,6 @@ export default function Admin() {
         )}
       </div>
 
-      {/* ============================ CRÉATIONS =========================== */}
       <div className="admin-form">
         <h3>Section "Créations"</h3>
 
@@ -471,9 +468,9 @@ export default function Admin() {
           ) : (
             <>
               <div className="admin-field admin-field-full">
-                {/* <label htmlFor="creationsDescription">Texte descriptif</label> */}
                 <textarea
                   id="creationsDescription"
+                  aria-label="Texte descriptif de la section Créations"
                   rows="3"
                   value={creationsDescription}
                   onChange={(e) => {
@@ -505,15 +502,6 @@ export default function Admin() {
               <label htmlFor="name">Nom</label>
               <input id="name" name="name" required value={form.name} onChange={handleChange} />
             </div>
-
-            {/* <div className="admin-field">
-              <label htmlFor="category">Catégorie</label>
-              <select id="category" name="category" value={form.category} onChange={handleChange}>
-                <option value="lampe">Lampe</option>
-                <option value="mobilier">Mobilier</option>
-                <option value="decoration">Décoration</option>
-              </select>
-            </div> */}
 
             <div className="admin-field admin-field-full">
               <label htmlFor="description">Description</label>
@@ -563,7 +551,6 @@ export default function Admin() {
               <img src={resolveImageUrl(c.image)} alt={c.name} />
               <div className="admin-list-info">
                 <p className="admin-list-name">{c.name}</p>
-                {/* <p className="admin-list-category">{c.category}</p> */}
               </div>
               <div className="admin-list-actions">
                 <button className="btn btn-small" onClick={() => startEdit(c)}>
@@ -578,7 +565,6 @@ export default function Admin() {
         </ul>
       </div>
 
-      {/* ============================= MESSAGES =========================== */}
       <div className="admin-list">
         <h3>
           Messages reçus {unreadCount > 0 && <span className="admin-badge">{unreadCount} non lu(s)</span>}

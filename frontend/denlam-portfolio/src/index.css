@@ -133,6 +133,31 @@ main {
   white-space: nowrap;
 }
 
+/* Dissuasion légère anti-copie (voir AntiCopyGuard.jsx) — exception pour
+   les champs de formulaire, sinon impossible d'y saisir/sélectionner du texte. */
+body.no-select {
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+}
+
+body.no-select input,
+body.no-select textarea,
+body.no-select [contenteditable="true"] {
+  user-select: text;
+  -webkit-user-select: text;
+  -moz-user-select: text;
+}
+
+/* Exception : les coordonnées de contact (adresse, téléphone, email)
+   doivent rester copiables — un visiteur qui veut enregistrer le numéro
+   ou coller l'adresse dans un GPS ne doit pas être bloqué. */
+body.no-select .coordonnees {
+  user-select: text;
+  -webkit-user-select: text;
+  -moz-user-select: text;
+}
+
 /* Focus visible cohérent sur toute l'app */
 a:focus-visible,
 button:focus-visible,

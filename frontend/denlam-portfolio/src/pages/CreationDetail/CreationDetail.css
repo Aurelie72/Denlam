@@ -2,14 +2,12 @@
   padding-bottom: 80px;
 }
 
-/* --- Status --- */
 .detail-status {
   text-align: center;
   color: var(--color-muted);
   padding: 60px 24px;
 }
 
-/* --- Header --- */
 .detail-header {
   display: flex;
   align-items: center;
@@ -51,34 +49,20 @@
   margin-left: auto;
 }
 
-/* --- Layout centré (marges gauche = marges droite) --- */
-.detail-layout {
+.detail-body {
   max-width: 1100px;
   margin: 0 auto;
   padding: 20px clamp(24px, 6vw, 70px) 0;
-}
-
-/* --- Grille texte + photo --- */
-.detail-body {
   display: grid;
   grid-template-columns: minmax(300px, 450px) 1fr;
   gap: clamp(40px, 6vw, 80px);
   align-items: start;
 }
 
-/* --- Description --- */
 .detail-description {
   display: flex;
   flex-direction: column;
   gap: 14px;
-}
-
-.detail-category {
-  text-transform: uppercase;
-  letter-spacing: 2px;
-  font-size: 0.85rem;
-  color: var(--color-border);
-  font-weight: 700;
 }
 
 .detail-description > p:last-child {
@@ -87,7 +71,6 @@
   color: var(--color-muted);
 }
 
-/* --- Carousel --- */
 .detail-carousel {
   display: flex;
   flex-direction: column;
@@ -95,28 +78,24 @@
   gap: 12px;
 }
 
-/* Photo active */
 .carousel-main {
   position: relative;
   width: 100%;
   max-width: 500px;
   margin: 0 auto;
-  aspect-ratio: 4 / 3;
   border-radius: var(--radius-sm);
   box-shadow: var(--shadow-strong);
   overflow: hidden;
-  background: none; /* plus de cadre gris */
+  background: none;
 }
 
 .carousel-main img {
   width: 100%;
-  /* height: auto;          /* ← on laisse l’image respirer */
-  /* max-height: 400px;     ← limite la hauteur portrait */ 
-  object-fit: cover;  
-  height: 100%;   /* ← remplit le cadre sans bandes */
+  height: auto;
+  max-height: 400px;
+  object-fit: cover;
 }
 
-/* Flèches */
 .carousel-arrow {
   position: absolute;
   top: 50%;
@@ -142,7 +121,6 @@
   right: 12px;
 }
 
-/* Miniatures sous la photo */
 .carousel-thumbs {
   display: flex;
   justify-content: center;
@@ -160,6 +138,8 @@
   cursor: pointer;
   opacity: 0.65;
   transition: border-color var(--transition-fast), opacity var(--transition-fast);
+  padding: 0;
+  background: none;
 }
 
 .thumb img {
@@ -173,17 +153,14 @@
   opacity: 1;
 }
 
-/* --- Responsive --- */
 @media (max-width: 780px) {
   .detail-body {
     grid-template-columns: 1fr;
   }
-
   .detail-header {
     flex-direction: column;
     text-align: center;
   }
-
   .nav-arrow-next {
     margin-left: 0;
   }

@@ -11,7 +11,7 @@ export default function Footer() {
         <Link to="/admin">Espace Admin</Link>
       </div>
       <p className="copy">© {new Date().getFullYear()} Denlam — Tous droits réservés</p>
-      <Link to="/admin" className="copy">Conception du site par Aurélie Beaufils</Link>
+      <Link to="https://portfolio-aur-lie.vercel.app/" className="copy">Conception du site par Aurélie Beaufils</Link>
     </footer>
   );
 }

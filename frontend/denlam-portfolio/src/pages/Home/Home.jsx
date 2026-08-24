@@ -13,15 +13,20 @@ import hero from "../../../content/settings/hero.json";
 import contact from "../../../content/settings/contact.json";
 
 import { sendContactMessage, ApiError } from "../../services/api.js";
+import { usePageMeta } from "../../hooks/usePageMeta.js";
 
 // La section "À propos" est désormais statique (plus gérée depuis /admin) :
 // modifie directement le nom, la photo et le texte ci-dessous/plus bas.
 const ABOUT_NAME = "Thomas André";
-const ABOUT_PORTRAIT = {portrait};
+
 
 const initialForm = { name: "", email: "", phone: "", message: "", consent: false };
 
 export default function Home() {
+   usePageMeta(
+     null,
+     "Denlam — Thomas André, menuisier-agenceur et designer d'objets sur mesure en Sarthe, Pays de la Loire. Étude, agencement, créations uniques."
+   );
   const [form, setForm] = useState(initialForm);
   const [status, setStatus] = useState("idle"); // idle | sending | sent | error
   const [errorMessage, setErrorMessage] = useState(null);
@@ -46,17 +51,17 @@ export default function Home() {
 
   return (
     <>
-    <h1>ETUDE | AGENCEMENT | MENUISERIE | DESIGN | CREATIONS | SARTHE | PAYS DE LOIRE</h1>
+    <h1 className="seo-tagline">ETUDE | AGENCEMENT | MENUISERIE | DESIGN | CREATIONS | SARTHE | PAYS DE LOIRE</h1>
       <section id="etude" className="hero">
         <Link to="/etude" className="hero-card">
           <span className="hero-card-media" aria-hidden="true">
-        <img src={eeta} alt="" width="700" height="700" loading="eager" fetchpriority="high" decoding="async" />
+        <img src={eeta} alt="" width="700" height="700" loading="eager" fetchPriority="high" decoding="async" />
           </span>
           <p>{hero.card1_label}</p>
         </Link>
         <Link to="/creations" className="hero-card">
           <span className="hero-card-media" aria-hidden="true">
-           <img src={crea} alt="" width="700" height="700" loading="eager" fetchpriority="high" decoding="async" />
+           <img src={crea} alt="" width="700" height="700" loading="eager" fetchPriority="high" decoding="async" />
           </span>
           <p>{hero.card2_label}</p>
         </Link>
@@ -99,7 +104,9 @@ export default function Home() {
 
       <section id="contact" className="contact">
         <div className="contact-form-wrap">
-          <h2>Contactez-moi</h2>
+          <h2>Un projet, une question ?</h2>
+          <br />
+          <p className="form-required-note">* champ obligatoire</p>
           <form className="form" onSubmit={handleSubmit}>
             <div className="input-field">
               <input
@@ -147,7 +154,7 @@ export default function Home() {
                 id="message"
                 name="message"
                 cols="30"
-                rows="10"
+                rows="6"
                 minLength={10}
                 required
                 placeholder=" "
@@ -156,7 +163,7 @@ export default function Home() {
               />
               <label htmlFor="message">Votre message *</label>
             </div>
-<p className="form-required-note">* champ obligatoire</p>
+
             <label className="container-checkbox">
               En cochant cette case, je consens à ce que mes informations
               soient utilisées afin de me contacter

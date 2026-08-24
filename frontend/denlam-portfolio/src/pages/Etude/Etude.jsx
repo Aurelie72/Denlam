@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { fetchEtudeSettings, fetchEtudePlans, ApiError } from "../../services/api.js";
+import { usePageMeta } from "../../hooks/usePageMeta.js";
 import PlanCard from "./PlanCard.jsx";
 import "./Etude.css";
 
@@ -23,6 +24,11 @@ const RELEVES_CONTENT = {
 };
 
 export default function Etude() {
+
+   usePageMeta(
+     "Étude & Agencement",
+     "Étude, relevés, plans 2D et 3D pour vos projets d'agencement sur mesure. Conseils personnalisés en Sarthe, Pays de la Loire."
+   );
   const [description, setDescription] = useState("");
   const [activeTab, setActiveTab] = useState("conseils");
 
@@ -60,6 +66,7 @@ export default function Etude() {
 
   return (
     <section className="etude">
+      <h1 className="visually-hidden">Étude & Agencement</h1>
       <div className="etude-intro">
         <p>{description}</p>
       </div>
