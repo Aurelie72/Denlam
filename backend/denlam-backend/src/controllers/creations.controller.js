@@ -24,7 +24,7 @@ export async function getCreation(req, res) {
 export async function createCreation(req, res) {
   const { name, description } = req.body;
 
-  const uploadedImages = (req.files || []).map((f) => `/uploads/${f.filename}`);
+  const uploadedImages = (req.files || []).map((f) => f.cloudinaryUrl);
   const bodyImages = normalizeArray(req.body.images); // fallback si des URLs sont envoyées en JSON
   const images = uploadedImages.length > 0 ? uploadedImages : bodyImages;
 
@@ -46,7 +46,7 @@ export async function updateCreation(req, res) {
   const { name, description } = req.body;
 
   const keptExisting = normalizeArray(req.body.existingImages);
-  const uploadedImages = (req.files || []).map((f) => `/uploads/${f.filename}`);
+  const uploadedImages = (req.files || []).map((f) => f.cloudinaryUrl);
   const images = [...keptExisting, ...uploadedImages];
 
   if (images.length === 0) {

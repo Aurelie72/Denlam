@@ -13,7 +13,7 @@ export default function Creations() {
 
    usePageMeta(
      "Créations",
-     "Lampes, mobilier et objets de décoration conçus et fabriqués sur mesure par Thomas André, Denlam."
+     "Mobilier et objets de décoration conçus et fabriqués sur mesure par Thomas André, Denlam."
    );
   const [description, setDescription] = useState("");
   const [creations, setCreations] = useState([]);

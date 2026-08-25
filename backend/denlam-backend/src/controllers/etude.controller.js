@@ -32,7 +32,7 @@ export async function listPlans(req, res) {
 
 // POST /api/etude/plans — protégé (multipart : "images" [plusieurs] + "description")
 export async function createPlan(req, res) {
-  const uploadedImages = (req.files || []).map((f) => `/uploads/${f.filename}`);
+  const uploadedImages = (req.files || []).map((f) => f.cloudinaryUrl);
   if (uploadedImages.length === 0) {
     return res
       .status(400)
@@ -49,7 +49,7 @@ export async function createPlan(req, res) {
 // Combine les photos gardées ("existingImages") avec les nouveaux fichiers.
 export async function updatePlan(req, res) {
   const keptExisting = normalizeArray(req.body.existingImages);
-  const uploadedImages = (req.files || []).map((f) => `/uploads/${f.filename}`);
+  const uploadedImages = (req.files || []).map((f) => f.cloudinaryUrl);
   const images = [...keptExisting, ...uploadedImages];
 
   if (images.length === 0) {

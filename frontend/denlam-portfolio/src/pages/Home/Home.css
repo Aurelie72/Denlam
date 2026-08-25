@@ -34,8 +34,8 @@
 
 .hero-card-media {
   display: block;
-  width: min(340px, 35vw);
-  aspect-ratio: 1 / 1;
+  width: min(450px, 35vw);
+  aspect-ratio: 3 / 2;
   border-radius: var(--radius-sm);
   overflow: hidden;
   box-shadow: var(--shadow-soft);
@@ -295,13 +295,26 @@ textarea {
 }
 
 .reseaux a {
-  font-size: 1.4rem;
+  font-size: 1.8rem;
   color: var(--color-muted);
   transition: color var(--transition-fast);
 }
 
 .reseaux a:hover {
   color: var(--color-text);
+}
+
+.cv-icon img {
+  width: 32px;
+  height: 32px;
+  display: block;
+  opacity: 0.85;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.cv-icon:hover img {
+  opacity: 1;
+  transform: scale(1.1);
 }
 
 @media (max-width: 780px) {

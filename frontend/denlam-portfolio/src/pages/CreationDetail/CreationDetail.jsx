@@ -16,7 +16,7 @@ export default function CreationDetail() {
 
   usePageMeta(
     creation?.name || "Créations",
-    creation?.description || "Découvrez cette création de Denlam, conçue et fabriquée sur mesure."
+    creation?.description || "Découvrez cette création unique signée Denlam, fabriquée sur mesure."
   );
 
   useEffect(() => {

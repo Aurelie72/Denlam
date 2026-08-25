@@ -1,11 +1,12 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { FaInstagram, FaLinkedin} from "react-icons/fa";
+import {FaLinkedin} from "react-icons/fa";
 import "./Home.css";
 import crea from "../../assets/creadenlam.jpg"
 import eeta from "../../assets/eetadenlam.jpg"
 import portrait from "../../assets/portraitapropos.png"
-
+import cv from "../../assets/iconcv.png"
+import cvthomas from "../../assets/CVthomas.pdf"
 
 
 // hero et contact restent des textes statiques pour l'instant.
@@ -51,7 +52,7 @@ export default function Home() {
 
   return (
     <>
-    <h1 className="seo-tagline">ETUDE | AGENCEMENT | MENUISERIE | DESIGN | CREATIONS | SARTHE | PAYS DE LOIRE</h1>
+    <h1 className="seo-tagline">ETUDE | AGENCEMENT | MENUISERIE | DESIGN | CREATIONS | SARTHE | PAYS DE LA LOIRE</h1>
       <section id="etude" className="hero">
         <Link to="/etude" className="hero-card">
           <span className="hero-card-media" aria-hidden="true">
@@ -208,16 +209,24 @@ export default function Home() {
 
 
           <div className="reseaux">
-            {contact.instagram && (
+            {/* {contact.instagram && (
               <a href={contact.instagram} target="_blank" rel="noreferrer" aria-label="Instagram">
                 <FaInstagram />
               </a>
-            )}
+            )} */}
             {contact.linkedin && (
               <a href={contact.linkedin} target="_blank" rel="noreferrer" aria-label="LinkedIn">
                 <FaLinkedin />
               </a>
             )}
+<a
+  href={cvthomas}
+  className="cv-icon"
+  target="_blank"
+  rel="noopener noreferrer"
+>
+  <img src={cv} alt="Télécharger mon CV" />
+</a>
             {/* {contact.facebook && (
               <a href={contact.facebook} target="_blank" rel="noreferrer" aria-label="Facebook">
                 <FaFacebook />

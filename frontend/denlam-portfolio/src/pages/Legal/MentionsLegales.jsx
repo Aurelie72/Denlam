@@ -8,15 +8,15 @@ export default function MentionsLegales() {
 
       <h2>Éditeur du site</h2>
       <p>
-        Le présent site est édité par Thomas André, exerçant sous le statut de{" "}
-        <mark className="legal-placeholder">[forme juridique à préciser — ex. entrepreneur individuel]</mark>.
+        Le présent site est édité par Thomas André, exerçant sous le statut d'auto-entrepeneur
+        
       </p>
       <ul>
         <li>Adresse : {contact.address_line1}, {contact.address_line2}</li>
         <li>Téléphone : {contact.phone}</li>
         <li>Email : {contact.email}</li>
         <li>
-          SIRET : <mark className="legal-placeholder">[à compléter]</mark>
+          SIRET : 97971983800018
         </li>
       </ul>
 

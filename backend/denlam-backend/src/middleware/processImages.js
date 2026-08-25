@@ -1,10 +1,5 @@
 import sharp from "sharp";
-import path from "node:path";
-import fs from "node:fs";
-import crypto from "node:crypto";
-
-const uploadDir = path.resolve("uploads");
-fs.mkdirSync(uploadDir, { recursive: true });
+import cloudinary from "../config/cloudinary.js";
 
 // Largeur max raisonnable pour le web : au-delà, aucune photo affichée sur
 // le site n'a besoin de plus de pixels, même en plein écran sur un grand
@@ -14,10 +9,11 @@ const MAX_WIDTH = 2000;
 const QUALITY = 82;
 
 // À placer juste après upload.array(...)/upload.single(...) dans les
-// routes. Transforme req.files (buffers en mémoire) en fichiers WebP
-// optimisés écrits sur disque, et met à jour req.files pour que les
-// controllers en aval (qui lisent file.filename) continuent de fonctionner
-// sans rien changer.
+// routes. Transforme req.files (buffers en mémoire) en images WebP
+// optimisées, uploadées sur Cloudinary (stockage permanent, ne dépend pas
+// du disque du serveur — voir la discussion sur les hébergeurs à disque
+// éphémère). Met à jour req.files pour que les controllers en aval (qui
+// lisent file.cloudinaryUrl) continuent de fonctionner.
 export async function processImages(req, res, next) {
   try {
     if (req.files && req.files.length > 0) {
@@ -32,14 +28,29 @@ export async function processImages(req, res, next) {
 }
 
 async function processOne(file) {
-  const filename = `${crypto.randomUUID()}.webp`;
-  const outputPath = path.join(uploadDir, filename);
-
-  await sharp(file.buffer)
+  const buffer = await sharp(file.buffer)
     .rotate() // respecte l'orientation EXIF (essentiel pour les photos prises au téléphone)
     .resize({ width: MAX_WIDTH, withoutEnlargement: true })
     .webp({ quality: QUALITY })
-    .toFile(outputPath);
+    .toBuffer();
 
-  return { ...file, filename, path: outputPath };
+  const cloudinaryUrl = await uploadBuffer(buffer);
+  return { ...file, cloudinaryUrl };
+}
+
+function uploadBuffer(buffer) {
+  return new Promise((resolve, reject) => {
+    const stream = cloudinary.uploader.upload_stream(
+      {
+        folder: "denlam", // regroupe toutes les images du site dans un même dossier Cloudinary
+        resource_type: "image",
+        format: "webp",
+      },
+      (err, result) => {
+        if (err) return reject(err);
+        resolve(result.secure_url);
+      },
+    );
+    stream.end(buffer);
+  });
 }

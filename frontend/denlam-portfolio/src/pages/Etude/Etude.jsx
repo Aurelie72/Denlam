@@ -27,7 +27,7 @@ export default function Etude() {
 
    usePageMeta(
      "Étude & Agencement",
-     "Étude, relevés, plans 2D et 3D pour vos projets d'agencement sur mesure. Conseils personnalisés en Sarthe, Pays de la Loire."
+     "Étude, relevés, plans 2D et plans 3D sur autocad ou topsolid pour vos projets d'agencement intérieur sur mesure. Conseils personnalisés en Sarthe, Pays de la Loire."
    );
   const [description, setDescription] = useState("");
   const [activeTab, setActiveTab] = useState("conseils");
