@@ -126,7 +126,7 @@ export default function CreationDetail() {
                     src={resolveImageUrl(images[activeImage])}
                     alt={`${creation.name} — photo ${activeImage + 1}`}
                     loading="eager"
-                    fetchPriority="high"
+                    fetchpriority="high"
                     decoding="async"
                   />
 

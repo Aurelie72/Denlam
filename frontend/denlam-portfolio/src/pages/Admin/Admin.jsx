@@ -1,6 +1,8 @@
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext.jsx";
+import { useAsyncList } from "../../hooks/useAsyncList.js";
+import { useImageFields } from "./useImageFields.js";
 import {
   fetchCreations,
   createCreation,
@@ -21,6 +23,7 @@ import {
   ApiError,
 } from "../../services/api.js";
 import ImagePicker from "./ImagePicker.jsx";
+import EditableTextField from "./EditableTextField.jsx";
 import "./Admin.css";
 
 const emptyForm = { name: "", description: "", newFiles: [], existingImages: [] };
@@ -30,32 +33,21 @@ export default function Admin() {
   const { user, token, logout } = useAuth();
   const navigate = useNavigate();
 
-  const [creations, setCreations] = useState([]);
-  const [isLoadingList, setIsLoadingList] = useState(true);
-  const [listError, setListError] = useState(null);
+  // ---- Créations : liste ---------------------------------------------------
+  const {
+    items: creations,
+    setItems: setCreations,
+    isLoading: isLoadingList,
+    error: listError,
+    reload: loadCreations,
+  } = useAsyncList(fetchCreations);
 
   const [form, setForm] = useState(emptyForm);
   const [editingId, setEditingId] = useState(null);
   const [isSaving, setIsSaving] = useState(false);
   const [formError, setFormError] = useState(null);
   const creationFormRef = useRef(null);
-
-  async function loadCreations() {
-    setIsLoadingList(true);
-    setListError(null);
-    try {
-      const data = await fetchCreations();
-      setCreations(data);
-    } catch (err) {
-      setListError(err instanceof ApiError ? err.message : "Erreur de chargement.");
-    } finally {
-      setIsLoadingList(false);
-    }
-  }
-
-  useEffect(() => {
-    loadCreations();
-  }, []);
+  const creationImages = useImageFields(setForm);
 
   function handleLogout() {
     logout();
@@ -83,18 +75,6 @@ export default function Admin() {
   function handleChange(e) {
     const { name, value } = e.target;
     setForm((prev) => ({ ...prev, [name]: value }));
-  }
-
-  function addCreationFiles(files) {
-    setForm((prev) => ({ ...prev, newFiles: [...prev.newFiles, ...files] }));
-  }
-
-  function removeCreationExistingImage(index) {
-    setForm((prev) => ({ ...prev, existingImages: prev.existingImages.filter((_, i) => i !== index) }));
-  }
-
-  function removeCreationNewFile(index) {
-    setForm((prev) => ({ ...prev, newFiles: prev.newFiles.filter((_, i) => i !== index) }));
   }
 
   async function handleSubmit(e) {
@@ -140,56 +120,13 @@ export default function Admin() {
     }
   }
 
-  const [creationsDescription, setCreationsDescription] = useState("");
-  const [isLoadingCreationsText, setIsLoadingCreationsText] = useState(true);
-  const [isSavingCreationsText, setIsSavingCreationsText] = useState(false);
-  const [creationsTextError, setCreationsTextError] = useState(null);
-  const [creationsTextSaved, setCreationsTextSaved] = useState(false);
-
-  useEffect(() => {
-    fetchCreationsSettings()
-      .then((data) => setCreationsDescription(data.description || ""))
-      .catch((err) => setCreationsTextError(err instanceof ApiError ? err.message : "Erreur de chargement."))
-      .finally(() => setIsLoadingCreationsText(false));
-  }, []);
-
-  async function handleCreationsTextSubmit(e) {
-    e.preventDefault();
-    setCreationsTextError(null);
-    setIsSavingCreationsText(true);
-    setCreationsTextSaved(false);
-    try {
-      const updated = await updateCreationsSettings(creationsDescription, token);
-      setCreationsDescription(updated.description || "");
-      setCreationsTextSaved(true);
-    } catch (err) {
-      setCreationsTextError(err instanceof ApiError ? err.message : "Erreur lors de l'enregistrement.");
-    } finally {
-      setIsSavingCreationsText(false);
-    }
-  }
-
-  const [messages, setMessages] = useState([]);
-  const [isLoadingMessages, setIsLoadingMessages] = useState(true);
-  const [messagesError, setMessagesError] = useState(null);
-
-  async function loadMessages() {
-    setIsLoadingMessages(true);
-    setMessagesError(null);
-    try {
-      const data = await fetchMessages(token);
-      setMessages(data);
-    } catch (err) {
-      setMessagesError(err instanceof ApiError ? err.message : "Erreur de chargement.");
-    } finally {
-      setIsLoadingMessages(false);
-    }
-  }
-
-  useEffect(() => {
-    loadMessages();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  // ---- Messages -------------------------------------------------------------
+  const {
+    items: messages,
+    setItems: setMessages,
+    isLoading: isLoadingMessages,
+    error: messagesError,
+  } = useAsyncList(() => fetchMessages(token));
 
   async function handleToggleRead(id) {
     try {
@@ -212,92 +149,42 @@ export default function Admin() {
 
   const unreadCount = messages.filter((m) => !m.read).length;
 
-  const [etudeDescription, setEtudeDescription] = useState("");
-  const [isLoadingEtudeText, setIsLoadingEtudeText] = useState(true);
-  const [isSavingEtudeText, setIsSavingEtudeText] = useState(false);
-  const [etudeTextError, setEtudeTextError] = useState(null);
-  const [etudeTextSaved, setEtudeTextSaved] = useState(false);
+  // ---- Étude & Agencement : plans --------------------------------------------
+  const {
+    items: plans,
+    setItems: setPlans,
+    isLoading: isLoadingPlans,
+    error: plansError,
+    reload: loadPlans,
+  } = useAsyncList(fetchEtudePlans);
 
-  useEffect(() => {
-    fetchEtudeSettings()
-      .then((data) => setEtudeDescription(data.description || ""))
-      .catch((err) => setEtudeTextError(err instanceof ApiError ? err.message : "Erreur de chargement."))
-      .finally(() => setIsLoadingEtudeText(false));
-  }, []);
-
-  async function handleEtudeTextSubmit(e) {
-    e.preventDefault();
-    setEtudeTextError(null);
-    setIsSavingEtudeText(true);
-    setEtudeTextSaved(false);
-    try {
-      const updated = await updateEtudeSettings(etudeDescription, token);
-      setEtudeDescription(updated.description || "");
-      setEtudeTextSaved(true);
-    } catch (err) {
-      setEtudeTextError(err instanceof ApiError ? err.message : "Erreur lors de l'enregistrement.");
-    } finally {
-      setIsSavingEtudeText(false);
-    }
-  }
-
-  const [plans, setPlans] = useState([]);
-  const [isLoadingPlans, setIsLoadingPlans] = useState(true);
-  const [plansError, setPlansError] = useState(null);
   const [planForm, setPlanForm] = useState(emptyPlanForm);
   const [editingPlanId, setEditingPlanId] = useState(null);
   const [isSavingPlan, setIsSavingPlan] = useState(false);
+  const [plansFormError, setPlansFormError] = useState(null);
   const planFormRef = useRef(null);
-
-  async function loadPlans() {
-    setIsLoadingPlans(true);
-    setPlansError(null);
-    try {
-      const data = await fetchEtudePlans();
-      setPlans(data);
-    } catch (err) {
-      setPlansError(err instanceof ApiError ? err.message : "Erreur de chargement.");
-    } finally {
-      setIsLoadingPlans(false);
-    }
-  }
-
-  useEffect(() => {
-    loadPlans();
-  }, []);
+  const planImages = useImageFields(setPlanForm);
 
   function startEditPlan(plan) {
     setEditingPlanId(plan.id);
     setPlanForm({ description: plan.description || "", newFiles: [], existingImages: plan.images || [] });
-    setPlansError(null);
+    setPlansFormError(null);
     planFormRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
   }
 
   function cancelEditPlan() {
     setEditingPlanId(null);
     setPlanForm(emptyPlanForm);
-    setPlansError(null);
-  }
-
-  function addPlanFiles(files) {
-    setPlanForm((prev) => ({ ...prev, newFiles: [...prev.newFiles, ...files] }));
-  }
-
-  function removePlanExistingImage(index) {
-    setPlanForm((prev) => ({ ...prev, existingImages: prev.existingImages.filter((_, i) => i !== index) }));
-  }
-
-  function removePlanNewFile(index) {
-    setPlanForm((prev) => ({ ...prev, newFiles: prev.newFiles.filter((_, i) => i !== index) }));
+    setPlansFormError(null);
   }
 
   async function handleSubmitPlan(e) {
     e.preventDefault();
-    setPlansError(null);
+    setPlansFormError(null);
 
     const totalImages = planForm.existingImages.length + planForm.newFiles.length;
     if (totalImages === 0) {
-      setPlansError("Ajoute au moins une photo.");
+      setPlansFormError("Ajoute au moins une photo.");
       return;
     }
 
@@ -317,7 +204,7 @@ export default function Admin() {
       cancelEditPlan();
       await loadPlans();
     } catch (err) {
-      setPlansError(err instanceof ApiError ? err.message : "Erreur lors de l'envoi.");
+      setPlansFormError(err instanceof ApiError ? err.message : "Erreur lors de l'envoi.");
     } finally {
       setIsSavingPlan(false);
     }
@@ -335,13 +222,14 @@ export default function Admin() {
 
   return (
     <section className="admin">
+      {/* <h1 className="visually-hidden">Admin</h1> */}
       <p className="admin-desktop-only">
-  L'espace d'administration n'est disponible que sur ordinateur.
-  <br />
-  Reviens depuis un écran plus grand pour gérer le site.
-</p>
+        L'espace d'administration n'est disponible que sur ordinateur.
+        <br />
+        Reviens depuis un écran plus grand pour gérer le site.
+      </p>
       <div className="admin-header">
-        <h2>Espace Admin</h2>
+        <h1>Espace Admin</h1>
         <button className="btn" onClick={handleLogout}>
           Se déconnecter
         </button>
@@ -354,41 +242,18 @@ export default function Admin() {
       <div className="admin-form">
         <h3>Section "Étude &amp; Agencement"</h3>
 
-        <form onSubmit={handleEtudeTextSubmit} className="admin-etude-text-form">
-          {isLoadingEtudeText ? (
-            <p>Chargement…</p>
-          ) : (
-            <>
-              <div className="admin-field admin-field-full">
-                <textarea
-                  id="etudeDescription"
-                  aria-label="Texte descriptif de la section Étude & Agencement"
-                  rows="4"
-                  value={etudeDescription}
-                  onChange={(e) => {
-                    setEtudeDescription(e.target.value);
-                    setEtudeTextSaved(false);
-                  }}
-                />
-              </div>
-
-              {etudeTextError && <p className="admin-error">{etudeTextError}</p>}
-              {etudeTextSaved && <p className="admin-success">Enregistré.</p>}
-
-              <div className="admin-form-actions">
-                <button className="btn" type="submit" disabled={isSavingEtudeText}>
-                  {isSavingEtudeText ? "Enregistrement…" : "Enregistrer le texte"}
-                </button>
-              </div>
-            </>
-          )}
-        </form>
+        <EditableTextField
+          id="etudeDescription"
+          ariaLabel="Texte descriptif de la section Étude & Agencement"
+          rows={4}
+          fetchFn={fetchEtudeSettings}
+          updateFn={updateEtudeSettings}
+          token={token}
+        />
 
         <hr className="admin-divider" />
 
-        <h4 className="admin-subheading">
-          {editingPlanId ? "Modifier le plan" : "Ajouter un plan : "} 
-        </h4>
+        <h4 className="admin-subheading">{editingPlanId ? "Modifier le plan" : "Ajouter un plan : "} </h4>
 
         <form onSubmit={handleSubmitPlan} className="admin-etude-upload-form" ref={planFormRef}>
           <div className="admin-field admin-field-full">
@@ -407,14 +272,14 @@ export default function Admin() {
               inputId="planFiles"
               ariaLabel="Choisir des photos pour ce plan"
               existingImages={planForm.existingImages}
-              onRemoveExisting={removePlanExistingImage}
+              onRemoveExisting={planImages.removeExisting}
               newFiles={planForm.newFiles}
-              onAddFiles={addPlanFiles}
-              onRemoveNewFile={removePlanNewFile}
+              onAddFiles={planImages.addFiles}
+              onRemoveNewFile={planImages.removeNewFile}
             />
           </div>
 
-          {plansError && <p className="admin-error">{plansError}</p>}
+          {plansFormError && <p className="admin-error">{plansFormError}</p>}
 
           <div className="admin-form-actions">
             <button className="btn" type="submit" disabled={isSavingPlan}>
@@ -428,9 +293,8 @@ export default function Admin() {
           </div>
         </form>
         <hr className="admin-divider" />
-        <h4 className="admin-subheading">
-          Les plans existants :
-        </h4>
+        <h4 className="admin-subheading">Les plans existants :</h4>
+        {plansError && <p className="admin-error">{plansError}</p>}
         {isLoadingPlans ? (
           <p>Chargement…</p>
         ) : plans.length === 0 ? (
@@ -462,35 +326,14 @@ export default function Admin() {
       <div className="admin-form">
         <h3>Section "Créations"</h3>
 
-        <form onSubmit={handleCreationsTextSubmit}>
-          {isLoadingCreationsText ? (
-            <p>Chargement…</p>
-          ) : (
-            <>
-              <div className="admin-field admin-field-full">
-                <textarea
-                  id="creationsDescription"
-                  aria-label="Texte descriptif de la section Créations"
-                  rows="3"
-                  value={creationsDescription}
-                  onChange={(e) => {
-                    setCreationsDescription(e.target.value);
-                    setCreationsTextSaved(false);
-                  }}
-                />
-              </div>
-
-              {creationsTextError && <p className="admin-error">{creationsTextError}</p>}
-              {creationsTextSaved && <p className="admin-success">Enregistré.</p>}
-
-              <div className="admin-form-actions">
-                <button className="btn" type="submit" disabled={isSavingCreationsText}>
-                  {isSavingCreationsText ? "Enregistrement…" : "Enregistrer le texte"}
-                </button>
-              </div>
-            </>
-          )}
-        </form>
+        <EditableTextField
+          id="creationsDescription"
+          ariaLabel="Texte descriptif de la section Créations"
+          rows={3}
+          fetchFn={fetchCreationsSettings}
+          updateFn={updateCreationsSettings}
+          token={token}
+        />
 
         <hr className="admin-divider" />
 
@@ -513,10 +356,10 @@ export default function Admin() {
               <ImagePicker
                 inputId="creationFiles"
                 existingImages={form.existingImages}
-                onRemoveExisting={removeCreationExistingImage}
+                onRemoveExisting={creationImages.removeExisting}
                 newFiles={form.newFiles}
-                onAddFiles={addCreationFiles}
-                onRemoveNewFile={removeCreationNewFile}
+                onAddFiles={creationImages.addFiles}
+                onRemoveNewFile={creationImages.removeNewFile}
               />
             </div>
           </div>
@@ -548,7 +391,7 @@ export default function Admin() {
         <ul className="admin-list-items">
           {creations.map((c) => (
             <li key={c.id} className="admin-list-item">
-              <img src={resolveImageUrl(c.image)} alt={c.name} />
+              <img src={resolveImageUrl(c.image)} alt="" />
               <div className="admin-list-info">
                 <p className="admin-list-name">{c.name}</p>
               </div>
@@ -566,9 +409,7 @@ export default function Admin() {
       </div>
 
       <div className="admin-list">
-        <h3>
-          Messages reçus {unreadCount > 0 && <span className="admin-badge">{unreadCount} non lu(s)</span>}
-        </h3>
+        <h3>Messages reçus {unreadCount > 0 && <span className="admin-badge">{unreadCount} non lu(s)</span>}</h3>
 
         {isLoadingMessages && <p>Chargement…</p>}
         {messagesError && <p className="admin-error">{messagesError}</p>}
@@ -583,7 +424,8 @@ export default function Admin() {
                 <div>
                   <p className="admin-message-name">{m.name}</p>
                   <p className="admin-message-meta">
-                    {m.email} · {m.phone}
+                    {m.email}
+                    {m.phone && ` · ${m.phone}`}
                   </p>
                 </div>
                 <p className="admin-message-date">

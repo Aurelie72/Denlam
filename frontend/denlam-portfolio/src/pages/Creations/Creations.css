@@ -2,15 +2,18 @@
   max-width: 850px;
   margin: 0 auto;
   padding: 50px clamp(24px, 6vw, 70px) 20px;
-  text-align: center;
+
 }
 
 
 .creations-intro p {
-  font-size: 1.15rem;
+  font-size: 1rem;
   line-height: 1.7;
   color: var(--color-muted);
   white-space: pre-line;
+  text-align: justify;
+  text-justify: inter-word;
+  
 }
 
 .detail-description p {
@@ -62,6 +65,7 @@
   font-size: 1.1rem;
   font-weight: 700;
   text-align: center;
+
 }
 
 .gallery-empty {
@@ -86,6 +90,7 @@
   letter-spacing: 1px;
   color: black;
   pointer-events: none;
+  font-family: var(--font-title);
 }
 
 /* Hover identique à la Home */

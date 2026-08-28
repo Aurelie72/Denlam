@@ -8,6 +8,13 @@
   text-align: center;
 }
 
+.site-footer-brand {
+  letter-spacing: 15px;
+  font-size: clamp(1.25rem, 2.5vw, 1.875rem);
+  color: var(--color-muted);
+  font-weight: 800;
+}
+
 .site-footer a {
   text-decoration: none;
   color: var(--color-muted);

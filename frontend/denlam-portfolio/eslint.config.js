@@ -37,6 +37,13 @@ export default [
       // parfaitement bien tel quel en React, ce n'est pas un vrai bug.
       // Très bruyant pour un site en français plein de texte courant.
       "react/no-unescaped-entities": "off",
+      // "fetchpriority" en minuscule est un bug connu de React 18.3.x
+      // (l'attribut camelCase déclenche un faux avertissement dans cette
+      // version précise — voir facebook/react#28948). La minuscule
+      // fonctionne parfaitement et sans avertissement ; on l'autorise ici
+      // plutôt que de suivre la recommandation par défaut (pensée pour
+      // React 19, pas encore utilisé dans ce projet).
+      "react/no-unknown-property": ["error", { ignore: ["fetchpriority"] }],
     },
     settings: {
       react: { version: "detect" },

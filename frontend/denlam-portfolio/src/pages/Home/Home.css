@@ -48,7 +48,7 @@
   transition: opacity var(--transition-soft), transform var(--transition-soft);
 }
 
-.hero-card p {
+.hero-card h2 {
   position: absolute;
   opacity: 0;
   transition: opacity var(--transition-soft);
@@ -57,6 +57,9 @@
   font-weight: 800;
   letter-spacing: 1px;
   pointer-events: none;
+  font-family: var(--font-title);
+  /* background-color: rgba(0, 0, 0, 0.55);
+  border-radius: var(--radius-sm); */
 }
 
 .hero-card:hover .hero-card-media img {
@@ -64,7 +67,7 @@
   transform: scale(1.03);
 }
 
-.hero-card:hover p {
+.hero-card:hover h2 {
   opacity: 1;
 }
 
@@ -94,7 +97,7 @@
   width: var(--portrait-w);
   height: min(420px, 60vw);
   object-fit: cover;
-  transform: translateX(-40px);
+  transform: translateX(-50px) translateY(10px);
 }
 
 /* Texte placé proportionnellement à la largeur réelle de la photo (700px
@@ -102,6 +105,9 @@
 .about-text {
   position: absolute;
   top: -70px;
+  text-align: justify;
+text-justify: inter-word;
+
   left: calc(var(--portrait-w) * 0.5714 - 20px);
   width: min(750px, 85vw);
   padding: 20px;
@@ -114,7 +120,7 @@
 }
 
 .about-text p {
-  font-size: 1.05rem;
+  font-size: .95rem;
   line-height: 1.6;
   color: var(--color-muted);
   font-weight: 500;
@@ -156,7 +162,7 @@
   display: flex;
   flex-wrap: wrap;
   gap: 40px;
- padding: clamp(100px, 6vw, 60px) clamp(60px, 10vw, 140px) clamp(60px, 10vw, 100px);
+  padding: clamp(100px, 6vw, 60px) clamp(80px, 12vw, 180px) clamp(60px, 10vw, 100px);
 }
 
 .contact-form-wrap {
@@ -277,6 +283,8 @@ textarea {
 .email-link {
   text-decoration: none;
   color: inherit;
+  color: var(--color-muted);
+  font-size: 1.05rem;
 }
 
 .form-required-note {
@@ -302,6 +310,8 @@ textarea {
 
 .reseaux a:hover {
   color: var(--color-text);
+  opacity: 1;
+  transform: scale(1.1);
 }
 
 .cv-icon img {

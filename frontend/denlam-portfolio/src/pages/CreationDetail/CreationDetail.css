@@ -21,6 +21,8 @@
   flex: 1;
   text-align: center;
   min-width: 200px;
+  font-family: var(--font-title);
+  font-size: 1.8rem;
 }
 
 .nav-arrow {
@@ -66,7 +68,7 @@
 }
 
 .detail-description > p:last-child {
-  font-size: 1.15rem;
+  font-size: 1rem;
   line-height: 1.7;
   color: var(--color-muted);
 }

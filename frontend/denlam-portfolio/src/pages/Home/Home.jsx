@@ -56,15 +56,15 @@ export default function Home() {
       <section id="etude" className="hero">
         <Link to="/etude" className="hero-card">
           <span className="hero-card-media" aria-hidden="true">
-        <img src={eeta} alt="" width="700" height="700" loading="eager" fetchPriority="high" decoding="async" />
+        <img src={eeta} alt="" width="700" height="700" loading="eager" fetchpriority="high" decoding="async" />
           </span>
-          <p>{hero.card1_label}</p>
+          <h2>{hero.card1_label}</h2>
         </Link>
         <Link to="/creations" className="hero-card">
           <span className="hero-card-media" aria-hidden="true">
            <img src={crea} alt="" width="700" height="700" loading="eager" fetchPriority="high" decoding="async" />
           </span>
-          <p>{hero.card2_label}</p>
+          <h2>{hero.card2_label}</h2>
         </Link>
       </section>
       <section id="apropos" className="about">
@@ -223,6 +223,7 @@ export default function Home() {
   href={cvthomas}
   className="cv-icon"
   target="_blank"
+  aria-label="Télécharger mon CV (PDF, nouvel onglet)"
   rel="noopener noreferrer"
 >
   <img src={cv} alt="Télécharger mon CV" />
