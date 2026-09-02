@@ -1,3 +1,18 @@
+.seo-tagline {
+  /* margin-left: 75px; */
+  margin-top: 50px;
+  font-size: 1rem ;
+  max-width: 1500px;
+  margin: 40px auto 0;
+  padding: 0 24px;
+  text-align: center;
+  /* font-size: clamp(0.65rem, 1.5vw, 1.05rem); */
+  font-weight: 700;
+  letter-spacing: 3px;
+  /* text-transform: uppercase; */
+  color: var(--color-muted);
+}
+
 /* ---- Hero / cartes ------------------------------------------------- */
 .hero {
   display: flex;
@@ -19,8 +34,8 @@
 
 .hero-card-media {
   display: block;
-  width: min(420px, 40vw + 120px);
-  aspect-ratio: 1 / 1;
+  width: min(450px, 35vw);
+  aspect-ratio: 3 / 2;
   border-radius: var(--radius-sm);
   overflow: hidden;
   box-shadow: var(--shadow-soft);
@@ -33,7 +48,7 @@
   transition: opacity var(--transition-soft), transform var(--transition-soft);
 }
 
-.hero-card p {
+.hero-card h2 {
   position: absolute;
   opacity: 0;
   transition: opacity var(--transition-soft);
@@ -42,6 +57,9 @@
   font-weight: 800;
   letter-spacing: 1px;
   pointer-events: none;
+  font-family: var(--font-title);
+  /* background-color: rgba(0, 0, 0, 0.55);
+  border-radius: var(--radius-sm); */
 }
 
 .hero-card:hover .hero-card-media img {
@@ -49,7 +67,7 @@
   transform: scale(1.03);
 }
 
-.hero-card:hover p {
+.hero-card:hover h2 {
   opacity: 1;
 }
 
@@ -60,28 +78,41 @@
 }
 
 /* ---- A propos -------------------------------------------------------- */
+
 .about {
-  padding: clamp(40px, 8vw, 80px) clamp(24px, 6vw, 70px);
+  padding: clamp(70px, 8vw, 180px) clamp(24px, 6vw, 70px);
 }
 
 .about-inner {
+  --portrait-w: min(700px, 90vw);
+  position: relative;
   display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  align-items: center;
-  gap: clamp(24px, 4vw, 40px);
+  flex-wrap: nowrap;
+  align-items: flex-start;
+  justify-content: left;
+  padding-left: clamp(24px, 8vw, 100px);
 }
 
 .about-portrait {
-  width: min(360px, 90vw);
-  height: min(430px, 60vw);
+  width: var(--portrait-w);
+  height: min(420px, 60vw);
   object-fit: cover;
-  border-radius: var(--radius-sm);
-  box-shadow: var(--shadow-soft);
+  transform: translateX(-50px) translateY(10px);
 }
 
+/* Texte placé proportionnellement à la largeur réelle de la photo (700px
+   de référence, ratio conservé quelle que soit la taille d'écran) */
 .about-text {
-  max-width: 540px;
+  position: absolute;
+  top: -70px;
+  text-align: justify;
+text-justify: inter-word;
+
+  left: calc(var(--portrait-w) * 0.5714 - 20px);
+  width: min(750px, 85vw);
+  padding: 20px;
+  border-radius: var(--radius-sm);
+  box-sizing: border-box;
 }
 
 .about-text h2 {
@@ -89,25 +120,49 @@
 }
 
 .about-text p {
-  font-size: 1.15rem;
+  font-size: .95rem;
   line-height: 1.6;
   color: var(--color-muted);
   font-weight: 500;
 }
 
-.about-placeholder-note {
-  margin-top: 12px;
-  font-size: 0.85rem !important;
-  font-style: italic;
-  color: var(--color-border) !important;
+.about-text .indent {
+  margin-left: calc(var(--portrait-w) * 0.5429);
 }
+
+@media (max-width: 780px) {
+  .about-inner {
+    flex-wrap: wrap;
+    padding-left: 0;
+  }
+
+  .about-text {
+    position: static;
+    padding: 0;
+    margin-top: 20px;
+    width: 100%;
+    left: auto;
+  }
+
+  .about-text .indent {
+    margin-left: 0;
+  }
+
+  .about-portrait {
+    transform: translateX(0);
+    width: 100%;
+    height: auto;
+    aspect-ratio: 700 / 420;
+  }
+}
+
 
 /* ---- Contact ----------------------------------------------------------- */
 .contact {
   display: flex;
   flex-wrap: wrap;
   gap: 40px;
-  padding: clamp(40px, 6vw, 60px) clamp(24px, 6vw, 70px) clamp(60px, 10vw, 100px);
+  padding: clamp(100px, 6vw, 60px) clamp(80px, 12vw, 180px) clamp(60px, 10vw, 100px);
 }
 
 .contact-form-wrap {
@@ -116,10 +171,10 @@
 
 .form {
   max-width: 560px;
-  margin-top: 1.5rem;
+  margin-top: 1rem;
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
+  gap: 1rem;
 }
 
 textarea {
@@ -161,10 +216,10 @@ textarea {
   outline: none;
 }
 
-.input-field input:focus ~ label,
-.input-field input:valid ~ label,
-.input-field textarea:focus ~ label,
-.input-field textarea:valid ~ label {
+ .input-field input:focus ~ label,
+ .input-field input:not(:placeholder-shown) ~ label,
+ .input-field textarea:focus ~ label,
+ .input-field textarea:not(:placeholder-shown) ~ label  {
   transform: translateY(-1.35rem) translateX(-10px) scale(0.8);
   background-color: var(--color-surface);
   padding: 0 5px;
@@ -195,6 +250,18 @@ textarea {
   font-size: 0.95rem;
 }
 
+.form-feedback.error {
+  color: #b23b3b;
+  font-size: 0.95rem;
+}
+
+.form input,
+.form textarea,
+.btn,
+.container-checkbox {
+  max-width: 480px;
+}
+
 .coordonnees {
   flex: 1 1 260px;
   display: flex;
@@ -212,6 +279,22 @@ textarea {
   font-size: 1.05rem;
 }
 
+.phone-link,
+.email-link {
+  text-decoration: none;
+  color: inherit;
+  color: var(--color-muted);
+  font-size: 1.05rem;
+}
+
+.form-required-note {
+  font-size: 0.85rem;
+  color: var(--color-muted);
+  margin-top: -0.5rem;
+}
+
+
+
 .reseaux {
   display: flex;
   justify-content: flex-end;
@@ -220,13 +303,28 @@ textarea {
 }
 
 .reseaux a {
-  font-size: 1.4rem;
+  font-size: 1.8rem;
   color: var(--color-muted);
   transition: color var(--transition-fast);
 }
 
 .reseaux a:hover {
   color: var(--color-text);
+  opacity: 1;
+  transform: scale(1.1);
+}
+
+.cv-icon img {
+  width: 32px;
+  height: 32px;
+  display: block;
+  opacity: 0.85;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.cv-icon:hover img {
+  opacity: 1;
+  transform: scale(1.1);
 }
 
 @media (max-width: 780px) {

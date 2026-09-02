@@ -1,14 +1,28 @@
 import "dotenv/config";
 import express from "express";
 import cors from "cors";
+import helmet from "helmet";
+import mongoSanitize from "express-mongo-sanitize";
 import path from "node:path";
 import { connectDB } from "./src/config/db.js";
 import authRoutes from "./src/routes/auth.routes.js";
 import creationsRoutes from "./src/routes/creations.routes.js";
 import settingsRoutes from "./src/routes/settings.routes.js";
+import messagesRoutes from "./src/routes/messages.routes.js";
+import etudeRoutes from "./src/routes/etude.routes.js";
+import { apiLimiter } from "./src/middleware/rateLimiters.js";
 import { notFound, errorHandler } from "./src/middleware/errorHandler.js";
 
 const app = express();
+
+// En-têtes de sécurité HTTP standard (protection clickjacking, MIME
+// sniffing, etc.). crossOriginResourcePolicy désactivé pour que les images
+// de /uploads restent chargeables depuis le domaine du frontend.
+app.use(
+  helmet({
+    crossOriginResourcePolicy: { policy: "cross-origin" },
+  }),
+);
 
 const defaultOrigins = ["http://localhost:5173", "http://localhost:5174"];
 const allowedOrigins = process.env.CLIENT_ORIGIN
@@ -18,23 +32,41 @@ const allowedOrigins = process.env.CLIENT_ORIGIN
 app.use(
   cors({
     origin(origin, callback) {
-      // Autorise aussi les requêtes sans origine (ex. curl, Postman)
-      if (!origin || allowedOrigins.includes(origin)) {
+      if (!origin || allowedOrigins.includes(origin))
         return callback(null, true);
-      }
       callback(new Error(`Origine non autorisée par CORS : ${origin}`));
     },
   }),
 );
 app.use(express.json());
 
-// Sert les images uploadées (POST /api/creations avec un fichier)
-app.use("/uploads", express.static(path.resolve("uploads")));
+// Retire toute clé commençant par "$" ou contenant "." dans req.body/params/
+// query — empêche l'injection d'opérateurs MongoDB (ex. { "$ne": null })
+// glissés dans une requête.
+app.use(mongoSanitize());
+
+// Filet de sécurité général contre les abus (bots, scraping agressif) sur
+// toute l'API. Les limites plus strictes (login, contact) s'ajoutent
+// par-dessus sur leurs routes spécifiques.
+app.use("/api", apiLimiter);
+
+// Cache long : les noms de fichiers sont des UUID générés une seule fois
+// et jamais réutilisés (voir processImages.js) — donc "immutable" est sûr,
+// pas de risque de servir une ancienne version en cache après une modif.
+app.use(
+  "/uploads",
+  express.static(path.resolve("uploads"), {
+    maxAge: "30d",
+    immutable: true,
+  }),
+);
 
 app.get("/api/health", (req, res) => res.json({ status: "ok" }));
 app.use("/api/auth", authRoutes);
 app.use("/api/creations", creationsRoutes);
 app.use("/api/settings", settingsRoutes);
+app.use("/api/messages", messagesRoutes);
+app.use("/api/etude", etudeRoutes);
 
 app.use(notFound);
 app.use(errorHandler);

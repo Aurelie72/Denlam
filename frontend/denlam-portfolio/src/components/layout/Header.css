@@ -1,19 +1,26 @@
 .site-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 32px clamp(24px, 6vw, 70px) 0;
+  min-height: var(--header-height);
+  box-sizing: border-box;
+  padding: 12px clamp(24px, 6vw, 70px);
+  background-color: rgba(255, 254, 254, 0.92);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.06);
 }
 
-.logo {
-  font-family: var(--font-display);
-  font-weight: 800;
-  font-size: 1.75rem;
-  letter-spacing: 6px;
-  text-decoration: none;
-  color: var(--color-text);
+.logo img {
+  height: 58px;
+  width: auto;
+  display: block;
 }
-
 .nav-toggle {
   display: none;
   flex-direction: column;
@@ -58,17 +65,40 @@
   transition: color var(--transition-fast);
 }
 
+.primary-nav a {
+  position: relative;
+}
+
+.primary-nav a::before,
 .primary-nav a::after {
   content: "";
   position: absolute;
-  left: 0;
   bottom: -4px;
-  width: 100%;
   height: 2px;
+  width: 50%;
   background-color: var(--color-accent-strong);
   transform: scaleX(0);
-  transform-origin: left;
   transition: transform var(--transition-fast);
+}
+
+/* Barre gauche */
+.primary-nav a::before {
+  left: 0;
+  transform-origin: left;
+}
+
+/* Barre droite */
+.primary-nav a::after {
+  right: 0;
+  transform-origin: right;
+}
+
+/* Activation + hover */
+.primary-nav a:hover::before,
+.primary-nav a:hover::after,
+.primary-nav a.active::before,
+.primary-nav a.active::after {
+  transform: scaleX(1);
 }
 
 .primary-nav a:hover::after,
@@ -87,20 +117,27 @@
   }
 
   .primary-nav {
-    position: absolute;
-    top: 90px;
+    position: fixed;
+    top: var(--header-height);
     left: 24px;
     right: 24px;
     width: auto;
     box-shadow: var(--shadow-soft);
     max-height: 0;
     overflow: hidden;
-    transition: max-height var(--transition-soft);
-    z-index: 20;
+   visibility: hidden;
+    opacity: 0;
+transition: max-height var(--transition-soft), opacity var(--transition-soft);
+visibility: hidden;
+transition: visibility 0s linear var(--transition-soft);
+z-index: 20;
   }
 
   .primary-nav.open {
     max-height: 320px;
+    visibility: visible;
+   opacity: 1;
+    transition: max-height var(--transition-soft), opacity var(--transition-soft), visibility 0s linear 0s;
   }
 
   .primary-nav ul {
@@ -108,5 +145,8 @@
     align-items: flex-start;
     padding: 16px 24px;
     gap: 16px;
+  }
+  .primary-nav a.nav-admin {
+    display: none;
   }
 }

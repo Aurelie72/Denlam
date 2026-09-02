@@ -7,16 +7,6 @@ const creationSchema = new mongoose.Schema(
       required: [true, "Le nom est obligatoire"],
       trim: true,
     },
-    category: {
-      type: String,
-      required: true,
-      enum: {
-        values: ["lampe", "mobilier", "decoration"],
-        message: "Catégorie invalide : {VALUE}",
-      },
-    },
-    // Plusieurs photos possibles : la première sert de photo principale
-    // (vignette galerie + image affichée en premier dans le carrousel).
     images: {
       type: [String],
       required: [true, "Au moins une image est obligatoire"],
@@ -27,7 +17,7 @@ const creationSchema = new mongoose.Schema(
     },
     description: {
       type: String,
-      default: "",
+      required: [true, "La description est obligatoire"],
       trim: true,
     },
   },
@@ -39,8 +29,6 @@ creationSchema.set("toJSON", {
     ret.id = ret._id;
     delete ret._id;
     delete ret.__v;
-    // "image" reste exposé (= la première photo) pour compat avec du code
-    // qui n'a besoin que de la vignette (liste galerie).
     ret.image = ret.images?.[0] || null;
     return ret;
   },

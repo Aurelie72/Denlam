@@ -1,50 +1,53 @@
-import { useEffect, useState } from "react";
+import { useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext.jsx";
+import { useAsyncList } from "../../hooks/useAsyncList.js";
+import { useImageFields } from "./useImageFields.js";
 import {
   fetchCreations,
   createCreation,
   updateCreation,
   deleteCreation,
-  fetchAbout,
-  updateAbout,
+  fetchCreationsSettings,
+  updateCreationsSettings,
+  fetchMessages,
+  toggleMessageRead,
+  deleteMessage,
+  fetchEtudeSettings,
+  updateEtudeSettings,
+  fetchEtudePlans,
+  addEtudePlan,
+  updateEtudePlan,
+  deleteEtudePlan,
   resolveImageUrl,
   ApiError,
 } from "../../services/api.js";
+import ImagePicker from "./ImagePicker.jsx";
+import EditableTextField from "./EditableTextField.jsx";
 import "./Admin.css";
 
-const emptyForm = { name: "", category: "lampe", description: "", imageFiles: [], existingImages: [] };
-const emptyAboutForm = { name: "", bio: "", portraitFile: null, portraitUrl: "" };
+const emptyForm = { name: "", description: "", newFiles: [], existingImages: [] };
+const emptyPlanForm = { description: "", newFiles: [], existingImages: [] };
 
 export default function Admin() {
   const { user, token, logout } = useAuth();
   const navigate = useNavigate();
 
-  const [creations, setCreations] = useState([]);
-  const [isLoadingList, setIsLoadingList] = useState(true);
-  const [listError, setListError] = useState(null);
+  // ---- Créations : liste ---------------------------------------------------
+  const {
+    items: creations,
+    setItems: setCreations,
+    isLoading: isLoadingList,
+    error: listError,
+    reload: loadCreations,
+  } = useAsyncList(fetchCreations);
 
   const [form, setForm] = useState(emptyForm);
   const [editingId, setEditingId] = useState(null);
   const [isSaving, setIsSaving] = useState(false);
   const [formError, setFormError] = useState(null);
-
-  async function loadCreations() {
-    setIsLoadingList(true);
-    setListError(null);
-    try {
-      const data = await fetchCreations();
-      setCreations(data);
-    } catch (err) {
-      setListError(err instanceof ApiError ? err.message : "Erreur de chargement.");
-    } finally {
-      setIsLoadingList(false);
-    }
-  }
-
-  useEffect(() => {
-    loadCreations();
-  }, []);
+  const creationFormRef = useRef(null);
+  const creationImages = useImageFields(setForm);
 
   function handleLogout() {
     logout();
@@ -55,13 +58,12 @@ export default function Admin() {
     setEditingId(creation.id);
     setForm({
       name: creation.name,
-      category: creation.category,
       description: creation.description || "",
-      imageFiles: [],
+      newFiles: [],
       existingImages: creation.images?.length ? creation.images : creation.image ? [creation.image] : [],
     });
     setFormError(null);
-    window.scrollTo({ top: 0, behavior: "smooth" });
+    creationFormRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
   }
 
   function cancelEdit() {
@@ -71,37 +73,27 @@ export default function Admin() {
   }
 
   function handleChange(e) {
-    const { name, value, files } = e.target;
-    if (name === "imageFiles") {
-      setForm((prev) => ({ ...prev, imageFiles: Array.from(files) }));
-    } else {
-      setForm((prev) => ({ ...prev, [name]: value }));
-    }
+    const { name, value } = e.target;
+    setForm((prev) => ({ ...prev, [name]: value }));
   }
 
   async function handleSubmit(e) {
     e.preventDefault();
     setFormError(null);
 
-    if (!editingId && form.imageFiles.length === 0) {
+    const totalImages = form.existingImages.length + form.newFiles.length;
+    if (totalImages === 0) {
       setFormError("Ajoute au moins une photo.");
       return;
     }
 
     setIsSaving(true);
-
     try {
-      let payload;
-      if (form.imageFiles.length > 0) {
-        payload = new FormData();
-        payload.append("name", form.name);
-        payload.append("category", form.category);
-        payload.append("description", form.description);
-        form.imageFiles.forEach((file) => payload.append("images", file));
-      } else {
-        // En édition sans nouveau fichier : on garde les photos actuelles.
-        payload = { name: form.name, category: form.category, description: form.description };
-      }
+      const payload = new FormData();
+      payload.append("name", form.name);
+      payload.append("description", form.description);
+      form.existingImages.forEach((img) => payload.append("existingImages", img));
+      form.newFiles.forEach((file) => payload.append("images", file));
 
       if (editingId) {
         await updateCreation(editingId, payload, token);
@@ -128,82 +120,116 @@ export default function Admin() {
     }
   }
 
-  // ---- Section "À propos" ------------------------------------------------
-  const [aboutForm, setAboutForm] = useState(emptyAboutForm);
-  const [isLoadingAbout, setIsLoadingAbout] = useState(true);
-  const [aboutError, setAboutError] = useState(null);
-  const [isSavingAbout, setIsSavingAbout] = useState(false);
-  const [aboutSaved, setAboutSaved] = useState(false);
+  // ---- Messages -------------------------------------------------------------
+  const {
+    items: messages,
+    setItems: setMessages,
+    isLoading: isLoadingMessages,
+    error: messagesError,
+  } = useAsyncList(() => fetchMessages(token));
 
-  useEffect(() => {
-    let cancelled = false;
-    fetchAbout()
-      .then((data) => {
-        if (!cancelled) {
-          setAboutForm({
-            name: data.name || "",
-            bio: data.bio || "",
-            portraitFile: null,
-            portraitUrl: data.portrait || "",
-          });
-        }
-      })
-      .catch((err) => {
-        if (!cancelled) setAboutError(err instanceof ApiError ? err.message : "Erreur de chargement.");
-      })
-      .finally(() => {
-        if (!cancelled) setIsLoadingAbout(false);
-      });
-    return () => {
-      cancelled = true;
-    };
-  }, []);
-
-  function handleAboutChange(e) {
-    const { name, value, files } = e.target;
-    setAboutSaved(false);
-    if (name === "portraitFile") {
-      setAboutForm((prev) => ({ ...prev, portraitFile: files[0] || null }));
-    } else {
-      setAboutForm((prev) => ({ ...prev, [name]: value }));
+  async function handleToggleRead(id) {
+    try {
+      const updated = await toggleMessageRead(id, token);
+      setMessages((prev) => prev.map((m) => (m.id === id ? updated : m)));
+    } catch (err) {
+      alert(err instanceof ApiError ? err.message : "Erreur.");
     }
   }
 
-  async function handleAboutSubmit(e) {
-    e.preventDefault();
-    setAboutError(null);
-    setIsSavingAbout(true);
-
+  async function handleDeleteMessage(id) {
+    if (!window.confirm("Supprimer ce message ?")) return;
     try {
-      let payload;
-      if (aboutForm.portraitFile) {
-        payload = new FormData();
-        payload.append("name", aboutForm.name);
-        payload.append("bio", aboutForm.bio);
-        payload.append("portrait", aboutForm.portraitFile);
+      await deleteMessage(id, token);
+      setMessages((prev) => prev.filter((m) => m.id !== id));
+    } catch (err) {
+      alert(err instanceof ApiError ? err.message : "Erreur lors de la suppression.");
+    }
+  }
+
+  const unreadCount = messages.filter((m) => !m.read).length;
+
+  // ---- Étude & Agencement : plans --------------------------------------------
+  const {
+    items: plans,
+    setItems: setPlans,
+    isLoading: isLoadingPlans,
+    error: plansError,
+    reload: loadPlans,
+  } = useAsyncList(fetchEtudePlans);
+
+  const [planForm, setPlanForm] = useState(emptyPlanForm);
+  const [editingPlanId, setEditingPlanId] = useState(null);
+  const [isSavingPlan, setIsSavingPlan] = useState(false);
+  const [plansFormError, setPlansFormError] = useState(null);
+  const planFormRef = useRef(null);
+  const planImages = useImageFields(setPlanForm);
+
+  function startEditPlan(plan) {
+    setEditingPlanId(plan.id);
+    setPlanForm({ description: plan.description || "", newFiles: [], existingImages: plan.images || [] });
+    setPlansFormError(null);
+    planFormRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+
+  function cancelEditPlan() {
+    setEditingPlanId(null);
+    setPlanForm(emptyPlanForm);
+    setPlansFormError(null);
+  }
+
+  async function handleSubmitPlan(e) {
+    e.preventDefault();
+    setPlansFormError(null);
+
+    const totalImages = planForm.existingImages.length + planForm.newFiles.length;
+    if (totalImages === 0) {
+      setPlansFormError("Ajoute au moins une photo.");
+      return;
+    }
+
+    setIsSavingPlan(true);
+    try {
+      const formData = new FormData();
+      formData.append("description", planForm.description);
+      planForm.existingImages.forEach((img) => formData.append("existingImages", img));
+      planForm.newFiles.forEach((file) => formData.append("images", file));
+
+      if (editingPlanId) {
+        await updateEtudePlan(editingPlanId, formData, token);
       } else {
-        payload = { name: aboutForm.name, bio: aboutForm.bio };
+        await addEtudePlan(formData, token);
       }
 
-      const updated = await updateAbout(payload, token);
-      setAboutForm({
-        name: updated.name || "",
-        bio: updated.bio || "",
-        portraitFile: null,
-        portraitUrl: updated.portrait || "",
-      });
-      setAboutSaved(true);
+      cancelEditPlan();
+      await loadPlans();
     } catch (err) {
-      setAboutError(err instanceof ApiError ? err.message : "Erreur lors de l'enregistrement.");
+      setPlansFormError(err instanceof ApiError ? err.message : "Erreur lors de l'envoi.");
     } finally {
-      setIsSavingAbout(false);
+      setIsSavingPlan(false);
+    }
+  }
+
+  async function handleDeletePlan(id) {
+    if (!window.confirm("Supprimer ce plan ?")) return;
+    try {
+      await deleteEtudePlan(id, token);
+      setPlans((prev) => prev.filter((p) => p.id !== id));
+    } catch (err) {
+      alert(err instanceof ApiError ? err.message : "Erreur lors de la suppression.");
     }
   }
 
   return (
     <section className="admin">
+      {/* <h1 className="visually-hidden">Admin</h1> */}
+      <p className="admin-desktop-only">
+        L'espace d'administration n'est disponible que sur ordinateur.
+        <br />
+        Reviens depuis un écran plus grand pour gérer le site.
+      </p>
       <div className="admin-header">
-        <h2>Espace Admin</h2>
+        <h1>Espace Admin</h1>
         <button className="btn" onClick={handleLogout}>
           Se déconnecter
         </button>
@@ -213,137 +239,151 @@ export default function Admin() {
         Connecté en tant que <strong>{user?.username || "administrateur"}</strong>.
       </p>
 
-      <form className="admin-form" onSubmit={handleAboutSubmit}>
-        <h3>Section "À propos"</h3>
+      <div className="admin-form">
+        <h3>Section "Étude &amp; Agencement"</h3>
 
-        {isLoadingAbout ? (
-          <p>Chargement…</p>
-        ) : (
-          <>
-            <div className="admin-form-grid">
-              <div className="admin-field">
-                <label htmlFor="aboutName">Nom</label>
-                <input
-                  id="aboutName"
-                  name="name"
-                  required
-                  value={aboutForm.name}
-                  onChange={handleAboutChange}
-                />
-              </div>
+        <EditableTextField
+          id="etudeDescription"
+          ariaLabel="Texte descriptif de la section Étude & Agencement"
+          rows={4}
+          fetchFn={fetchEtudeSettings}
+          updateFn={updateEtudeSettings}
+          token={token}
+        />
 
-              <div className="admin-field admin-field-full">
-                <label htmlFor="aboutBio">Texte de présentation</label>
-                <textarea
-                  id="aboutBio"
-                  name="bio"
-                  rows="5"
-                  value={aboutForm.bio}
-                  onChange={handleAboutChange}
-                />
-              </div>
+        <hr className="admin-divider" />
 
-              <div className="admin-field admin-field-full">
-                <label htmlFor="portraitFile">Photo (laisser vide pour garder l'actuelle)</label>
-                <input
-                  id="portraitFile"
-                  name="portraitFile"
-                  type="file"
-                  accept="image/*"
-                  onChange={handleAboutChange}
-                />
-                {aboutForm.portraitUrl && !aboutForm.portraitFile && (
-                  <img
-                    src={resolveImageUrl(aboutForm.portraitUrl)}
-                    alt=""
-                    className="admin-current-image"
-                  />
-                )}
-              </div>
-            </div>
+        <h4 className="admin-subheading">{editingPlanId ? "Modifier le plan" : "Ajouter un plan : "} </h4>
 
-            {aboutError && <p className="admin-error">{aboutError}</p>}
-            {aboutSaved && <p className="admin-success">Enregistré.</p>}
-
-            <div className="admin-form-actions">
-              <button className="btn" type="submit" disabled={isSavingAbout}>
-                {isSavingAbout ? "Enregistrement…" : "Enregistrer"}
-              </button>
-            </div>
-          </>
-        )}
-      </form>
-
-      <form className="admin-form" onSubmit={handleSubmit}>
-        <h3>{editingId ? "Modifier la création" : "Ajouter une création"}</h3>
-
-        <div className="admin-form-grid">
-          <div className="admin-field">
-            <label htmlFor="name">Nom</label>
-            <input id="name" name="name" required value={form.name} onChange={handleChange} />
-          </div>
-
-          <div className="admin-field">
-            <label htmlFor="category">Catégorie</label>
-            <select id="category" name="category" value={form.category} onChange={handleChange}>
-              <option value="lampe">Lampe</option>
-              <option value="mobilier">Mobilier</option>
-              <option value="decoration">Décoration</option>
-            </select>
-          </div>
-
+        <form onSubmit={handleSubmitPlan} className="admin-etude-upload-form" ref={planFormRef}>
           <div className="admin-field admin-field-full">
-            <label htmlFor="description">Description (optionnel)</label>
-            <textarea id="description" name="description" rows="3" value={form.description} onChange={handleChange} />
-          </div>
-
-          <div className="admin-field admin-field-full">
-            <label htmlFor="imageFiles">
-              Photos {editingId ? "(laisser vide pour garder les photos actuelles)" : ""}
-            </label>
-            <input
-              id="imageFiles"
-              name="imageFiles"
-              type="file"
-              accept="image/*"
-              multiple
-              onChange={handleChange}
+            <textarea
+              id="planDescription"
+              aria-label="Texte du plan"
+              rows="3"
+              value={planForm.description}
+              onChange={(e) => setPlanForm((prev) => ({ ...prev, description: e.target.value }))}
             />
-            <p className="admin-field-hint">
-              Plusieurs photos possibles : la première sert de photo principale (vignette + carrousel).
-              Sélectionner de nouveaux fichiers remplace toutes les photos actuelles.
-            </p>
+          </div>
 
-            {form.imageFiles.length === 0 && form.existingImages.length > 0 && (
-              <div className="admin-current-images">
-                {form.existingImages.map((img, i) => (
-                  <img key={img + i} src={resolveImageUrl(img)} alt="" className="admin-current-image" />
-                ))}
-              </div>
+          <div className="admin-field admin-field-full">
+            <br />
+            <ImagePicker
+              inputId="planFiles"
+              ariaLabel="Choisir des photos pour ce plan"
+              existingImages={planForm.existingImages}
+              onRemoveExisting={planImages.removeExisting}
+              newFiles={planForm.newFiles}
+              onAddFiles={planImages.addFiles}
+              onRemoveNewFile={planImages.removeNewFile}
+            />
+          </div>
+
+          {plansFormError && <p className="admin-error">{plansFormError}</p>}
+
+          <div className="admin-form-actions">
+            <button className="btn" type="submit" disabled={isSavingPlan}>
+              {isSavingPlan ? "Enregistrement…" : editingPlanId ? "Enregistrer les modifications" : "Ajouter ce plan"}
+            </button>
+            {editingPlanId && (
+              <button type="button" className="btn btn-secondary" onClick={cancelEditPlan}>
+                Annuler
+              </button>
             )}
           </div>
-        </div>
+        </form>
+        <hr className="admin-divider" />
+        <h4 className="admin-subheading">Les plans existants :</h4>
+        {plansError && <p className="admin-error">{plansError}</p>}
+        {isLoadingPlans ? (
+          <p>Chargement…</p>
+        ) : plans.length === 0 ? (
+          <p className="admin-empty">Aucun plan pour le moment.</p>
+        ) : (
+          <ul className="admin-plans-list">
+            {plans.map((plan) => (
+              <li key={plan.id} className="admin-plan-item">
+                <div className="admin-plan-thumbs">
+                  {plan.images.map((img, i) => (
+                    <img key={img + i} src={resolveImageUrl(img)} alt="" />
+                  ))}
+                </div>
+                <p className="admin-plan-description">{plan.description || <em>(sans texte)</em>}</p>
+                <div className="admin-list-actions">
+                  <button type="button" className="btn btn-small" onClick={() => startEditPlan(plan)}>
+                    Modifier
+                  </button>
+                  <button type="button" className="btn btn-small btn-danger" onClick={() => handleDeletePlan(plan.id)}>
+                    Supprimer
+                  </button>
+                </div>
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
 
-        {formError && <p className="admin-error">{formError}</p>}
+      <div className="admin-form">
+        <h3>Section "Créations"</h3>
 
-        <div className="admin-form-actions">
-          <button className="btn" type="submit" disabled={isSaving}>
-            {isSaving ? "Enregistrement…" : editingId ? "Enregistrer les modifications" : "Ajouter"}
-          </button>
-          {editingId && (
-            <button type="button" className="btn btn-secondary" onClick={cancelEdit}>
-              Annuler
+        <EditableTextField
+          id="creationsDescription"
+          ariaLabel="Texte descriptif de la section Créations"
+          rows={3}
+          fetchFn={fetchCreationsSettings}
+          updateFn={updateCreationsSettings}
+          token={token}
+        />
+
+        <hr className="admin-divider" />
+
+        <h4 className="admin-subheading">{editingId ? "Modifier la création" : "Ajouter une création :"}</h4>
+
+        <form onSubmit={handleSubmit} ref={creationFormRef} className="admin-creation-form">
+          <div className="admin-form-grid">
+            <div className="admin-field">
+              <label htmlFor="name">Nom</label>
+              <input id="name" name="name" required value={form.name} onChange={handleChange} />
+            </div>
+
+            <div className="admin-field admin-field-full">
+              <label htmlFor="description">Description</label>
+              <textarea id="description" name="description" rows="3" required value={form.description} onChange={handleChange} />
+            </div>
+
+            <div className="admin-field admin-field-full">
+              <label htmlFor="creationFiles">Photos</label>
+              <ImagePicker
+                inputId="creationFiles"
+                existingImages={form.existingImages}
+                onRemoveExisting={creationImages.removeExisting}
+                newFiles={form.newFiles}
+                onAddFiles={creationImages.addFiles}
+                onRemoveNewFile={creationImages.removeNewFile}
+              />
+            </div>
+          </div>
+
+          {formError && <p className="admin-error">{formError}</p>}
+
+          <div className="admin-form-actions">
+            <button className="btn" type="submit" disabled={isSaving}>
+              {isSaving ? "Enregistrement…" : editingId ? "Enregistrer les modifications" : "Ajouter"}
             </button>
-          )}
-        </div>
-      </form>
+            {editingId && (
+              <button type="button" className="btn btn-secondary" onClick={cancelEdit}>
+                Annuler
+              </button>
+            )}
+          </div>
+        </form>
 
-      <div className="admin-list">
-        <h3>Créations existantes</h3>
+        <hr className="admin-divider" />
+
+        <h4 className="admin-subheading">Créations existantes : </h4>
 
         {isLoadingList && <p>Chargement…</p>}
         {listError && <p className="admin-error">{listError}</p>}
-
         {!isLoadingList && !listError && creations.length === 0 && (
           <p className="admin-empty">Aucune création pour le moment.</p>
         )}
@@ -351,16 +391,55 @@ export default function Admin() {
         <ul className="admin-list-items">
           {creations.map((c) => (
             <li key={c.id} className="admin-list-item">
-              <img src={resolveImageUrl(c.image)} alt={c.name} />
+              <img src={resolveImageUrl(c.image)} alt="" />
               <div className="admin-list-info">
                 <p className="admin-list-name">{c.name}</p>
-                <p className="admin-list-category">{c.category}</p>
               </div>
               <div className="admin-list-actions">
                 <button className="btn btn-small" onClick={() => startEdit(c)}>
                   Modifier
                 </button>
                 <button className="btn btn-small btn-danger" onClick={() => handleDelete(c.id)}>
+                  Supprimer
+                </button>
+              </div>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      <div className="admin-list">
+        <h3>Messages reçus {unreadCount > 0 && <span className="admin-badge">{unreadCount} non lu(s)</span>}</h3>
+
+        {isLoadingMessages && <p>Chargement…</p>}
+        {messagesError && <p className="admin-error">{messagesError}</p>}
+        {!isLoadingMessages && !messagesError && messages.length === 0 && (
+          <p className="admin-empty">Aucun message pour le moment.</p>
+        )}
+
+        <ul className="admin-messages">
+          {messages.map((m) => (
+            <li key={m.id} className={m.read ? "admin-message" : "admin-message unread"}>
+              <div className="admin-message-header">
+                <div>
+                  <p className="admin-message-name">{m.name}</p>
+                  <p className="admin-message-meta">
+                    {m.email}
+                    {m.phone && ` · ${m.phone}`}
+                  </p>
+                </div>
+                <p className="admin-message-date">
+                  {new Date(m.createdAt).toLocaleString("fr-FR", { dateStyle: "medium", timeStyle: "short" })}
+                </p>
+              </div>
+
+              <p className="admin-message-body">{m.message}</p>
+
+              <div className="admin-list-actions">
+                <button className="btn btn-small" onClick={() => handleToggleRead(m.id)}>
+                  {m.read ? "Marquer comme non lu" : "Marquer comme lu"}
+                </button>
+                <button className="btn btn-small btn-danger" onClick={() => handleDeleteMessage(m.id)}>
                   Supprimer
                 </button>
               </div>

@@ -7,29 +7,35 @@ function signToken(user) {
   });
 }
 
-// POST /api/auth/login
 export async function login(req, res) {
   const { username, password } = req.body;
 
-  if (!username || !password) {
-    return res.status(400).json({ message: "Nom d'utilisateur et mot de passe requis." });
+  // Vérification explicite du type : empêche qu'un objet (au lieu d'une
+  // chaîne) soit glissé dans la requête pour tenter de manipuler la
+  // vérification du mot de passe.
+  if (
+    typeof username !== "string" ||
+    typeof password !== "string" ||
+    !username ||
+    !password
+  ) {
+    return res
+      .status(400)
+      .json({ message: "Nom d'utilisateur et mot de passe requis." });
   }
 
   const user = await User.findOne({ username: username.trim().toLowerCase() });
-  if (!user) {
+  if (!user)
     return res.status(401).json({ message: "Identifiants incorrects." });
-  }
 
   const valid = await user.comparePassword(password);
-  if (!valid) {
+  if (!valid)
     return res.status(401).json({ message: "Identifiants incorrects." });
-  }
 
   const token = signToken(user);
   res.json({ token, user });
 }
 
-// GET /api/auth/me
 export async function me(req, res) {
   res.json({ user: req.user });
 }

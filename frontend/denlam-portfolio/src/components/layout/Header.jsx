@@ -4,7 +4,7 @@ import "./Header.css";
 import logo from "../../assets/logo.png"
 
 const NAV_LINKS = [
-  { to: "/#etude", label: "Étude & Agencement", end: false },
+    { to: "/etude", label: "Étude & Agencement", end: false },
   { to: "/creations", label: "Créations", end: false },
   { to: "/#apropos", label: "À propos", end: false },
   { to: "/#contact", label: "Contact", end: false },
@@ -16,7 +16,7 @@ export default function Header() {
   return (
     <header className="site-header">
       <NavLink to="/" className="logo" onClick={() => setIsOpen(false)}>
-        <img src={logo} alt="logo denlam" />
+        <img src={logo} alt="logo denlam" width="582" height="173" />
       </NavLink>
 
       <button

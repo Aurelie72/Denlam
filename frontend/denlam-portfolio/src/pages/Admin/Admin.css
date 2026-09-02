@@ -23,11 +23,25 @@
   border-radius: var(--radius-sm);
   padding: 24px;
   margin-bottom: 48px;
+  /* Pour que le scroll vers ce cadre (édition) ne finisse pas caché sous
+     le header fixe. */
+  scroll-margin-top: var(--header-height);
 }
 
 .admin-form h3,
 .admin-list h3 {
   margin-bottom: 20px;
+}
+
+.admin-subheading {
+  margin: 20px 0 6px;
+  font-size: 1.05rem;
+}
+
+.admin-divider {
+  border: none;
+  border-top: 1px solid var(--color-border);
+  margin: 24px 0;
 }
 
 .admin-form-grid {
@@ -40,6 +54,8 @@
   display: flex;
   flex-direction: column;
   gap: 6px;
+  /* Même raison que .admin-form : le formulaire lui-même sert de cible de
+     scroll (via ref), donc ses champs héritent implicitement du décalage. */
 }
 
 .admin-field-full {
@@ -65,26 +81,6 @@
 
 .admin-field textarea {
   resize: vertical;
-}
-
-.admin-current-image {
-  margin-top: 10px;
-  width: 100px;
-  height: 100px;
-  object-fit: cover;
-  border-radius: var(--radius-sm);
-}
-
-.admin-current-images {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  margin-top: 10px;
-}
-
-.admin-field-hint {
-  font-size: 0.8rem;
-  color: var(--color-border);
 }
 
 .admin-form-actions {
@@ -119,6 +115,178 @@
   color: var(--color-muted);
 }
 
+.admin-etude-upload-form {
+  margin-bottom: 20px;
+  /* Cible de scroll précise pour "Modifier ce plan" */
+  scroll-margin-top: var(--header-height);
+}
+
+.admin-creation-form {
+  scroll-margin-top: var(--header-height);
+}
+
+/* ---- Sélecteur de photos (aperçu + croix de suppression) --------------- */
+.image-picker-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.image-picker-thumb {
+  position: relative;
+  aspect-ratio: 1 / 1;
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  background: #f2f2f2;
+}
+
+.image-picker-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.image-picker-remove {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(178, 59, 59, 0.92);
+  color: #fff;
+  font-size: 0.8rem;
+  line-height: 1;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.image-picker-remove:hover {
+  background: #8f2e2e;
+}
+
+.image-picker-add-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 20px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--color-border);
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: var(--color-text);
+  cursor: pointer;
+  transition: background-color var(--transition-fast);
+}
+
+.image-picker-add-btn:hover {
+  background-color: #f2f2f2;
+}
+
+/* ---- Liste des plans ----------------------------------------------------- */
+.admin-plans-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-top: 16px;
+}
+
+.admin-plan-item {
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  padding: 14px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.admin-plan-thumbs {
+  display: flex;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.admin-plan-thumbs img {
+  width: 56px;
+  height: 56px;
+  object-fit: cover;
+  border-radius: var(--radius-sm);
+}
+
+.admin-plan-description {
+  flex: 1;
+  min-width: 180px;
+  color: var(--color-muted);
+}
+
+/* ---- Messages -------------------------------------------------------------- */
+.admin-badge {
+  display: inline-block;
+  margin-left: 10px;
+  padding: 2px 10px;
+  border-radius: var(--radius-pill);
+  background: var(--color-cta);
+  color: #fff;
+  font-size: 0.75rem;
+  font-weight: 700;
+  vertical-align: middle;
+}
+
+.admin-messages {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.admin-message {
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  padding: 16px;
+}
+
+.admin-message.unread {
+  border-color: var(--color-accent-strong);
+  background: #fafafa;
+}
+
+.admin-message-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.admin-message-name {
+  font-weight: 700;
+}
+
+.admin-message-meta {
+  font-size: 0.85rem;
+  color: var(--color-muted);
+}
+
+.admin-message-date {
+  font-size: 0.8rem;
+  color: var(--color-muted);
+  white-space: nowrap;
+}
+
+.admin-message-body {
+  margin: 12px 0;
+  color: var(--color-text);
+  line-height: 1.5;
+}
+
+/* ---- Liste des créations --------------------------------------------------- */
 .admin-list-items {
   list-style: none;
   display: flex;
@@ -151,12 +319,6 @@
   font-weight: 700;
 }
 
-.admin-list-category {
-  font-size: 0.85rem;
-  color: var(--color-muted);
-  text-transform: capitalize;
-}
-
 .admin-list-actions {
   display: flex;
   gap: 8px;
@@ -182,5 +344,27 @@
   }
   .admin-list-item {
     flex-wrap: wrap;
+  }
+}
+
+/* L'espace admin n'est pas utilisable confortablement sur mobile (longs
+   formulaires, sélecteurs de photos...) — on bloque l'accès en dessous de
+   780px et on affiche un message à la place. */
+.admin-desktop-only {
+  display: none;
+}
+
+@media (max-width: 780px) {
+  .admin > *:not(.admin-desktop-only) {
+    display: none !important;
+  }
+
+  .admin-desktop-only {
+    display: block;
+    text-align: center;
+    padding: 120px 24px;
+    color: var(--color-muted);
+    font-size: 1.1rem;
+    line-height: 1.6;
   }
 }
