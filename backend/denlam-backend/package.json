@@ -7,7 +7,6 @@
     "dev": "node --watch server.js",
     "start": "node server.js",
     "seed:admin": "node src/scripts/seedAdmin.js",
-    "change:password": "node src/scripts/changePassword.js",
     "optimize:images": "node src/scripts/optimizeExistingImages.js",
     "migrate:cloudinary": "node src/scripts/migrateToCloudinary.js"
   },
@@ -23,7 +22,10 @@
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.5.0",
     "multer": "^2.0.1",
-    "nodemailer": "^9.0.5",
+    "resend": "^4.0.1",
     "sharp": "^0.35.3"
+  },
+  "overrides": {
+    "qs": "6.16.0"
   }
 }

@@ -15,6 +15,15 @@ import { notFound, errorHandler } from "./src/middleware/errorHandler.js";
 
 const app = express();
 
+// Render (et la plupart des hébergeurs modernes) fait passer les requêtes
+// par un proxy intermédiaire, qui ajoute un en-tête X-Forwarded-For avec la
+// vraie IP du visiteur. Sans cette ligne, Express ne fait pas confiance à
+// cet en-tête, et express-rate-limit ne peut plus identifier correctement
+// qui envoie quoi (indispensable pour le limiteur anti-spam/anti-bruteforce).
+// "1" = ne fait confiance qu'au premier proxy (celui de Render), pas à toute
+// la chaîne — évite qu'un en-tête falsifié plus loin ne soit pris en compte.
+app.set("trust proxy", 1);
+
 // En-têtes de sécurité HTTP standard (protection clickjacking, MIME
 // sniffing, etc.). crossOriginResourcePolicy désactivé pour que les images
 // de /uploads restent chargeables depuis le domaine du frontend.
