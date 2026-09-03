@@ -34,11 +34,19 @@ export async function sendContactNotification(message) {
   const from = process.env.MAIL_FROM || "Site Denlam <contact@denlam.fr>";
   const phoneLine = message.phone ? `Téléphone : ${message.phone}` : null;
 
+  // Un format d'email invalide dans "reply_to" ne doit jamais faire échouer
+  // tout l'envoi — Resend est strict sur ce champ précis, donc on l'omet
+  // simplement s'il n'est pas valide plutôt que de perdre la notification.
+  const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  const replyTo = EMAIL_REGEX.test(message.email || "")
+    ? message.email
+    : undefined;
+
   try {
     await resend.emails.send({
       from,
       to,
-      replyTo: message.email,
+      ...(replyTo ? { replyTo } : {}),
       subject: `Nouveau message de ${message.name} — site Denlam`,
       text: [
         `Nom : ${message.name}`,
