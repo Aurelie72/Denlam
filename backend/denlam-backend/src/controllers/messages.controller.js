@@ -1,12 +1,17 @@
 import Message from "../models/Message.js";
 import { sendContactNotification } from "../services/email.js";
 
+const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
 export async function createMessage(req, res) {
   const { name, email, phone, message } = req.body;
   if (!name || !email || !message) {
     return res
       .status(400)
       .json({ message: "Nom, email et message sont obligatoires." });
+  }
+  if (!EMAIL_REGEX.test(email)) {
+    return res.status(400).json({ message: "Adresse email invalide." });
   }
 
   const doc = await Message.create({
