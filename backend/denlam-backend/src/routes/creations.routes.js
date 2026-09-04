@@ -5,6 +5,7 @@ import {
   createCreation,
   updateCreation,
   deleteCreation,
+  reorderCreations,
 } from "../controllers/creations.controller.js";
 import { requireAuth } from "../middleware/auth.js";
 import { upload } from "../middleware/upload.js";
@@ -14,6 +15,11 @@ import { asyncHandler } from "../middleware/asyncHandler.js";
 const router = Router();
 
 router.get("/", asyncHandler(listCreations));
+
+// Doit être déclarée avant "/:id" — sinon Express interprète "reorder"
+// comme un identifiant de création et route vers getCreation par erreur.
+router.put("/reorder", requireAuth, asyncHandler(reorderCreations));
+
 router.get("/:id", asyncHandler(getCreation));
 
 router.post(

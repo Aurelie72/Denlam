@@ -6,6 +6,7 @@ import {
   createPlan,
   updatePlan,
   deletePlan,
+  reorderPlans,
 } from "../controllers/etude.controller.js";
 import { requireAuth } from "../middleware/auth.js";
 import { upload } from "../middleware/upload.js";
@@ -18,6 +19,10 @@ router.get("/settings", asyncHandler(getSettings));
 router.put("/settings", requireAuth, asyncHandler(updateSettings));
 
 router.get("/plans", asyncHandler(listPlans));
+
+// Avant "/plans/:id" pour la même raison que côté créations.
+router.put("/plans/reorder", requireAuth, asyncHandler(reorderPlans));
+
 router.post(
   "/plans",
   requireAuth,

@@ -11,6 +11,7 @@ const etudePlanSchema = new mongoose.Schema(
         message: "Au moins une image est obligatoire",
       },
     },
+    order: { type: Number, default: 0 },
   },
   { timestamps: true },
 );

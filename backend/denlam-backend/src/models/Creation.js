@@ -20,6 +20,11 @@ const creationSchema = new mongoose.Schema(
       required: [true, "La description est obligatoire"],
       trim: true,
     },
+    // Contrôle l'ordre d'affichage sur le site public (le plus petit en
+    // premier). Par défaut à 0 pour les créations déjà existantes — elles
+    // gardent alors leur tri habituel (les plus récentes en premier) tant
+    // que personne n'a réordonné manuellement.
+    order: { type: Number, default: 0 },
   },
   { timestamps: true },
 );

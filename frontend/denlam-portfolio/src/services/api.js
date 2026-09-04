@@ -90,6 +90,10 @@ export function deleteCreation(id, token) {
   return request(`/creations/${id}`, { method: "DELETE", token });
 }
 
+export function reorderCreations(ids, token) {
+  return request("/creations/reorder", { method: "PUT", body: { ids }, token });
+}
+
 // ---- Réglages "Créations" (texte d'intro) --------------------------------
 export function fetchCreationsSettings() {
   return request("/settings/creations");
@@ -157,6 +161,14 @@ export function updateEtudePlan(id, formData, token) {
 
 export function deleteEtudePlan(id, token) {
   return request(`/etude/plans/${id}`, { method: "DELETE", token });
+}
+
+export function reorderEtudePlans(ids, token) {
+  return request("/etude/plans/reorder", {
+    method: "PUT",
+    body: { ids },
+    token,
+  });
 }
 
 // Télécharge un export complet de la base (créations, plans, messages) au

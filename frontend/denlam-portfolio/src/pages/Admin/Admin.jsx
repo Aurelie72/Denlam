@@ -8,7 +8,7 @@ import {
   createCreation,
   updateCreation,
   deleteCreation,
-  
+  reorderCreations,
 downloadBackup,
   fetchCreationsSettings,
   updateCreationsSettings,
@@ -21,6 +21,7 @@ downloadBackup,
   addEtudePlan,
   updateEtudePlan,
   deleteEtudePlan,
+  reorderEtudePlans,
   resolveImageUrl,
   ApiError,
 } from "../../services/api.js";
@@ -314,7 +315,7 @@ export default function Admin() {
           <p className="admin-empty">Aucun plan pour le moment.</p>
         ) : (
           <ul className="admin-plans-list">
-            {plans.map((plan) => (
+            {plans.map((plan, index) => (
               <li key={plan.id} className="admin-plan-item">
                 <div className="admin-plan-thumbs">
                   {plan.images.map((img, i) => (
@@ -323,6 +324,27 @@ export default function Admin() {
                 </div>
                 <p className="admin-plan-description">{plan.description || <em>(sans texte)</em>}</p>
                 <div className="admin-list-actions">
+         <button
+           type="button"
+           className="btn btn-small"
+           onClick={() => movePlan(index, -1)}
+           disabled={index === 0}
+           aria-label="Monter"
+         >
+           ↑
+         </button>
+         <button
+           type="button"
+           className="btn btn-small"
+           onClick={() => movePlan(index, 1)}
+           disabled={index === plans.length - 1}
+           aria-label="Descendre"
+         >
+           ↓
+         </button>
+
+
+
                   <button type="button" className="btn btn-small" onClick={() => startEditPlan(plan)}>
                     Modifier
                   </button>
@@ -402,13 +424,32 @@ export default function Admin() {
         )}
 
         <ul className="admin-list-items">
-          {creations.map((c) => (
+          {creations.map((c, index) => (
             <li key={c.id} className="admin-list-item">
               <img src={resolveImageUrl(c.image)} alt="" />
               <div className="admin-list-info">
                 <p className="admin-list-name">{c.name}</p>
               </div>
               <div className="admin-list-actions">
+         <button
+           className="btn btn-small"
+           onClick={() => moveCreation(index, -1)}
+           disabled={index === 0}
+           aria-label="Monter"
+         >
+           ↑
+         </button>
+         <button
+           className="btn btn-small"
+           onClick={() => moveCreation(index, 1)}
+           disabled={index === creations.length - 1}
+           aria-label="Descendre"
+         >
+           ↓
+         </button>
+
+
+
                 <button className="btn btn-small" onClick={() => startEdit(c)}>
                   Modifier
                 </button>

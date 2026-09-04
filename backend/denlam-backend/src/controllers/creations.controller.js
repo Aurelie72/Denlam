@@ -1,14 +1,26 @@
 import Creation from "../models/Creation.js";
+import { normalizeArray, mergeImages } from "../utils/images.js";
 
-function normalizeArray(value) {
-  if (value === undefined || value === null) return [];
-  return Array.isArray(value) ? value : [value];
+// GET /api/creations — liste toutes les créations, triées par ordre
+// personnalisé (le plus petit en premier), puis par date à défaut
+export async function listCreations(req, res) {
+  const creations = await Creation.find().sort({ order: 1, createdAt: -1 });
+  res.json(creations);
 }
 
-// GET /api/creations — liste toutes les créations, sans filtre
-export async function listCreations(req, res) {
-  const creations = await Creation.find().sort({ createdAt: -1 });
-  res.json(creations);
+// PUT /api/creations/reorder (protégé) — reçoit la liste des identifiants
+// dans le nouvel ordre souhaité, et met à jour le champ "order" de chacun
+// en conséquence (position dans le tableau = nouvel ordre).
+export async function reorderCreations(req, res) {
+  const { ids } = req.body;
+  if (!Array.isArray(ids) || ids.length === 0) {
+    return res.status(400).json({ message: "Liste d'identifiants invalide." });
+  }
+
+  await Promise.all(
+    ids.map((id, index) => Creation.findByIdAndUpdate(id, { order: index })),
+  );
+  res.json({ success: true });
 }
 
 // GET /api/creations/:id
@@ -39,15 +51,11 @@ export async function createCreation(req, res) {
 }
 
 // PUT /api/creations/:id (protégé)
-// Combine les photos déjà enregistrées qu'on garde ("existingImages", URLs
-// envoyées par le front, une par une, celles que l'admin n'a pas supprimées
-// via la croix) avec les nouveaux fichiers uploadés.
+// Combine les photos déjà enregistrées qu'on garde avec les nouveaux
+// fichiers uploadés (voir mergeImages dans utils/images.js).
 export async function updateCreation(req, res) {
   const { name, description } = req.body;
-
-  const keptExisting = normalizeArray(req.body.existingImages);
-  const uploadedImages = (req.files || []).map((f) => f.cloudinaryUrl);
-  const images = [...keptExisting, ...uploadedImages];
+  const images = mergeImages(req);
 
   if (images.length === 0) {
     return res
