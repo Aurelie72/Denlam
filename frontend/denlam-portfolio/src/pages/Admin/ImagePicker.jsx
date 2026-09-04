@@ -7,6 +7,12 @@ import { resolveImageUrl } from "../../services/api.js";
  * - nouvelles photos tout juste sélectionnées (newFiles : File[]), avec un
  *   aperçu généré localement (URL.createObjectURL) et supprimables aussi
  *
+ * La toute première vignette affichée (existante si elle existe, sinon
+ * nouvelle) est la "photo principale" — celle utilisée comme vignette de
+ * galerie et 1ère image du carrousel. Un bouton "Photo principale" sur
+ * chaque autre vignette permet de la faire passer en tête, sans dépendre
+ * de l'ordre d'ajout d'origine.
+ *
  * Le fichier <input> permet d'ajouter d'autres photos sans perdre celles
  * déjà choisies (chaque sélection s'ajoute à la liste au lieu de la
  * remplacer).
@@ -14,9 +20,11 @@ import { resolveImageUrl } from "../../services/api.js";
 export default function ImagePicker({
   existingImages = [],
   onRemoveExisting,
+  onSetCoverExisting,
   newFiles = [],
   onAddFiles,
   onRemoveNewFile,
+  onSetCoverNewFile,
   inputId,
   ariaLabel = "Choisir des photos",
 }) {
@@ -37,38 +45,73 @@ export default function ImagePicker({
   }
 
   const hasImages = existingImages.length > 0 || newFiles.length > 0;
+  // La photo principale est toujours la toute première de la liste
+  // combinée : la 1ère "existante" s'il y en a, sinon la 1ère "nouvelle".
+  const coverIsExisting = existingImages.length > 0;
 
   return (
     <div className="image-picker">
       {hasImages && (
         <div className="image-picker-grid">
-          {existingImages.map((img, i) => (
-            <div className="image-picker-thumb" key={`existing-${img}-${i}`}>
-              <img src={resolveImageUrl(img)} alt="" />
-              <button
-                type="button"
-                className="image-picker-remove"
-                onClick={() => onRemoveExisting(i)}
-                aria-label="Supprimer cette photo"
-              >
-                ✕
-              </button>
-            </div>
-          ))}
+          {existingImages.map((img, i) => {
+            const isCover = coverIsExisting && i === 0;
+            return (
+              <div className="image-picker-thumb" key={`existing-${img}-${i}`}>
+                <img src={resolveImageUrl(img)} alt="" />
+                {isCover ? (
+                  <span className="image-picker-cover-badge">Principale</span>
+                ) : (
+                  onSetCoverExisting && (
+                    <button
+                      type="button"
+                      className="image-picker-cover-btn"
+                      onClick={() => onSetCoverExisting(i)}
+                    >
+                      Photo principale
+                    </button>
+                  )
+                )}
+                <button
+                  type="button"
+                  className="image-picker-remove"
+                  onClick={() => onRemoveExisting(i)}
+                  aria-label="Supprimer cette photo"
+                >
+                  ✕
+                </button>
+              </div>
+            );
+          })}
 
-          {newFiles.map((file, i) => (
-            <div className="image-picker-thumb" key={`new-${file.name}-${i}`}>
-              {previews[i] && <img src={previews[i]} alt="" />}
-              <button
-                type="button"
-                className="image-picker-remove"
-                onClick={() => onRemoveNewFile(i)}
-                aria-label="Retirer cette photo"
-              >
-                ✕
-              </button>
-            </div>
-          ))}
+          {newFiles.map((file, i) => {
+            const isCover = !coverIsExisting && i === 0;
+            return (
+              <div className="image-picker-thumb" key={`new-${file.name}-${i}`}>
+                {previews[i] && <img src={previews[i]} alt="" />}
+                {isCover ? (
+                  <span className="image-picker-cover-badge">Principale</span>
+                ) : (
+                  onSetCoverNewFile && (
+                    <button
+                      type="button"
+                      className="image-picker-cover-btn"
+                      onClick={() => onSetCoverNewFile(i)}
+                    >
+                      Photo principale
+                    </button>
+                  )
+                )}
+                <button
+                  type="button"
+                  className="image-picker-remove"
+                  onClick={() => onRemoveNewFile(i)}
+                  aria-label="Retirer cette photo"
+                >
+                  ✕
+                </button>
+              </div>
+            );
+          })}
         </div>
       )}
 

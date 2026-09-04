@@ -27,5 +27,36 @@ export function useImageFields(setForm) {
     }));
   }
 
-  return { addFiles, removeExisting, removeNewFile };
+  // Déplace une photo déjà enregistrée en première position — c'est cette
+  // position 0 qui devient la "photo principale" (vignette de la galerie,
+  // 1ère image du carrousel), indépendamment de l'ordre d'ajout d'origine.
+  function setCoverExisting(index) {
+    setForm((prev) => {
+      if (index === 0) return prev;
+      const arr = [...prev.existingImages];
+      const [item] = arr.splice(index, 1);
+      arr.unshift(item);
+      return { ...prev, existingImages: arr };
+    });
+  }
+
+  // Même principe pour un fichier tout juste sélectionné (utile s'il n'y a
+  // aucune photo déjà enregistrée, ou pour une toute nouvelle création).
+  function setCoverNewFile(index) {
+    setForm((prev) => {
+      if (index === 0) return prev;
+      const arr = [...prev.newFiles];
+      const [item] = arr.splice(index, 1);
+      arr.unshift(item);
+      return { ...prev, newFiles: arr };
+    });
+  }
+
+  return {
+    addFiles,
+    removeExisting,
+    removeNewFile,
+    setCoverExisting,
+    setCoverNewFile,
+  };
 }

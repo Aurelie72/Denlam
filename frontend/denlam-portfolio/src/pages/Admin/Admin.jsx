@@ -319,9 +319,11 @@ async function movePlan(index, direction) {
               ariaLabel="Choisir des photos pour ce plan"
               existingImages={planForm.existingImages}
               onRemoveExisting={planImages.removeExisting}
+              onSetCoverExisting={planImages.setCoverExisting}
               newFiles={planForm.newFiles}
               onAddFiles={planImages.addFiles}
               onRemoveNewFile={planImages.removeNewFile}
+              onSetCoverNewFile={planImages.setCoverNewFile}
             />
           </div>
 
@@ -424,9 +426,11 @@ async function movePlan(index, direction) {
                 inputId="creationFiles"
                 existingImages={form.existingImages}
                 onRemoveExisting={creationImages.removeExisting}
+                onSetCoverExisting={creationImages.setCoverExisting}
                 newFiles={form.newFiles}
                 onAddFiles={creationImages.addFiles}
                 onRemoveNewFile={creationImages.removeNewFile}
+                onSetCoverNewFile={creationImages.setCoverNewFile}
               />
             </div>
           </div>
