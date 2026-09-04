@@ -10,6 +10,7 @@ import creationsRoutes from "./src/routes/creations.routes.js";
 import settingsRoutes from "./src/routes/settings.routes.js";
 import messagesRoutes from "./src/routes/messages.routes.js";
 import etudeRoutes from "./src/routes/etude.routes.js";
+import backupRoutes from "./src/routes/backup.routes.js";
 import { apiLimiter } from "./src/middleware/rateLimiters.js";
 import { notFound, errorHandler } from "./src/middleware/errorHandler.js";
 
@@ -76,6 +77,7 @@ app.use("/api/creations", creationsRoutes);
 app.use("/api/settings", settingsRoutes);
 app.use("/api/messages", messagesRoutes);
 app.use("/api/etude", etudeRoutes);
+app.use("/api/backup", backupRoutes);
 
 app.use(notFound);
 app.use(errorHandler);

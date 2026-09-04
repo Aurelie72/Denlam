@@ -159,6 +159,33 @@ export function deleteEtudePlan(id, token) {
   return request(`/etude/plans/${id}`, { method: "DELETE", token });
 }
 
+// Télécharge un export complet de la base (créations, plans, messages) au
+// format JSON, directement dans le navigateur — pas de fetch générique via
+// request() ici, car on doit gérer un fichier téléchargeable, pas du JSON
+// à parser normalement.
+export async function downloadBackup(token) {
+  const response = await fetch(`${API_URL}/backup`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+
+  if (!response.ok) {
+    throw new ApiError(
+      "Erreur lors du téléchargement de la sauvegarde.",
+      response.status,
+    );
+  }
+
+  const blob = await response.blob();
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = `denlam-backup-${new Date().toISOString().slice(0, 10)}.json`;
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+  URL.revokeObjectURL(url);
+}
+
 export { ApiError, API_URL };
 
 export function resolveImageUrl(path) {

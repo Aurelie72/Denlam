@@ -8,7 +8,8 @@
     "start": "node server.js",
     "seed:admin": "node src/scripts/seedAdmin.js",
     "optimize:images": "node src/scripts/optimizeExistingImages.js",
-    "migrate:cloudinary": "node src/scripts/migrateToCloudinary.js"
+    "migrate:cloudinary": "node src/scripts/migrateToCloudinary.js",
+    "backup": "node src/scripts/backupDatabase.js"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",

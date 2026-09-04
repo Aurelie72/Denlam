@@ -8,6 +8,8 @@ import {
   createCreation,
   updateCreation,
   deleteCreation,
+  
+downloadBackup,
   fetchCreationsSettings,
   updateCreationsSettings,
   fetchMessages,
@@ -53,6 +55,14 @@ export default function Admin() {
     logout();
     navigate("/login", { replace: true });
   }
+
+  async function handleBackupDownload() {
+  try {
+    await downloadBackup(token);
+  } catch (err) {
+    alert(err instanceof ApiError ? err.message : "Erreur lors du téléchargement.");
+  }
+}
 
   function startEdit(creation) {
     setEditingId(creation.id);
@@ -230,6 +240,9 @@ export default function Admin() {
       </p>
       <div className="admin-header">
         <h1>Espace Admin</h1>
+           <button className="btn btn-secondary" onClick={handleBackupDownload}>
+     Télécharger une sauvegarde
+   </button>
         <button className="btn" onClick={handleLogout}>
           Se déconnecter
         </button>
