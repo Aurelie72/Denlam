@@ -231,6 +231,38 @@ export default function Admin() {
     }
   }
 
+  async function moveCreation(index, direction) {
+  const newIndex = index + direction;
+  if (newIndex < 0 || newIndex >= creations.length) return;
+
+  const reordered = [...creations];
+  [reordered[index], reordered[newIndex]] = [reordered[newIndex], reordered[index]];
+  setCreations(reordered);
+
+  try {
+    await reorderCreations(reordered.map((c) => c.id), token);
+  } catch (err) {
+    setCreations(creations);
+    alert(err instanceof ApiError ? err.message : "Erreur lors du réordonnancement.");
+  }
+}
+
+async function movePlan(index, direction) {
+  const newIndex = index + direction;
+  if (newIndex < 0 || newIndex >= plans.length) return;
+
+  const reordered = [...plans];
+  [reordered[index], reordered[newIndex]] = [reordered[newIndex], reordered[index]];
+  setPlans(reordered);
+
+  try {
+    await reorderEtudePlans(reordered.map((p) => p.id), token);
+  } catch (err) {
+    setPlans(plans);
+    alert(err instanceof ApiError ? err.message : "Erreur lors du réordonnancement.");
+  }
+}
+
   return (
     <section className="admin">
       {/* <h1 className="visually-hidden">Admin</h1> */}
