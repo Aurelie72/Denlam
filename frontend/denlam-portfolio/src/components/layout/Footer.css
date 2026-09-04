@@ -34,3 +34,31 @@
   letter-spacing: 1px;
   margin-top: 8px;
 }
+
+@media (max-width: 780px) {
+
+  .site-footer {
+    padding: 40px 24px; /* beaucoup plus large visuellement */
+    gap: 12px;
+  }
+
+  .footer-links {
+    flex-direction: column; /* liens empilés = meilleure lisibilité */
+    gap: 12px;
+    align-items: center;
+  }
+
+  .site-footer-brand {
+    letter-spacing: 10px; /* un peu moins serré sur mobile */
+    font-size: 1.4rem;
+  }
+
+  .site-footer a {
+    font-size: 1rem;
+  }
+
+  .site-footer .copy {
+    font-size: 0.85rem;
+    margin-top: 12px;
+  }
+}

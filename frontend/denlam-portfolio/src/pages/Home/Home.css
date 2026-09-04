@@ -335,3 +335,44 @@ textarea {
     justify-content: flex-start;
   }
 }
+
+@media (max-width: 780px) {
+
+  .contact {
+    padding: 60px 24px 80px; /* beaucoup plus large visuellement */
+    gap: 32px;
+  }
+
+  .contact-form-wrap,
+  .coordonnees {
+    flex: 1 1 100%;
+    max-width: 100%;
+  }
+
+  .form {
+    max-width: 100%;
+  }
+
+  .form input,
+  .form textarea,
+  .btn,
+  .container-checkbox {
+    max-width: 100%; /* enlève la limite 480px */
+  }
+
+  .coordonnees {
+    text-align: left;
+    padding-top: 10px;
+  }
+
+  .coordonnees p,
+  .phone-link,
+  .email-link {
+    font-size: 1rem;
+  }
+
+  .reseaux {
+    justify-content: flex-start;
+    margin-top: 20px;
+  }
+}

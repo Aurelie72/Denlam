@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { resolveImageUrl } from "../services/api.js";
+import "./PhotoCarousel.css";
 
 /**
  * Carrousel photo réutilisable : photo principale + flèches (si plusieurs

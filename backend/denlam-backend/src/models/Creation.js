@@ -25,6 +25,13 @@ const creationSchema = new mongoose.Schema(
     // gardent alors leur tri habituel (les plus récentes en premier) tant
     // que personne n'a réordonné manuellement.
     order: { type: Number, default: 0 },
+    // Point de recadrage de la photo principale (en %, 0-100), pour que le
+    // recadrage carré de la galerie centre toujours sur la bonne zone —
+    // 50/50 = centre, comportement par défaut si jamais réglé autrement.
+    focalPoint: {
+      x: { type: Number, default: 50, min: 0, max: 100 },
+      y: { type: Number, default: 50, min: 0, max: 100 },
+    },
   },
   { timestamps: true },
 );

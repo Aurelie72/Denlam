@@ -1,6 +1,21 @@
 import Creation from "../models/Creation.js";
 import { normalizeArray, mergeImages } from "../utils/images.js";
 
+// Lit un point de recadrage envoyé sous forme de 2 champs séparés
+// (focalPointX / focalPointY, en %) — reste sur la valeur par défaut du
+// schéma (50/50, centre) si absent ou invalide.
+function parseFocalPoint(body) {
+  const x = Number(body.focalPointX);
+  const y = Number(body.focalPointY);
+  if (Number.isFinite(x) && Number.isFinite(y)) {
+    return {
+      x: Math.min(100, Math.max(0, x)),
+      y: Math.min(100, Math.max(0, y)),
+    };
+  }
+  return undefined;
+}
+
 // GET /api/creations — liste toutes les créations, triées par ordre
 // personnalisé (le plus petit en premier), puis par date à défaut
 export async function listCreations(req, res) {
@@ -46,7 +61,13 @@ export async function createCreation(req, res) {
       .json({ message: "Au moins une image est obligatoire." });
   }
 
-  const creation = await Creation.create({ name, description, images });
+  const focalPoint = parseFocalPoint(req.body);
+  const creation = await Creation.create({
+    name,
+    description,
+    images,
+    ...(focalPoint && { focalPoint }),
+  });
   res.status(201).json(creation);
 }
 
@@ -63,7 +84,13 @@ export async function updateCreation(req, res) {
       .json({ message: "Au moins une image est obligatoire." });
   }
 
-  const update = { name, description, images };
+  const focalPoint = parseFocalPoint(req.body);
+  const update = {
+    name,
+    description,
+    images,
+    ...(focalPoint && { focalPoint }),
+  };
 
   const creation = await Creation.findByIdAndUpdate(req.params.id, update, {
     new: true,

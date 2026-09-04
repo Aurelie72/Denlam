@@ -92,7 +92,7 @@
 }
 
 /* ---- Carrousel (mêmes styles que la page détail créations) -------------- */
-.detail-carousel {
+/* .detail-carousel {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -173,7 +173,7 @@
 .thumb.active {
   border-color: var(--color-accent-strong);
   opacity: 1;
-}
+} */
 
 .etude-empty {
   text-align: center;
