@@ -2,9 +2,9 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import {FaLinkedin} from "react-icons/fa";
 import "./Home.css";
-import crea from "../../assets/creadenlam.jpg"
-import eeta from "../../assets/eetadenlam.jpg"
-import portrait from "../../assets/portraitapropos.png"
+import crea from "../../assets/creadenlam.webp"
+import eeta from "../../assets/eetadenlam.webp"
+import portrait from "../../assets/portraitapropos.webp"
 import cv from "../../assets/iconcv.png"
 import cvthomas from "../../assets/CVthomas.pdf"
 
@@ -130,6 +130,8 @@ export default function Home() {
                 name="email"
                 required
                 placeholder=" "
+                pattern="[^\s@]+@[^\s@]+\.[^\s@]+"
+   title="Adresse email invalide (exemple : nom@domaine.com)"
                 autoComplete="off"
                 value={form.email}
                 onChange={handleChange}
