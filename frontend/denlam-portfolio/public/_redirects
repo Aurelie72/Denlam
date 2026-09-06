@@ -1,0 +1,10 @@
+# Site en une seule page (SPA, React Router) : le serveur ne connaît
+# physiquement qu'index.html — sans cette règle, toute adresse demandée
+# directement (actualisation de page, lien externe, Google...) renvoie une
+# erreur 404, puisqu'aucun vrai fichier n'existe à ces chemins (/etude,
+# /creations/xxx...). Cette règle dit à Netlify : "peu importe l'adresse,
+# sers toujours index.html, laisse React Router afficher la bonne page une
+# fois chargé côté navigateur." Le "200" (pas 301/302) est essentiel : ça
+# sert le contenu directement, sans jamais changer l'adresse affichée dans
+# le navigateur.
+/*    /index.html   200
