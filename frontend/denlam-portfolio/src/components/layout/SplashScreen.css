@@ -1,0 +1,69 @@
+.splash-screen {
+  position: fixed;
+  inset: 0;
+  z-index: 2000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-bg);
+  opacity: 1;
+}
+
+.splash-group {
+  position: relative;
+  width: clamp(280px, 42vw, 460px);
+  aspect-ratio: 793 / 192;
+}
+
+.splash-letters {
+  position: absolute;
+  inset: 0;
+  opacity: 1;
+  transition: opacity 0.35s ease;
+}
+
+.splash-letter {
+  position: absolute;
+  display: block;
+  transform: translateX(var(--spread-offset, 0));
+  transition: transform 1.5s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.splash-converge .splash-letter {
+  transform: translateX(0);
+}
+
+/* Le vrai logo (PNG) : superposé exactement au même endroit que les
+   lettres reconstituées, invisible au départ. */
+.splash-final-logo {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  opacity: 0;
+  transition: opacity 0.35s ease;
+}
+
+/* Bascule : les lettres reconstituées s'effacent, le vrai logo apparaît
+   à la même place — le visiteur ne voit qu'un léger fondu, pas un "saut". */
+.splash-revealed .splash-letters {
+  opacity: 0;
+}
+
+.splash-revealed .splash-final-logo {
+  opacity: 1;
+}
+
+/* Envol final vers la position réelle du logo dans l'en-tête, pendant que
+   le fond blanc s'efface pour révéler le site. */
+.splash-fly {
+  opacity: 0;
+  transition: opacity 0.9s ease 0.1s;
+  pointer-events: none;
+}
+
+.splash-fly .splash-group {
+  transition: transform 1s cubic-bezier(0.65, 0, 0.35, 1);
+  transform: translate(var(--fly-x, 0), var(--fly-y, 0)) scale(var(--fly-scale, 1));
+}

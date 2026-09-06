@@ -6,25 +6,20 @@ import { connectDB } from "../config/db.js";
 import Creation from "../models/Creation.js";
 import EtudePlan from "../models/EtudePlan.js";
 import Message from "../models/Message.js";
-import CreationsSettings from "../models/CreationsSettings.js";
-import EtudeSettings from "../models/EtudeSettings.js";
 
-// Exporte tout le contenu de la base (créations, plans étude, messages,
-// textes d'intro) dans un seul fichier JSON horodaté, dans le dossier
-// backups/ à la racine du projet. MongoDB Atlas gratuit n'inclut aucune
-// sauvegarde automatique — ce script comble ce manque, à lancer
-// manuellement de temps en temps (voir la note en bas du fichier généré).
+// Exporte tout le contenu de la base (créations, plans étude, messages)
+// dans un seul fichier JSON horodaté, dans le dossier backups/ à la racine
+// du projet. MongoDB Atlas gratuit n'inclut aucune sauvegarde automatique —
+// ce script comble ce manque, à lancer manuellement de temps en temps (voir
+// la note en bas du fichier généré).
 async function run() {
   await connectDB();
 
-  const [creations, plans, messages, creationsSettings, etudeSettings] =
-    await Promise.all([
-      Creation.find(),
-      EtudePlan.find(),
-      Message.find(),
-      CreationsSettings.find(),
-      EtudeSettings.find(),
-    ]);
+  const [creations, plans, messages] = await Promise.all([
+    Creation.find(),
+    EtudePlan.find(),
+    Message.find(),
+  ]);
 
   const backup = {
     exportedAt: new Date().toISOString(),
@@ -36,8 +31,6 @@ async function run() {
     creations,
     plans,
     messages,
-    creationsSettings,
-    etudeSettings,
   };
 
   const backupsDir = path.resolve("backups");

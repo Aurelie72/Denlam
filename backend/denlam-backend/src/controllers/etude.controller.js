@@ -1,24 +1,5 @@
-import EtudeSettings from "../models/EtudeSettings.js";
 import EtudePlan from "../models/EtudePlan.js";
 import { mergeImages } from "../utils/images.js";
-
-// GET /api/etude/settings — public
-export async function getSettings(req, res) {
-  let doc = await EtudeSettings.findOne({ key: "main" });
-  if (!doc) doc = await EtudeSettings.create({ key: "main" });
-  res.json(doc);
-}
-
-// PUT /api/etude/settings — protégé
-export async function updateSettings(req, res) {
-  const { description } = req.body;
-  const doc = await EtudeSettings.findOneAndUpdate(
-    { key: "main" },
-    { description },
-    { new: true, upsert: true, runValidators: true },
-  );
-  res.json(doc);
-}
 
 // GET /api/etude/plans — public, triés par ordre personnalisé (le plus
 // petit en premier), puis par date à défaut

@@ -1,12 +1,8 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import {
-  fetchCreations,
-  fetchCreationsSettings,
-  resolveImageUrl,
-  ApiError
-} from "../../services/api.js";
+import { fetchCreations, resolveImageUrl, ApiError } from "../../services/api.js";
 import { usePageMeta } from "../../hooks/usePageMeta.js";
+import { CREATIONS_INTRO } from "../../content/introTexts.js";
 import "./Creations.css";
 
 export default function Creations() {
@@ -15,17 +11,9 @@ export default function Creations() {
      "Créations",
      "Mobilier et objets de décoration conçus et fabriqués sur mesure par Thomas André, Denlam."
    );
-  const [description, setDescription] = useState("");
   const [creations, setCreations] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
-
-  // Charger description
-  useEffect(() => {
-    fetchCreationsSettings()
-      .then((data) => setDescription(data.description || ""))
-      .catch(() => {});
-  }, []);
 
   // Charger toutes les créations (sans filtre)
   useEffect(() => {
@@ -54,7 +42,7 @@ export default function Creations() {
     <>
     <h1 className="visually-hidden">Créations</h1>
       <div className="creations-intro">
-        <p>{description}</p>
+        <p>{CREATIONS_INTRO}</p>
       </div>
 
       <section className="gallery" aria-live="polite">

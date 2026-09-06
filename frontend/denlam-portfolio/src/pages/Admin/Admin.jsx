@@ -9,14 +9,10 @@ import {
   updateCreation,
   deleteCreation,
   reorderCreations,
-downloadBackup,
-  fetchCreationsSettings,
-  updateCreationsSettings,
+  downloadBackup,
   fetchMessages,
   toggleMessageRead,
   deleteMessage,
-  fetchEtudeSettings,
-  updateEtudeSettings,
   fetchEtudePlans,
   addEtudePlan,
   updateEtudePlan,
@@ -26,7 +22,6 @@ downloadBackup,
   ApiError,
 } from "../../services/api.js";
 import ImagePicker from "./ImagePicker.jsx";
-import EditableTextField from "./EditableTextField.jsx";
 import "./Admin.css";
 
 const emptyForm = { name: "", description: "", newFiles: [], existingImages: [] };
@@ -58,12 +53,12 @@ export default function Admin() {
   }
 
   async function handleBackupDownload() {
-  try {
-    await downloadBackup(token);
-  } catch (err) {
-    alert(err instanceof ApiError ? err.message : "Erreur lors du téléchargement.");
+    try {
+      await downloadBackup(token);
+    } catch (err) {
+      alert(err instanceof ApiError ? err.message : "Erreur lors du téléchargement.");
+    }
   }
-}
 
   function startEdit(creation) {
     setEditingId(creation.id);
@@ -232,36 +227,36 @@ export default function Admin() {
   }
 
   async function moveCreation(index, direction) {
-  const newIndex = index + direction;
-  if (newIndex < 0 || newIndex >= creations.length) return;
+    const newIndex = index + direction;
+    if (newIndex < 0 || newIndex >= creations.length) return;
 
-  const reordered = [...creations];
-  [reordered[index], reordered[newIndex]] = [reordered[newIndex], reordered[index]];
-  setCreations(reordered);
+    const reordered = [...creations];
+    [reordered[index], reordered[newIndex]] = [reordered[newIndex], reordered[index]];
+    setCreations(reordered);
 
-  try {
-    await reorderCreations(reordered.map((c) => c.id), token);
-  } catch (err) {
-    setCreations(creations);
-    alert(err instanceof ApiError ? err.message : "Erreur lors du réordonnancement.");
+    try {
+      await reorderCreations(reordered.map((c) => c.id), token);
+    } catch (err) {
+      setCreations(creations);
+      alert(err instanceof ApiError ? err.message : "Erreur lors du réordonnancement.");
+    }
   }
-}
 
-async function movePlan(index, direction) {
-  const newIndex = index + direction;
-  if (newIndex < 0 || newIndex >= plans.length) return;
+  async function movePlan(index, direction) {
+    const newIndex = index + direction;
+    if (newIndex < 0 || newIndex >= plans.length) return;
 
-  const reordered = [...plans];
-  [reordered[index], reordered[newIndex]] = [reordered[newIndex], reordered[index]];
-  setPlans(reordered);
+    const reordered = [...plans];
+    [reordered[index], reordered[newIndex]] = [reordered[newIndex], reordered[index]];
+    setPlans(reordered);
 
-  try {
-    await reorderEtudePlans(reordered.map((p) => p.id), token);
-  } catch (err) {
-    setPlans(plans);
-    alert(err instanceof ApiError ? err.message : "Erreur lors du réordonnancement.");
+    try {
+      await reorderEtudePlans(reordered.map((p) => p.id), token);
+    } catch (err) {
+      setPlans(plans);
+      alert(err instanceof ApiError ? err.message : "Erreur lors du réordonnancement.");
+    }
   }
-}
 
   return (
     <section className="admin">
@@ -273,9 +268,9 @@ async function movePlan(index, direction) {
       </p>
       <div className="admin-header">
         <h1>Espace Admin</h1>
-           <button className="btn btn-secondary" onClick={handleBackupDownload}>
-     Télécharger une sauvegarde
-   </button>
+        <button className="btn btn-secondary" onClick={handleBackupDownload}>
+          Télécharger une sauvegarde
+        </button>
         <button className="btn" onClick={handleLogout}>
           Se déconnecter
         </button>
@@ -287,17 +282,6 @@ async function movePlan(index, direction) {
 
       <div className="admin-form">
         <h3>Section "Étude &amp; Agencement"</h3>
-
-        <EditableTextField
-          id="etudeDescription"
-          ariaLabel="Texte descriptif de la section Étude & Agencement"
-          rows={4}
-          fetchFn={fetchEtudeSettings}
-          updateFn={updateEtudeSettings}
-          token={token}
-        />
-
-        <hr className="admin-divider" />
 
         <h4 className="admin-subheading">{editingPlanId ? "Modifier le plan" : "Ajouter un plan : "} </h4>
 
@@ -358,26 +342,24 @@ async function movePlan(index, direction) {
                 </div>
                 <p className="admin-plan-description">{plan.description || <em>(sans texte)</em>}</p>
                 <div className="admin-list-actions">
-         <button
-           type="button"
-           className="btn btn-small"
-           onClick={() => movePlan(index, -1)}
-           disabled={index === 0}
-           aria-label="Monter"
-         >
-           ↑
-         </button>
-         <button
-           type="button"
-           className="btn btn-small"
-           onClick={() => movePlan(index, 1)}
-           disabled={index === plans.length - 1}
-           aria-label="Descendre"
-         >
-           ↓
-         </button>
-
-
+                  <button
+                    type="button"
+                    className="btn btn-small"
+                    onClick={() => movePlan(index, -1)}
+                    disabled={index === 0}
+                    aria-label="Monter"
+                  >
+                    ↑
+                  </button>
+                  <button
+                    type="button"
+                    className="btn btn-small"
+                    onClick={() => movePlan(index, 1)}
+                    disabled={index === plans.length - 1}
+                    aria-label="Descendre"
+                  >
+                    ↓
+                  </button>
 
                   <button type="button" className="btn btn-small" onClick={() => startEditPlan(plan)}>
                     Modifier
@@ -394,17 +376,6 @@ async function movePlan(index, direction) {
 
       <div className="admin-form">
         <h3>Section "Créations"</h3>
-
-        <EditableTextField
-          id="creationsDescription"
-          ariaLabel="Texte descriptif de la section Créations"
-          rows={3}
-          fetchFn={fetchCreationsSettings}
-          updateFn={updateCreationsSettings}
-          token={token}
-        />
-
-        <hr className="admin-divider" />
 
         <h4 className="admin-subheading">{editingId ? "Modifier la création" : "Ajouter une création :"}</h4>
 
@@ -467,24 +438,22 @@ async function movePlan(index, direction) {
                 <p className="admin-list-name">{c.name}</p>
               </div>
               <div className="admin-list-actions">
-         <button
-           className="btn btn-small"
-           onClick={() => moveCreation(index, -1)}
-           disabled={index === 0}
-           aria-label="Monter"
-         >
-           ↑
-         </button>
-         <button
-           className="btn btn-small"
-           onClick={() => moveCreation(index, 1)}
-           disabled={index === creations.length - 1}
-           aria-label="Descendre"
-         >
-           ↓
-         </button>
-
-
+                <button
+                  className="btn btn-small"
+                  onClick={() => moveCreation(index, -1)}
+                  disabled={index === 0}
+                  aria-label="Monter"
+                >
+                  ↑
+                </button>
+                <button
+                  className="btn btn-small"
+                  onClick={() => moveCreation(index, 1)}
+                  disabled={index === creations.length - 1}
+                  aria-label="Descendre"
+                >
+                  ↓
+                </button>
 
                 <button className="btn btn-small" onClick={() => startEdit(c)}>
                   Modifier

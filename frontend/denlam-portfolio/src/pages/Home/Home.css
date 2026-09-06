@@ -315,8 +315,8 @@ textarea {
 }
 
 .cv-icon img {
-  width: 32px;
-  height: 32px;
+  width: 30px;
+  height: 30px;
   display: block;
   opacity: 0.85;
   transition: opacity 0.2s ease, transform 0.2s ease;

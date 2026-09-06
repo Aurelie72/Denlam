@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
-import { fetchEtudeSettings, fetchEtudePlans, ApiError } from "../../services/api.js";
+import { fetchEtudePlans, ApiError } from "../../services/api.js";
 import { usePageMeta } from "../../hooks/usePageMeta.js";
+import { ETUDE_INTRO } from "../../content/introTexts.js";
 import PlanCard from "./PlanCard.jsx";
 import "./Etude.css";
 
@@ -9,7 +10,6 @@ const TABS = [
   { key: "releves", label: "Relevés" },
   { key: "plan", label: "Plans" },
 ];
-
 
 const CONSEILS_CONTENT = {
   description:
@@ -24,23 +24,16 @@ const RELEVES_CONTENT = {
 };
 
 export default function Etude() {
+  usePageMeta(
+    "Étude & Agencement",
+    "Étude, relevés, plans 2D et plans 3D sur autocad ou topsolid pour vos projets d'agencement intérieur sur mesure. Conseils personnalisés en Sarthe, Pays de la Loire."
+  );
 
-   usePageMeta(
-     "Étude & Agencement",
-     "Étude, relevés, plans 2D et plans 3D sur autocad ou topsolid pour vos projets d'agencement intérieur sur mesure. Conseils personnalisés en Sarthe, Pays de la Loire."
-   );
-  const [description, setDescription] = useState("");
   const [activeTab, setActiveTab] = useState("conseils");
 
   const [plans, setPlans] = useState([]);
   const [isLoadingPlans, setIsLoadingPlans] = useState(true);
   const [error, setError] = useState(null);
-
-  useEffect(() => {
-    fetchEtudeSettings()
-      .then((data) => setDescription(data.description || ""))
-      .catch(() => {});
-  }, []);
 
   useEffect(() => {
     if (activeTab !== "plan") return;
@@ -68,7 +61,7 @@ export default function Etude() {
     <section className="etude">
       <h1 className="visually-hidden">Étude & Agencement</h1>
       <div className="etude-intro">
-        <p>{description}</p>
+        <p>{ETUDE_INTRO}</p>
       </div>
 
       <div className="filters">

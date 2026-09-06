@@ -94,19 +94,6 @@ export function reorderCreations(ids, token) {
   return request("/creations/reorder", { method: "PUT", body: { ids }, token });
 }
 
-// ---- Réglages "Créations" (texte d'intro) --------------------------------
-export function fetchCreationsSettings() {
-  return request("/settings/creations");
-}
-
-export function updateCreationsSettings(description, token) {
-  return request("/settings/creations", {
-    method: "PUT",
-    body: { description },
-    token,
-  });
-}
-
 // ---- Messages de contact -------------------------------------------------
 export function sendContactMessage(payload) {
   return request("/messages", { method: "POST", body: payload });
@@ -125,18 +112,6 @@ export function deleteMessage(id, token) {
 }
 
 // ---- Étude & Agencement ---------------------------------------------------
-export function fetchEtudeSettings() {
-  return request("/etude/settings");
-}
-
-export function updateEtudeSettings(description, token) {
-  return request("/etude/settings", {
-    method: "PUT",
-    body: { description },
-    token,
-  });
-}
-
 export function fetchEtudePlans() {
   return request("/etude/plans");
 }

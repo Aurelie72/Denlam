@@ -7,7 +7,6 @@ import path from "node:path";
 import { connectDB } from "./src/config/db.js";
 import authRoutes from "./src/routes/auth.routes.js";
 import creationsRoutes from "./src/routes/creations.routes.js";
-import settingsRoutes from "./src/routes/settings.routes.js";
 import messagesRoutes from "./src/routes/messages.routes.js";
 import etudeRoutes from "./src/routes/etude.routes.js";
 import backupRoutes from "./src/routes/backup.routes.js";
@@ -74,7 +73,6 @@ app.use(
 app.get("/api/health", (req, res) => res.json({ status: "ok" }));
 app.use("/api/auth", authRoutes);
 app.use("/api/creations", creationsRoutes);
-app.use("/api/settings", settingsRoutes);
 app.use("/api/messages", messagesRoutes);
 app.use("/api/etude", etudeRoutes);
 app.use("/api/backup", backupRoutes);

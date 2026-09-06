@@ -1,7 +1,5 @@
 import { Router } from "express";
 import {
-  getSettings,
-  updateSettings,
   listPlans,
   createPlan,
   updatePlan,
@@ -14,9 +12,6 @@ import { processImages } from "../middleware/processImages.js";
 import { asyncHandler } from "../middleware/asyncHandler.js";
 
 const router = Router();
-
-router.get("/settings", asyncHandler(getSettings));
-router.put("/settings", requireAuth, asyncHandler(updateSettings));
 
 router.get("/plans", asyncHandler(listPlans));
 
