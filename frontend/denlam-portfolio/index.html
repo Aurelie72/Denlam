@@ -3,30 +3,28 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#fffefe" />
     <meta
       name="description"
       content="Denlam — Bureau d'étude en menuiserie et agencement intérieur. Conseil en agencement.  Créateur d'objets design uniques."
     />
-    <title>Denlam — Objets & Agencement</title>
+    <title>Denlam — Créations & Agencement</title>
 
-    <!-- Favicon (icône d'onglet du navigateur), basé sur le petit carré
-         jaune/gris du logo — le seul élément assez simple pour rester
-         lisible en 16x16px. -->
+    <!-- Dit à Google quelle est l'adresse "officielle" de cette page  -->
+    <link rel="canonical" href="https://denlam.fr/" />
+
+    <!-- Favicon -->
     <link rel="icon" href="/favicon.ico" sizes="any" />
-    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
     <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="48x48" href="/favicon-48x48.png" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <link rel="manifest" href="/site.webmanifest" />
 
-    <!-- Open Graph / réseaux sociaux — valeurs par défaut, remplacées
-         dynamiquement par usePageMeta() une fois React monté (utile pour
-         Google qui exécute le JS ; les valeurs ci-dessous servent surtout
-         pour les robots qui n'exécutent pas de JS, comme certains bots de
-         messagerie). Pense à déposer une vraie image de partage
-         (1200x630px) dans public/og-image.jpg et à remplacer l'URL du
-         domaine une fois le site déployé. -->
+    <!-- Open Graph  -->
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="Denlam" />
+    <meta property="og:url" content="https://denlam.fr/" />
     <meta property="og:title" content="Denlam — Créations & Agencement" />
     <meta
       property="og:description"
@@ -35,9 +33,7 @@
     <meta property="og:image" content="https://denlam.fr/og-image.jpg" />
     <meta name="twitter:card" content="summary_large_image" />
 
-    <!-- Données structurées (Schema.org) — aide Google à comprendre qu'il
-         s'agit d'une entreprise artisanale locale. À tenir synchronisé
-         avec content/settings/contact.json si les coordonnées changent. -->
+    <!-- Données structurées (Schema.org) -->
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",

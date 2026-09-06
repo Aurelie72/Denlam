@@ -10,6 +10,9 @@ export default defineConfig({
       jpeg: { quality: 78 },
       png: { quality: 78 },
       webp: { quality: 78 },
+      svg: {
+        multipass: true,
+      },
     }),
   ],
 });

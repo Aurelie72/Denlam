@@ -26,7 +26,7 @@ export default function PhotoCarousel({ images, alt = "", priority = false }) {
 
   if (!images || images.length === 0) return null;
 
-  const mainAlt = images.length > 1 ? `${alt} — photo ${activeIndex + 1}` : alt;
+  const mainAlt = images.length > 1 ? `${alt} — ${activeIndex + 1} sur ${images.length}` : alt;
 
   return (
     <div className="detail-carousel">

@@ -10,8 +10,8 @@ import cvthomas from "../../assets/CVthomas.pdf"
 
 
 // hero et contact restent des textes statiques pour l'instant.
-import hero from "../../../content/settings/hero.json";
-import contact from "../../../content/settings/contact.json";
+import hero from "../../content/settings/hero.json";
+import contact from "../../content/settings/contact.json";
 
 import { sendContactMessage, ApiError } from "../../services/api.js";
 import { usePageMeta } from "../../hooks/usePageMeta.js";

@@ -4,7 +4,7 @@ Site vitrine et espace d'administration pour [denlam.fr](https://denlam.fr) — 
 
 ## Identité visuelle
 
-Conversion d'un site statique HTML/CSS/JS d'origine vers React, en conservant son identité visuelle : police Cormorant Garamond, palette neutre gris/blanc, cartes avec révélation de contenu au survol, champs de formulaire à label flottant.
+Police Cormorant Garamond, palette neutre gris/blanc, cartes avec révélation de contenu au survol, champs de formulaire à label flottant.
 
 ## Stack technique
 
@@ -69,7 +69,7 @@ Les pages peu consultées (`/login`, `/admin`, pages légales) sont chargées à
 
 ## Fonctionnalités notables
 
-- **Espace admin** : gestion des créations et plans (ajout/modification/suppression, réordonnancement, choix de la photo principale et de son point de recadrage), gestion des messages de contact, textes d'intro éditables, téléchargement d'une sauvegarde de la base
+- **Espace admin** : gestion des créations et plans (ajout/modification/suppression, réordonnancement, choix de la photo principale et de son point de recadrage), gestion des messages de contact, téléchargement d'une sauvegarde de la base
 - **Optimisation des images** : les photos statiques du code (hero, portrait) sont compressées au build ; celles uploadées via l'admin sont automatiquement redimensionnées/converties en WebP côté backend
 - **SEO** : titres/descriptions dynamiques par page, Open Graph, données structurées (Schema.org), sitemap, robots.txt
 - **Accessibilité** : navigation clavier, textes alternatifs, contrastes conformes, hiérarchie de titres cohérente — audité avec WAVE

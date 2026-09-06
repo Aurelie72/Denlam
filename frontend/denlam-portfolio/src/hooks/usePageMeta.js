@@ -45,7 +45,7 @@ export function usePageMeta(title, description = DEFAULT_DESCRIPTION) {
   useEffect(() => {
     const fullTitle = title
       ? `${title} — ${SITE_NAME}`
-      : `${SITE_NAME} — Objets & Agencement`;
+      : `${SITE_NAME} — Créations & Agencement`;
     document.title = fullTitle;
     setMetaDescription(description);
     setOgTag("og:title", fullTitle);

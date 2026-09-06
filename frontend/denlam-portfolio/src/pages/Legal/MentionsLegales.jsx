@@ -1,4 +1,4 @@
-import contact from "../../../content/settings/contact.json";
+import contact from "../../content/settings/contact.json";
 import "./Legal.css";
 
 export default function MentionsLegales() {

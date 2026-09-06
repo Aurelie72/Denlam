@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { fetchCreation, fetchCreations, resolveImageUrl, ApiError } from "../../services/api.js";
 import { usePageMeta } from "../../hooks/usePageMeta.js";
+import PhotoCarousel from "../../components/PhotoCarousel.jsx";
 import "./CreationDetail.css";
 
 export default function CreationDetail() {
@@ -12,7 +13,6 @@ export default function CreationDetail() {
   const [siblings, setSiblings] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [activeImage, setActiveImage] = useState(0);
 
   usePageMeta(
     creation?.name || "Créations",
@@ -23,7 +23,6 @@ export default function CreationDetail() {
     let cancelled = false;
     setIsLoading(true);
     setError(null);
-    setActiveImage(0);
 
     Promise.all([fetchCreation(id), fetchCreations()])
       .then(([creationData, listData]) => {
@@ -50,10 +49,10 @@ export default function CreationDetail() {
     return siblings[(index + 1) % siblings.length].id;
   }, [siblings, id]);
 
- const images = useMemo(
-   () => (creation?.images?.length ? creation.images : creation?.image ? [creation.image] : []),
-   [creation]
- );
+  const images = useMemo(
+    () => (creation?.images?.length ? creation.images : creation?.image ? [creation.image] : []),
+    [creation]
+  );
 
   useEffect(() => {
     if (!creation) return;
@@ -79,11 +78,6 @@ export default function CreationDetail() {
     };
   }, [creation, images]);
 
-  function goToImage(delta) {
-    if (images.length === 0) return;
-    setActiveImage((prev) => (prev + delta + images.length) % images.length);
-  }
-
   return (
     <section className="creation-detail">
       {isLoading && <p className="detail-status">Chargement…</p>}
@@ -100,7 +94,7 @@ export default function CreationDetail() {
 
             {nextId && (
               <Link className="nav-arrow nav-arrow-next" to={`/creations/${nextId}`} aria-label="Création suivante">
-                 <span aria-hidden="true">→</span>
+                <span aria-hidden="true">→</span>
               </Link>
             )}
           </div>
@@ -111,49 +105,7 @@ export default function CreationDetail() {
                 <p>{creation.description || "Aucune description pour le moment."}</p>
               </div>
 
-              <div className="detail-carousel">
-                <div className="carousel-main">
-                  {images.length > 1 && (
-                    <button
-                      className="carousel-arrow carousel-arrow-left"
-                      onClick={() => goToImage(-1)}
-                    >
-                      ‹
-                    </button>
-                  )}
-
-                  <img
-                    src={resolveImageUrl(images[activeImage])}
-                    alt={`${creation.name} — photo ${activeImage + 1}`}
-                    loading="eager"
-                    fetchpriority="high"
-                    decoding="async"
-                  />
-
-                  {images.length > 1 && (
-                    <button
-                      className="carousel-arrow carousel-arrow-right"
-                      onClick={() => goToImage(1)}
-                    >
-                      ›
-                    </button>
-                  )}
-                </div>
-
-                {images.length > 1 && (
-                  <div className="carousel-thumbs">
-                    {images.map((img, i) => (
-                      <button
-                        key={img + i}
-                        className={i === activeImage ? "thumb active" : "thumb"}
-                        onClick={() => setActiveImage(i)}
-                      >
-                        <img src={resolveImageUrl(img)} alt="" loading="lazy" decoding="async" />
-                      </button>
-                    ))}
-                  </div>
-                )}
-              </div>
+              <PhotoCarousel images={images} alt={creation.name} priority />
             </div>
           </div>
         </>
