@@ -2,9 +2,7 @@
   max-width: 850px;
   margin: 0 auto;
   padding: 50px clamp(24px, 6vw, 70px) 20px;
-
 }
-
 
 .creations-intro p {
   font-size: 1rem;
@@ -13,7 +11,6 @@
   white-space: pre-line;
   text-align: justify;
   text-justify: inter-word;
-  
 }
 
 .detail-description p {
@@ -21,31 +18,28 @@
   text-justify: inter-word;
 }
 
-
 /* ---- Galerie ------------------------------------------------------- */
 .gallery {
-  padding: 50px clamp(24px, 5vw, 60px) 80px;
+  padding: 50px 0 80px;
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-  gap: 32px;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
 }
 
 .gallery-item {
   position: relative;
   cursor: pointer;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  display: block;
   text-decoration: none;
   color: inherit;
 }
 
 .gallery-media {
+  position: relative;
   width: 100%;
-  aspect-ratio: 5 / 6;
+  aspect-ratio: 1 / 1;
   border-radius: var(--radius-sm);
   overflow: hidden;
-  box-shadow: var(--shadow-strong);
 }
 
 .gallery-media img {
@@ -56,19 +50,6 @@
   transition: transform var(--transition-soft), opacity var(--transition-soft);
 }
 
-.gallery-item:hover .gallery-media img {
-  opacity: 0.75;
-  transform: scale(1.04);
-}
-
-.gallery-item p {
-  margin-top: 12px;
-  font-size: 1.1rem;
-  font-weight: 700;
-  text-align: center;
-
-}
-
 .gallery-empty {
   grid-column: 1 / -1;
   text-align: center;
@@ -76,7 +57,7 @@
   padding: 40px 0;
 }
 
-/* Titre identique à la Home */
+/* Titre affiché au survol */
 .gallery-title {
   position: absolute;
   inset: 0;
@@ -94,7 +75,6 @@
   font-family: var(--font-title);
 }
 
-/* Hover identique à la Home */
 .gallery-item:hover .gallery-media img {
   opacity: 0.45;
   transform: scale(1.03);
@@ -102,4 +82,19 @@
 
 .gallery-item:hover .gallery-title {
   opacity: 1;
+}
+
+/* Adaptation aux écrans plus petits (ma proposition : ta capture
+   ne montre que la version ordinateur) */
+@media (max-width: 1000px) {
+  .gallery {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .gallery {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
 }

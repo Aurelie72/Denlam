@@ -4,6 +4,7 @@ import { usePageMeta } from "../../hooks/usePageMeta.js";
 import { ETUDE_INTRO } from "../../content/introTexts.js";
 import PlanCard from "./PlanCard.jsx";
 import "./Etude.css";
+const relevesImage = new URL("../../assets/relevés.webp", import.meta.url).href;
 
 const TABS = [
   { key: "conseils", label: "Conseils" },
@@ -13,14 +14,15 @@ const TABS = [
 
 const CONSEILS_CONTENT = {
   description:
-    "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like).",
+    "Chaque projet commence par une rencontre.  Je me déplace chez vous lors d'un rendez-vous privilégié pour écouter vos attentes et comprendre votre projet. Lors de cet échange, je vous oriente et vous conseille sur les meilleures solutions techniques et esthétiques. Nous choisissons ensemble les matériaux les plus adaptés à vos goûts pour donner vie à un intérieur qui vous ressemble.",
   images: ["https://picsum.photos/seed/etude-conseils/700/500"],
 };
 
 const RELEVES_CONTENT = {
   description:
-    "Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like).",
-  images: ["https://picsum.photos/seed/etude-releves/700/500"],
+    "Le relevé est la première étape essentielle de votre projet.  Je me déplace directement chez vous pour prendre les dimensions exactes de votre espace. Ce rendez-vous technique est le moment idéal pour anticiper toutes les contraintes de votre intérieur : j'analyse l'état de vos murs supports et j'étudie l'emplacement de vos réseaux (eau, air, électricité) afin de garantir la faisabilité de votre futur agencement.",
+  images: [relevesImage],
+  frameless: true,
 };
 
 export default function Etude() {
@@ -96,7 +98,12 @@ export default function Etude() {
             {!isLoadingPlans &&
               !error &&
               plans.map((plan) => (
-                <PlanCard key={plan.id} description={plan.description} images={plan.images} />
+                <PlanCard
+                  key={plan.id}
+                  description={plan.description}
+                  images={plan.images}
+                  zoomable
+                />
               ))}
           </>
         )}

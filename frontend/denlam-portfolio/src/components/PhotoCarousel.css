@@ -80,3 +80,41 @@
   border-color: var(--color-accent-strong);
   opacity: 1;
 }
+
+/* ===== Agrandissement (lightbox) — à AJOUTER à la fin de PhotoCarousel.css ===== */
+.carousel-zoom {
+  position: absolute;
+  inset: 0;
+  border: 0;
+  background: transparent;
+  cursor: zoom-in;
+}
+
+.carousel-zoom:focus-visible {
+  outline: 3px solid var(--color-accent-strong);
+  outline-offset: -3px;
+}
+
+.carousel-zoom-hint {
+  position: absolute;
+  right: 12px;
+  bottom: 12px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.6);
+  color: #fff;
+  font-size: 0.8rem;
+  pointer-events: none;
+}
+
+/* Les flèches restent cliquables au-dessus du bouton « agrandir » */
+.carousel-arrow {
+  z-index: 2;
+}
+
+/* Photo sans cadre (ex : illustration des relevés) */
+.carousel-main.frameless {
+  box-shadow: none;
+  border-radius: 0;
+  background: none;
+}

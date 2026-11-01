@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { resolveImageUrl } from "../services/api.js";
+import ImageLightbox from "./ImageLightbox.jsx";
 import "./PhotoCarousel.css";
 
 /**
@@ -9,15 +10,25 @@ import "./PhotoCarousel.css";
  * contexte d'appel diffère.
  *
  * - `alt` : texte de base pour la photo principale (complété par
- *   "— photo N" automatiquement s'il y a plusieurs photos)
+ *   "— N sur total" automatiquement s'il y a plusieurs photos)
  * - `priority` : true pour la photo qui doit se charger en priorité
  *   (contenu principal d'une page) — à réserver à UN seul carrousel par
  *   page, jamais à plusieurs plans empilés en même temps (voir la
  *   discussion sur fetchpriority plus tôt : en mettre partout annule le
  *   bénéfice).
+ * - `zoomable` : true pour permettre d'agrandir la photo en plein écran
+ *   (lightbox) au clic.
+ * - `frameless` : true pour afficher la photo sans ombre ni coins arrondis.
  */
-export default function PhotoCarousel({ images, alt = "", priority = false }) {
+export default function PhotoCarousel({
+  images,
+  alt = "",
+  priority = false,
+  zoomable = false,
+  frameless = false,
+}) {
   const [activeIndex, setActiveIndex] = useState(0);
+  const [zoomOpen, setZoomOpen] = useState(false);
 
   function goTo(delta) {
     if (!images || images.length === 0) return;
@@ -30,7 +41,7 @@ export default function PhotoCarousel({ images, alt = "", priority = false }) {
 
   return (
     <div className="detail-carousel">
-      <div className="carousel-main">
+      <div className={frameless ? "carousel-main frameless" : "carousel-main"}>
         {images.length > 1 && (
           <button className="carousel-arrow carousel-arrow-left" onClick={() => goTo(-1)} aria-label="Photo précédente">
             ‹
@@ -44,6 +55,20 @@ export default function PhotoCarousel({ images, alt = "", priority = false }) {
           {...(priority ? { fetchpriority: "high" } : {})}
           decoding="async"
         />
+
+        {zoomable && (
+          <>
+            <button
+              type="button"
+              className="carousel-zoom"
+              onClick={() => setZoomOpen(true)}
+              aria-label="Agrandir la photo"
+            />
+            <span className="carousel-zoom-hint" aria-hidden="true">
+              🔍 Agrandir
+            </span>
+          </>
+        )}
 
         {images.length > 1 && (
           <button className="carousel-arrow carousel-arrow-right" onClick={() => goTo(1)} aria-label="Photo suivante">
@@ -65,6 +90,16 @@ export default function PhotoCarousel({ images, alt = "", priority = false }) {
             </button>
           ))}
         </div>
+      )}
+
+      {zoomable && zoomOpen && (
+        <ImageLightbox
+          images={images.map(resolveImageUrl)}
+          index={activeIndex}
+          alt={alt}
+          onChange={setActiveIndex}
+          onClose={() => setZoomOpen(false)}
+        />
       )}
     </div>
   );

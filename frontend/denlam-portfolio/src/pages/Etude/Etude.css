@@ -180,6 +180,16 @@
   color: var(--color-muted);
   padding: 40px 0;
 }
+.detail-description a {
+  color: var(--color-cta);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  overflow-wrap: anywhere; /* évite qu'une longue adresse dépasse de la carte */
+}
+
+.detail-description a:hover {
+  color: var(--color-accent-strong);
+}
 
 @media (max-width: 780px) {
   .etude-plan-card {
